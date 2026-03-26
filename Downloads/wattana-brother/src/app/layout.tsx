@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: 'บริษัท วัฒนบราเดอร์ จำกัด - ผู้เชี่ยวชาญงานโลหะและสแตนเลส ตั้งแต่ปี 1984',
     template: '%s | บริษัท วัฒนบราเดอร์ จำกัด'
   },
-  description: 'บริษัท วัฒนบราเดอร์ จำกัด ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลสกว่า 27 ปี รับผลิตถังแรงดัน ถังผสมสารเคมี งานตัดเหล็ก และโซลูชันเหล็กอุตสาหกรรม',
+  description: 'บริษัท วัฒนบราเดอร์ จำกัด ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลสกว่า 40 ปี รับผลิตถังแรงดัน ถังผสมสารเคมี งานตัดเหล็ก และโซลูชันเหล็กอุตสาหกรรม',
   keywords: ['งานโลหะ', 'สแตนเลส', 'ถังแรงดัน', 'ถังผสมสารเคมี', 'ตัดเหล็ก', 'ขึ้นรูปโลหะ', 'โรงงานเหล็ก', 'กรุงเทพ'],
   authors: [{ name: 'บริษัท วัฒนบราเดอร์ จำกัด' }],
   openGraph: {
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     url: 'https://www.wattanabrother.com',
     siteName: 'บริษัท วัฒนบราเดอร์ จำกัด',
     title: 'บริษัท วัฒนบราเดอร์ จำกัด - ผู้เชี่ยวชาญงานโลหะและสแตนเลส',
-    description: 'ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลสกว่า 27 ปี รับผลิตถังแรงดัน ถังผสมสารเคมี',
+    description: 'ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลสกว่า 40 ปี รับผลิตถังแรงดัน ถังผสมสารเคมี',
     images: [
       {
         url: '/og-image.jpg',
@@ -55,8 +55,8 @@ export default function RootLayout({
   return (
     <html lang="th">
       <head>
-        <link rel="icon" href="/logo.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
+        <link rel="icon" href="/logo.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -68,7 +68,7 @@ export default function RootLayout({
               alternateName: 'Wattana Brother Co., Ltd.',
               description: 'ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลส รับผลิตถังแรงดัน ถังผสมสารเคมี งานตัดเหล็ก ตั้งแต่ปี 1984',
               url: 'https://www.wattanabrother.com',
-              logo: 'https://www.wattanabrother.com/logo.svg',
+              logo: 'https://www.wattanabrother.com/logo.png',
               image: 'https://www.wattanabrother.com/og-image.jpg',
               foundingDate: '1984',
               telephone: ['+66-2-749-8115', '+66-81-138-1555'],

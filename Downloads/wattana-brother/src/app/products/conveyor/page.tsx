@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -48,9 +49,12 @@ export default function ConveyorPage() {
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               {/* Product Image */}
               <div className="rounded-lg h-96 overflow-hidden">
-                <img
+                <Image
                   src="/images/conveyor.jpg"
-                  alt="สายพานลำเลียง"
+                  alt="สายพานลำเลียงสแตนเลสอุตสาหกรรม วัฒนบราเดอร์"
+                  width={800}
+                  height={800}
+                  priority
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -104,7 +108,7 @@ export default function ConveyorPage() {
             {/* Features & Specifications */}
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h2>
                 <ul className="space-y-4">
                   <li className="flex items-start">
                     <div className="flex-shrink-0 w-8 h-8 bg-steel-blue rounded-full flex items-center justify-center mr-3">
@@ -113,7 +117,7 @@ export default function ConveyorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h3>
                       <p className="text-slate text-sm">โครงเหล็กแบบหนักหน่วงรับน้ำหนักได้มาก</p>
                     </div>
                   </li>
@@ -124,7 +128,7 @@ export default function ConveyorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ปรับความเร็วได้</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ปรับความเร็วได้</h3>
                       <p className="text-slate text-sm">ระบบควบคุมความเร็วที่ยืดหยุ่นตามการใช้งาน</p>
                     </div>
                   </li>
@@ -135,7 +139,7 @@ export default function ConveyorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ออกแบบแบบโมดูลาร์</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ออกแบบแบบโมดูลาร์</h3>
                       <p className="text-slate text-sm">สามารถต่อขยายหรือปรับเปลี่ยนได้ตามความต้องการ</p>
                     </div>
                   </li>
@@ -146,7 +150,7 @@ export default function ConveyorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ทนทานยาวนาน</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ทนทานยาวนาน</h3>
                       <p className="text-slate text-sm">ออกแบบให้ใช้งานได้ยาวนานในสภาพแวดล้อมอุตสาหกรรม</p>
                     </div>
                   </li>
@@ -154,7 +158,7 @@ export default function ConveyorPage() {
               </div>
 
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h2>
                 <div className="space-y-4">
                   <div className="border-b border-fog-gray pb-3">
                     <div className="flex justify-between">
@@ -190,20 +194,97 @@ export default function ConveyorPage() {
               </div>
             </div>
 
+            {/* FAQ */}
+            <div className="mt-12 bg-ice-white rounded-lg shadow-lg p-8">
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      { '@type': 'ListItem', position: 1, name: 'หน้าแรก', item: 'https://www.wattanabrother.com/' },
+                      { '@type': 'ListItem', position: 2, name: 'สินค้า', item: 'https://www.wattanabrother.com/products/' },
+                      { '@type': 'ListItem', position: 3, name: 'สายพานลำเลียง', item: 'https://www.wattanabrother.com/products/conveyor/' },
+                    ],
+                  }),
+                }}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: [
+                      {
+                        '@type': 'Question',
+                        name: 'สายพานลำเลียงรับน้ำหนักได้มากสุดเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ขึ้นอยู่กับขนาดโครงและประเภทสายพาน โดยทั่วไปรับได้ตั้งแต่ 50–2,000 กก./เมตร กรุณาระบุน้ำหนักสูงสุดที่ต้องการเพื่อออกแบบโครงสร้างให้เหมาะสม' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'มีสายพานแบบสแตนเลสสำหรับอุตสาหกรรมอาหารไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'มีครับ รับผลิตโครงสายพานสแตนเลส 304/316 สำหรับอุตสาหกรรมอาหารและยา พร้อมสายพานพลาสติกเกรด Food-grade ตามมาตรฐาน FDA ได้' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ความเร็วสายพานปรับได้ไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ปรับได้ผ่านระบบ Inverter (VFD) ที่ติดตั้งพร้อมมอเตอร์ สามารถควบคุมความเร็วได้อย่างละเอียดตามความต้องการของกระบวนการผลิต' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'รับผลิตสายพานลำเลียงแบบเอียงได้ไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ได้ครับ รับผลิตสายพานแบบเอียงได้ถึง 30–45 องศา พร้อมชั้นกั้นวัสดุและระบบป้องกันการไหลย้อนตามความเหมาะสมของงาน' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ระยะเวลาการผลิตและติดตั้งนานเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'โดยปกติใช้เวลาผลิต 3–6 สัปดาห์ขึ้นอยู่กับขนาดและความซับซ้อน การติดตั้งใช้เวลา 1–3 วัน ทีมช่างพร้อมให้บริการทั่วประเทศ' },
+                      },
+                    ],
+                  }),
+                }}
+              />
+              <h2 className="text-2xl font-bold text-charcoal mb-8">คำถามที่พบบ่อย</h2>
+              <div className="space-y-6">
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">สายพานลำเลียงรับน้ำหนักได้มากสุดเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">ขึ้นอยู่กับขนาดโครงและประเภทสายพาน โดยทั่วไปรับได้ตั้งแต่ 50–2,000 กก./เมตร กรุณาระบุน้ำหนักสูงสุดที่ต้องการเพื่อออกแบบโครงสร้างให้เหมาะสม</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">มีสายพานแบบสแตนเลสสำหรับอุตสาหกรรมอาหารไหม?</h3>
+                  <p className="text-slate leading-relaxed">มีครับ รับผลิตโครงสายพานสแตนเลส 304/316 สำหรับอุตสาหกรรมอาหารและยา พร้อมสายพานพลาสติกเกรด Food-grade ตามมาตรฐาน FDA ได้</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ความเร็วสายพานปรับได้ไหม?</h3>
+                  <p className="text-slate leading-relaxed">ปรับได้ผ่านระบบ Inverter (VFD) ที่ติดตั้งพร้อมมอเตอร์ สามารถควบคุมความเร็วได้อย่างละเอียดตามความต้องการของกระบวนการผลิต</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">รับผลิตสายพานลำเลียงแบบเอียงได้ไหม?</h3>
+                  <p className="text-slate leading-relaxed">ได้ครับ รับผลิตสายพานแบบเอียงได้ถึง 30–45 องศา พร้อมชั้นกั้นวัสดุและระบบป้องกันการไหลย้อนตามความเหมาะสมของงาน</p>
+                </div>
+                <div>
+                  <h3 className="font-bold text-charcoal mb-2">ระยะเวลาการผลิตและติดตั้งนานเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">โดยปกติใช้เวลาผลิต 3–6 สัปดาห์ขึ้นอยู่กับขนาดและความซับซ้อน การติดตั้งใช้เวลา 1–3 วัน ทีมช่างพร้อมให้บริการทั่วประเทศ</p>
+                </div>
+              </div>
+            </div>
+
             {/* Related Products */}
             <div className="mt-12 bg-fog-gray p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h3>
+              <h2 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <Link href="/products/water-filter/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h3>
                   <p className="text-slate text-sm">ระบบกรอง</p>
                 </Link>
                 <Link href="/products/reactor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h3>
                   <p className="text-slate text-sm">อุปกรณ์แปรรูปเคมี</p>
                 </Link>
                 <Link href="/products/plastic-mole/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">โม่พลาสติก</h4>
+                  <h3 className="font-bold text-charcoal mb-2">โม่พลาสติก</h3>
                   <p className="text-slate text-sm">แปรรูปวัสดุ</p>
                 </Link>
               </div>

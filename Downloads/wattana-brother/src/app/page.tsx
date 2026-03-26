@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import type { Metadata } from 'next'
 import ClientLogos from '@/components/ClientLogos'
 
 export const metadata: Metadata = {
-  title: 'หน้าแรก',
-  description: 'บริษัท วัฒนบราเดอร์ จำกัด ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลส รับผลิตถังแรงดัน ถังผสมสารเคมี งานตัดเหล็ก ตั้งแต่ปี 1984',
+  title: 'รับผลิตถังสแตนเลส งานโลหะตามสั่ง สมุทรปราการ',
+  description: 'บริษัท วัฒนบราเดอร์ จำกัด สมุทรปราการ รับผลิตงานสแตนเลสและโลหะตามสั่ง ถังแรงดัน ถังผสมสารเคมี เครื่องกรองน้ำ สายพานลำเลียง งานขึ้นรูปโลหะครบวงจร ประสบการณ์กว่า 40 ปี',
   alternates: {
     canonical: 'https://www.wattanabrother.com',
   },
@@ -44,7 +45,7 @@ export default function Home() {
   ]
 
   const stats = [
-    { number: '27+', label: 'ปีประสบการณ์', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+    { number: '40+', label: 'ปีประสบการณ์', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
     { number: '1000+', label: 'โปรเจกต์สำเร็จ', icon: 'M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z' },
     { number: '100+', label: 'ลูกค้าองค์กร', icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
     { number: '24/7', label: 'บริการหลังการขาย', icon: 'M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z' },
@@ -63,11 +64,16 @@ export default function Home() {
     <>
       {/* Hero Section - Enhanced */}
       <section className="relative min-h-[700px] flex items-center justify-center overflow-hidden">
-        {/* Background Image with Parallax Effect */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-fixed scale-110"
-          style={{ backgroundImage: 'url(/images/hero-factory.jpg)' }}
-        />
+        {/* Background Image */}
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src="/images/hero-factory.jpg"
+            alt=""
+            fill
+            priority
+            className="object-cover object-center"
+          />
+        </div>
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-navy/80 via-navy/70 to-steel-blue/60" />
@@ -81,9 +87,12 @@ export default function Home() {
           {/* Logo */}
           <div className="mb-8 flex justify-center">
             <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-4 shadow-2xl transform hover:scale-105 transition-transform duration-300">
-              <img
-                src="/logo.svg"
+              <Image
+                src="/logo.png"
                 alt="Wattana Brother Logo"
+                width={144}
+                height={144}
+                priority
                 className="h-24 sm:h-28 md:h-36 w-auto"
               />
             </div>
@@ -92,20 +101,20 @@ export default function Home() {
           {/* Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
             <span className="w-2 h-2 bg-accent-cyan rounded-full animate-pulse" />
-            <span className="text-sm font-medium">ก่อตั้งตั้งแต่ปี พ.ศ. 2527</span>
+            <span className="text-sm font-medium">บริษัท วัฒนบราเดอร์ จำกัด · ก่อตั้งตั้งแต่ปี พ.ศ. 2527</span>
           </div>
 
           {/* Title */}
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-            บริษัท วัฒนบราเดอร์ จำกัด
+            รับผลิตงานสแตนเลสและโลหะตามสั่ง สมุทรปราการ
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl sm:text-2xl md:text-3xl text-fog-gray mb-4 font-light">
-            ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลส
+            ถังแรงดัน · ถังผสมสารเคมี · งานขึ้นรูปโลหะ · สแตนเลสอุตสาหกรรม
           </p>
           <p className="text-lg text-fog-gray/80 mb-10 max-w-2xl mx-auto">
-            ด้วยประสบการณ์กว่า 27 ปี เราพร้อมผลิตงานคุณภาพตามความต้องการของคุณ
+            ด้วยประสบการณ์กว่า 40 ปี เราพร้อมผลิตงานคุณภาพตามความต้องการของคุณ
           </p>
 
           {/* CTA Buttons */}
@@ -166,9 +175,11 @@ export default function Home() {
               {/* Left - Image */}
               <div className="relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-                  <img
+                  <Image
                     src="/images/about-factory.jpg"
-                    alt="Wattana Brother Factory"
+                    alt="โรงงานผลิตบริษัท วัฒนบราเดอร์ จำกัด สมุทรปราการ"
+                    width={1920}
+                    height={1080}
                     className="w-full h-[400px] object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy/50 to-transparent" />
@@ -187,11 +198,11 @@ export default function Home() {
                   <span className="text-sm font-semibold text-steel-blue">เกี่ยวกับเรา</span>
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold text-charcoal mb-6">
-                  รับผลิตงานเหล็กและสแตนเลสตามสั่ง
+                  ประสบการณ์กว่า 40 ปี ในงานอุตสาหกรรมโลหะ
                 </h2>
                 <p className="text-slate text-lg mb-6 leading-relaxed">
                   บริษัท วัฒนบราเดอร์ จำกัด ดำเนินธุรกิจด้านการผลิตงานเหล็กและสแตนเลสมาตั้งแต่ปี พ.ศ. 2527
-                  ด้วยประสบการณ์มากกว่า 27 ปี เราเชี่ยวชาญงานผลิตตามแบบ งานโครงสร้าง และงานถังอุตสาหกรรม
+                  ด้วยประสบการณ์มากกว่า 40 ปี เราเชี่ยวชาญงานผลิตตามแบบ งานโครงสร้าง และงานถังอุตสาหกรรม
                 </p>
                 <ul className="space-y-3 mb-8">
                   {['ทีมช่างฝีมือคุณภาพ', 'เครื่องจักรทันสมัย', 'ควบคุมคุณภาพทุกขั้นตอน', 'ส่งมอบตรงเวลา'].map((item, i) => (
@@ -315,9 +326,11 @@ export default function Home() {
                 className="group bg-fog-gray rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
               >
                 <div className="relative h-56 overflow-hidden">
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
+                    width={800}
+                    height={800}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -420,6 +433,26 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Structured Data - Service Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'ItemList',
+            name: 'บริการรับผลิตงานโลหะและสแตนเลส',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'รับผลิตถังแรงดันสแตนเลส', url: 'https://www.wattanabrother.com/products/reactor/' },
+              { '@type': 'ListItem', position: 2, name: 'รับผลิตเครื่องกรองน้ำอุตสาหกรรม', url: 'https://www.wattanabrother.com/products/water-filter/' },
+              { '@type': 'ListItem', position: 3, name: 'รับผลิตฝาถังเหล็กและสแตนเลส', url: 'https://www.wattanabrother.com/products/tank-lid/' },
+              { '@type': 'ListItem', position: 4, name: 'รับผลิตสายพานลำเลียง', url: 'https://www.wattanabrother.com/products/conveyor/' },
+              { '@type': 'ListItem', position: 5, name: 'รับผลิตเครื่องบดพลาสติก', url: 'https://www.wattanabrother.com/products/plastic-mole/' },
+              { '@type': 'ListItem', position: 6, name: 'รับผลิตเสาป้ายโฆษณา', url: 'https://www.wattanabrother.com/products/advertising-pole/' },
+            ],
+          }),
+        }}
+      />
     </>
   )
 }

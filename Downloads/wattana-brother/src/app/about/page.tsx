@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'เกี่ยวกับเรา',
-  description: 'บริษัท วัฒนบราเดอร์ จำกัด ผู้เชี่ยวชาญงานผลิตเหล็กและสแตนเลส ก่อตั้งปี พ.ศ. 2527 ประสบการณ์กว่า 27 ปี',
+  description: 'บริษัท วัฒนบราเดอร์ จำกัด ผู้เชี่ยวชาญงานผลิตเหล็กและสแตนเลส ก่อตั้งปี พ.ศ. 2527 ประสบการณ์กว่า 40 ปี',
   alternates: {
     canonical: 'https://www.wattanabrother.com/about',
   },
@@ -67,7 +67,7 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold text-charcoal mb-6">บริษัทของเรา</h2>
               <p className="text-lg text-slate mb-4 leading-relaxed">
                 <strong className="text-charcoal">บริษัท วัฒนบราเดอร์ จำกัด</strong> ก่อตั้งขึ้นในปี พ.ศ. 2527 
-                เราเป็นผู้เชี่ยวชาญด้านการผลิตงานเหล็กและสแตนเลสมาอย่างยาวนาน กว่า 27 ปี 
+                เราเป็นผู้เชี่ยวชาญด้านการผลิตงานเหล็กและสแตนเลสมาอย่างยาวนาน กว่า 40 ปี 
                 ด้วยประสบการณ์และความเชี่ยวชาญที่สั่งสมมา ทำให้เราเป็นพันธมิตรที่เชื่อถือได้ 
                 สำหรับธุรกิจที่ต้องการงานผลิตโลหะคุณภาพสูงตามแบบที่กำหนด
               </p>
@@ -133,10 +133,10 @@ export default function AboutPage() {
 
             {/* Experience & Expertise */}
             <div className="bg-ice-white rounded-lg shadow-lg p-8 md:p-12 mb-8 animate-scale-in delay-400">
-              <h2 className="text-3xl font-bold text-charcoal mb-6">27 ปีแห่งความเป็นเลิศ</h2>
+              <h2 className="text-3xl font-bold text-charcoal mb-6">40 ปีแห่งความเป็นเลิศ</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <div className="text-4xl font-bold text-steel-blue mb-2">27+</div>
+                  <div className="text-4xl font-bold text-steel-blue mb-2">40+</div>
                   <p className="text-slate font-semibold">ปีประสบการณ์</p>
                 </div>
                 <div className="text-center">

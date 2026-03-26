@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -48,9 +49,12 @@ export default function PlasticMolePage() {
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               {/* Product Image */}
               <div className="rounded-lg h-96 overflow-hidden">
-                <img
+                <Image
                   src="/images/plastic-mole.jpg"
-                  alt="โม่พลาสติก"
+                  alt="เครื่องบดพลาสติกอุตสาหกรรม วัฒนบราเดอร์"
+                  width={800}
+                  height={800}
+                  priority
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -104,7 +108,7 @@ export default function PlasticMolePage() {
             {/* Features & Specifications */}
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h2>
                 <ul className="space-y-4">
                   <li className="flex items-start">
                     <div className="flex-shrink-0 w-8 h-8 bg-steel-blue rounded-full flex items-center justify-center mr-3">
@@ -113,7 +117,7 @@ export default function PlasticMolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h3>
                       <p className="text-slate text-sm">ผลิตจากเหล็กคุณภาพสูงเพื่อความทนทาน</p>
                     </div>
                   </li>
@@ -124,7 +128,7 @@ export default function PlasticMolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ประสิทธิภาพสูง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ประสิทธิภาพสูง</h3>
                       <p className="text-slate text-sm">แปรรูปพลาสติกได้อย่างรวดเร็วและมีประสิทธิภาพ</p>
                     </div>
                   </li>
@@ -135,7 +139,7 @@ export default function PlasticMolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ปรับแต่งได้</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ปรับแต่งได้</h3>
                       <p className="text-slate text-sm">สามารถกำหนดค่าตามความต้องการเฉพาะ</p>
                     </div>
                   </li>
@@ -146,7 +150,7 @@ export default function PlasticMolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">บำรุงรักษาง่าย</h4>
+                      <h3 className="font-bold text-charcoal mb-1">บำรุงรักษาง่าย</h3>
                       <p className="text-slate text-sm">ออกแบบให้ดูแลรักษาได้สะดวก ประหยัดเวลา</p>
                     </div>
                   </li>
@@ -154,7 +158,7 @@ export default function PlasticMolePage() {
               </div>
 
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h2>
                 <div className="space-y-4">
                   <div className="border-b border-fog-gray pb-3">
                     <div className="flex justify-between">
@@ -184,20 +188,97 @@ export default function PlasticMolePage() {
               </div>
             </div>
 
+            {/* FAQ */}
+            <div className="mt-12 bg-ice-white rounded-lg shadow-lg p-8">
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      { '@type': 'ListItem', position: 1, name: 'หน้าแรก', item: 'https://www.wattanabrother.com/' },
+                      { '@type': 'ListItem', position: 2, name: 'สินค้า', item: 'https://www.wattanabrother.com/products/' },
+                      { '@type': 'ListItem', position: 3, name: 'โม่พลาสติก', item: 'https://www.wattanabrother.com/products/plastic-mole/' },
+                    ],
+                  }),
+                }}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: [
+                      {
+                        '@type': 'Question',
+                        name: 'โม่พลาสติกใช้กับพลาสติกประเภทใดได้บ้าง?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'รองรับพลาสติกหลายประเภท เช่น PE, PP, PVC, ABS และเม็ดพลาสติกทั่วไป สามารถออกแบบใบมีดและความเร็วรอบให้เหมาะสมกับวัสดุแต่ละชนิด' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'กำลังการผลิตต่อชั่วโมงเป็นเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ขึ้นอยู่กับขนาดเครื่องและชนิดวัสดุ รับผลิตตั้งแต่ขนาดเล็กสำหรับงานทดสอบจนถึงขนาดอุตสาหกรรม กรุณาระบุปริมาณที่ต้องการต่อชั่วโมงเพื่อออกแบบให้เหมาะสม' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ใบมีดต้องเปลี่ยนบ่อยแค่ไหน?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ขึ้นอยู่กับวัสดุที่บดและชั่วโมงการใช้งาน โดยทั่วไปใบมีดทำจากเหล็กกล้าความแข็งสูง ทนทาน และสามารถลับใหม่หรือเปลี่ยนได้ง่าย' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'รับผลิตขนาดเล็กสุดและใหญ่สุดเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'รับผลิตหลายขนาดตามความต้องการ ตั้งแต่ขนาดทดสอบขนาดเล็กไปจนถึงโม่ขนาดอุตสาหกรรม กรุณาติดต่อเพื่อรับใบเสนอราคาตามความต้องการจริง' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ทำความสะอาดและเปลี่ยนวัสดุได้ง่ายไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ออกแบบให้เปิดฝาและถอดใบมีดได้ง่าย สะดวกในการทำความสะอาดและเปลี่ยนวัสดุ ลดเวลา Downtime ระหว่างการเปลี่ยนล็อตการผลิต' },
+                      },
+                    ],
+                  }),
+                }}
+              />
+              <h2 className="text-2xl font-bold text-charcoal mb-8">คำถามที่พบบ่อย</h2>
+              <div className="space-y-6">
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">โม่พลาสติกใช้กับพลาสติกประเภทใดได้บ้าง?</h3>
+                  <p className="text-slate leading-relaxed">รองรับพลาสติกหลายประเภท เช่น PE, PP, PVC, ABS และเม็ดพลาสติกทั่วไป สามารถออกแบบใบมีดและความเร็วรอบให้เหมาะสมกับวัสดุแต่ละชนิด</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">กำลังการผลิตต่อชั่วโมงเป็นเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">ขึ้นอยู่กับขนาดเครื่องและชนิดวัสดุ รับผลิตตั้งแต่ขนาดเล็กสำหรับงานทดสอบจนถึงขนาดอุตสาหกรรม กรุณาระบุปริมาณที่ต้องการต่อชั่วโมงเพื่อออกแบบให้เหมาะสม</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ใบมีดต้องเปลี่ยนบ่อยแค่ไหน?</h3>
+                  <p className="text-slate leading-relaxed">ขึ้นอยู่กับวัสดุที่บดและชั่วโมงการใช้งาน โดยทั่วไปใบมีดทำจากเหล็กกล้าความแข็งสูง ทนทาน และสามารถลับใหม่หรือเปลี่ยนได้ง่าย</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">รับผลิตขนาดเล็กสุดและใหญ่สุดเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">รับผลิตหลายขนาดตามความต้องการ ตั้งแต่ขนาดทดสอบขนาดเล็กไปจนถึงโม่ขนาดอุตสาหกรรม กรุณาติดต่อเพื่อรับใบเสนอราคาตามความต้องการจริง</p>
+                </div>
+                <div>
+                  <h3 className="font-bold text-charcoal mb-2">ทำความสะอาดและเปลี่ยนวัสดุได้ง่ายไหม?</h3>
+                  <p className="text-slate leading-relaxed">ออกแบบให้เปิดฝาและถอดใบมีดได้ง่าย สะดวกในการทำความสะอาดและเปลี่ยนวัสดุ ลดเวลา Downtime ระหว่างการเปลี่ยนล็อตการผลิต</p>
+                </div>
+              </div>
+            </div>
+
             {/* Related Products */}
             <div className="mt-12 bg-fog-gray p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h3>
+              <h2 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <Link href="/products/water-filter/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h3>
                   <p className="text-slate text-sm">ระบบกรอง</p>
                 </Link>
                 <Link href="/products/reactor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h3>
                   <p className="text-slate text-sm">อุปกรณ์แปรรูปเคมี</p>
                 </Link>
                 <Link href="/products/conveyor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h4>
+                  <h3 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h3>
                   <p className="text-slate text-sm">ระบบขนส่ง</p>
                 </Link>
               </div>

@@ -177,6 +177,9 @@ export default function ContactPage() {
                       src="/images/line-qr.png"
                       alt="LINE QR Code"
                       className="w-full h-full object-contain"
+                      width={300}
+                      height={300}
+                      loading="lazy"
                     />
                   </div>
                   <p className="text-slate text-sm mb-4">สแกน QR Code เพื่อเพิ่มเพื่อน</p>

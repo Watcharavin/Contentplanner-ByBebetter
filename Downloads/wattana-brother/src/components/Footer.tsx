@@ -18,7 +18,7 @@ export default function Footer() {
               ก่อตั้งตั้งแต่ปี พ.ศ. 2527
             </p>
             <p className="text-slate mb-4 transition-colors duration-300 hover:text-fog-gray">
-              ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลส ด้วยประสบการณ์กว่า 27 ปี
+              ผู้เชี่ยวชาญงานขึ้นรูปโลหะและสแตนเลส ด้วยประสบการณ์กว่า 40 ปี
             </p>
             <div className="text-slate">
               <strong className="text-ice-white">โทรศัพท์:</strong>

@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -49,9 +50,12 @@ export default function ReactorPage() {
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               <div className="rounded-lg h-96 overflow-hidden">
-                <img
+                <Image
                   src="/images/reactor.jpg"
-                  alt="เครื่องปฏิกรณ์เคมี"
+                  alt="เครื่องปฏิกรณ์เคมีอุตสาหกรรม วัฒนบราเดอร์"
+                  width={800}
+                  height={800}
+                  priority
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -102,7 +106,7 @@ export default function ReactorPage() {
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h2>
                 <ul className="space-y-4">
                   <li className="flex items-start">
                     <div className="flex-shrink-0 w-8 h-8 bg-steel-blue rounded-full flex items-center justify-center mr-3">
@@ -111,7 +115,7 @@ export default function ReactorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ทนทานต่อความดัน</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ทนทานต่อความดัน</h3>
                       <p className="text-slate text-sm">ออกแบบให้รองรับปฏิกิริยาเคมีความดันสูงอย่างปลอดภัย</p>
                     </div>
                   </li>
@@ -122,7 +126,7 @@ export default function ReactorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ควบคุมอุณหภูมิ</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ควบคุมอุณหภูมิ</h3>
                       <p className="text-slate text-sm">ระบบจัดการความร้อนขั้นสูงเพื่อสภาวะปฏิกิริยาที่แม่นยำ</p>
                     </div>
                   </li>
@@ -133,7 +137,7 @@ export default function ReactorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">หลายความจุ</h4>
+                      <h3 className="font-bold text-charcoal mb-1">หลายความจุ</h3>
                       <p className="text-slate text-sm">มีหลายขนาดตั้งแต่ระดับทดลองจนถึงระดับการผลิต</p>
                     </div>
                   </li>
@@ -144,7 +148,7 @@ export default function ReactorPage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ได้รับการรับรองความปลอดภัย</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ได้รับการรับรองความปลอดภัย</h3>
                       <p className="text-slate text-sm">เป็นไปตามมาตรฐานและข้อกำหนดความปลอดภัยสากล</p>
                     </div>
                   </li>
@@ -152,7 +156,7 @@ export default function ReactorPage() {
               </div>
 
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h2>
                 <div className="space-y-4">
                   <div className="border-b border-fog-gray pb-3">
                     <div className="flex justify-between">
@@ -188,19 +192,96 @@ export default function ReactorPage() {
               </div>
             </div>
 
+            {/* FAQ */}
+            <div className="mt-12 bg-ice-white rounded-lg shadow-lg p-8">
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      { '@type': 'ListItem', position: 1, name: 'หน้าแรก', item: 'https://www.wattanabrother.com/' },
+                      { '@type': 'ListItem', position: 2, name: 'สินค้า', item: 'https://www.wattanabrother.com/products/' },
+                      { '@type': 'ListItem', position: 3, name: 'เครื่องปฏิกรณ์', item: 'https://www.wattanabrother.com/products/reactor/' },
+                    ],
+                  }),
+                }}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: [
+                      {
+                        '@type': 'Question',
+                        name: 'ความแตกต่างระหว่าง Half-coil jacket และ Dimple jacket คืออะไร?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'Half-coil jacket เป็นท่อขดที่เชื่อมติดด้านนอกถัง เหมาะสำหรับงานที่ต้องการความดันในเส้นทางน้ำหล่อเย็นสูง ส่วน Dimple jacket คือแผ่นเชื่อมทั่วพื้นผิวแบบหลุมดุม เหมาะสำหรับการกระจายความร้อนสม่ำเสมอและมีต้นทุนต่ำกว่า' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'เครื่องปฏิกรณ์ทนความดันได้สูงสุดเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ขึ้นอยู่กับความหนาของผนังและวัสดุที่ใช้ โดยทั่วไปผลิตได้ถึง 10–15 บาร์ สำหรับงานความดันสูงพิเศษสามารถออกแบบเพิ่มเติมได้ตามความต้องการ' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ต้องให้ข้อมูลอะไรบ้างเพื่อสั่งผลิตเครื่องปฏิกรณ์?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ต้องการ: ขนาดความจุ (ลิตร), วัสดุ, ช่วงอุณหภูมิและความดันใช้งาน, ประเภทสารเคมี และแบบแปลน (ถ้ามี)' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'เครื่องปฏิกรณ์สำหรับอุตสาหกรรมอาหารและยาต้องใช้เกรดอะไร?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ต้องใช้สแตนเลส 316L ผิวขัดเรียบ Ra ≤ 0.8 µm พร้อมรอยเชื่อมที่ขัดเรียบตามมาตรฐาน GMP เพื่อป้องกันการสะสมของแบคทีเรีย' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'มีบริการออกแบบและคำนวณโครงสร้างให้ไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'มีทีมวิศวกรช่วยออกแบบและคำนวณโครงสร้างเบื้องต้น พร้อมให้คำปรึกษาตั้งแต่ขั้นตอนการเลือกวัสดุจนถึงการติดตั้ง' },
+                      },
+                    ],
+                  }),
+                }}
+              />
+              <h2 className="text-2xl font-bold text-charcoal mb-8">คำถามที่พบบ่อย</h2>
+              <div className="space-y-6">
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ความแตกต่างระหว่าง Half-coil jacket และ Dimple jacket คืออะไร?</h3>
+                  <p className="text-slate leading-relaxed">Half-coil jacket เป็นท่อขดที่เชื่อมติดด้านนอกถัง เหมาะสำหรับงานที่ต้องการความดันในเส้นทางน้ำหล่อเย็นสูง ส่วน Dimple jacket คือแผ่นเชื่อมทั่วพื้นผิวแบบหลุมดุม เหมาะสำหรับการกระจายความร้อนสม่ำเสมอและมีต้นทุนต่ำกว่า</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์ทนความดันได้สูงสุดเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">ขึ้นอยู่กับความหนาของผนังและวัสดุที่ใช้ โดยทั่วไปผลิตได้ถึง 10–15 บาร์ สำหรับงานความดันสูงพิเศษสามารถออกแบบเพิ่มเติมได้ตามความต้องการ</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ต้องให้ข้อมูลอะไรบ้างเพื่อสั่งผลิต?</h3>
+                  <p className="text-slate leading-relaxed">ต้องการ: ขนาดความจุ (ลิตร), วัสดุ, ช่วงอุณหภูมิและความดันใช้งาน, ประเภทสารเคมี และแบบแปลน (ถ้ามี)</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์สำหรับอุตสาหกรรมอาหารและยาต้องใช้เกรดอะไร?</h3>
+                  <p className="text-slate leading-relaxed">ต้องใช้สแตนเลส 316L ผิวขัดเรียบ Ra ≤ 0.8 µm พร้อมรอยเชื่อมที่ขัดเรียบตามมาตรฐาน GMP เพื่อป้องกันการสะสมของแบคทีเรีย</p>
+                </div>
+                <div>
+                  <h3 className="font-bold text-charcoal mb-2">มีบริการออกแบบและคำนวณโครงสร้างให้ไหม?</h3>
+                  <p className="text-slate leading-relaxed">มีทีมวิศวกรช่วยออกแบบและคำนวณโครงสร้างเบื้องต้น พร้อมให้คำปรึกษาตั้งแต่ขั้นตอนการเลือกวัสดุจนถึงการติดตั้ง</p>
+                </div>
+              </div>
+            </div>
+
             <div className="mt-12 bg-fog-gray p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h3>
+              <h2 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <Link href="/products/water-filter/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h3>
                   <p className="text-slate text-sm">ระบบกรอง</p>
                 </Link>
                 <Link href="/products/plastic-mole/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">โม่พลาสติก</h4>
+                  <h3 className="font-bold text-charcoal mb-2">โม่พลาสติก</h3>
                   <p className="text-slate text-sm">แปรรูปวัสดุ</p>
                 </Link>
                 <Link href="/products/conveyor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h4>
+                  <h3 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h3>
                   <p className="text-slate text-sm">ระบบขนส่ง</p>
                 </Link>
               </div>

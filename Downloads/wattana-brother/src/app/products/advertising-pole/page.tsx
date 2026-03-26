@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 
@@ -48,9 +49,12 @@ export default function AdvertisingPolePage() {
             <div className="grid md:grid-cols-2 gap-8 mb-12">
               {/* Product Image */}
               <div className="rounded-lg h-96 overflow-hidden">
-                <img
+                <Image
                   src="/images/advertising-pole.jpg"
-                  alt="เสาป้ายโฆษณา"
+                  alt="เสาป้ายโฆษณาเหล็กและสแตนเลส วัฒนบราเดอร์"
+                  width={800}
+                  height={800}
+                  priority
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -104,7 +108,7 @@ export default function AdvertisingPolePage() {
             {/* Features & Specifications */}
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">คุณสมบัติเด่น</h2>
                 <ul className="space-y-4">
                   <li className="flex items-start">
                     <div className="flex-shrink-0 w-8 h-8 bg-steel-blue rounded-full flex items-center justify-center mr-3">
@@ -113,7 +117,7 @@ export default function AdvertisingPolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">โครงสร้างแข็งแรง</h3>
                       <p className="text-slate text-sm">ออกแบบให้รับแรงลมและน้ำหนักป้ายได้อย่างปลอดภัย</p>
                     </div>
                   </li>
@@ -124,7 +128,7 @@ export default function AdvertisingPolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ทนทานต่อสภาพอากาศ</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ทนทานต่อสภาพอากาศ</h3>
                       <p className="text-slate text-sm">เคลือบสีกันสนิมหรือชุบกัลวาไนซ์ ทนแดด ทนฝน</p>
                     </div>
                   </li>
@@ -135,7 +139,7 @@ export default function AdvertisingPolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">ออกแบบตามสั่ง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">ออกแบบตามสั่ง</h3>
                       <p className="text-slate text-sm">ผลิตตามขนาดและรูปแบบที่ลูกค้าต้องการ</p>
                     </div>
                   </li>
@@ -146,7 +150,7 @@ export default function AdvertisingPolePage() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-bold text-charcoal mb-1">พร้อมติดตั้ง</h4>
+                      <h3 className="font-bold text-charcoal mb-1">พร้อมติดตั้ง</h3>
                       <p className="text-slate text-sm">บริการติดตั้งโดยทีมช่างมืออาชีพ</p>
                     </div>
                   </li>
@@ -154,7 +158,7 @@ export default function AdvertisingPolePage() {
               </div>
 
               <div className="bg-ice-white rounded-lg shadow-lg p-8">
-                <h3 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h3>
+                <h2 className="text-2xl font-bold text-charcoal mb-6">ข้อมูลจำเพาะ</h2>
                 <div className="space-y-4">
                   <div className="border-b border-fog-gray pb-3">
                     <div className="flex justify-between">
@@ -190,20 +194,97 @@ export default function AdvertisingPolePage() {
               </div>
             </div>
 
+            {/* FAQ */}
+            <div className="mt-12 bg-ice-white rounded-lg shadow-lg p-8">
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                      { '@type': 'ListItem', position: 1, name: 'หน้าแรก', item: 'https://www.wattanabrother.com/' },
+                      { '@type': 'ListItem', position: 2, name: 'สินค้า', item: 'https://www.wattanabrother.com/products/' },
+                      { '@type': 'ListItem', position: 3, name: 'เสาป้ายโฆษณา', item: 'https://www.wattanabrother.com/products/advertising-pole/' },
+                    ],
+                  }),
+                }}
+              />
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'FAQPage',
+                    mainEntity: [
+                      {
+                        '@type': 'Question',
+                        name: 'เสาป้ายโฆษณาต้องขออนุญาตจากหน่วยงานไหนบ้าง?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ต้องขออนุญาตกับเทศบาลหรือองค์กรปกครองส่วนท้องถิ่นในพื้นที่ หากตั้งอยู่ริมทางหลวงต้องขออนุญาตกรมทางหลวงด้วย ทางเราผลิตตามแบบที่ลูกค้าได้รับอนุมัติแล้ว' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'เสาทนแรงลมพายุได้ไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ออกแบบตามมาตรฐานวิศวกรรมโครงสร้าง รับแรงลมตามพื้นที่ติดตั้งและขนาดป้าย กรุณาระบุพื้นที่ติดตั้งและขนาดป้ายเพื่อคำนวณแรงลมที่ถูกต้อง' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ควรเลือกเสาเหล็กหรือเสาสแตนเลส?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'เหล็กพ่นสีกันสนิมราคาประหยัดกว่า เหมาะสำหรับพื้นที่ทั่วไป ส่วนสแตนเลสเหมาะสำหรับพื้นที่ชายฝั่งทะเลหรือที่มีความชื้นสูง เพราะทนการกัดกร่อนได้ดีกว่าและดูแลรักษาง่ายกว่า' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'ความสูงมาตรฐานสำหรับบิลบอร์ดริมถนนคือเท่าไหร่?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'ขึ้นอยู่กับข้อกำหนดของแต่ละพื้นที่ โดยทั่วไปสูง 6–15 เมตร รับผลิตได้ตั้งแต่ 3–20 เมตรตามที่ลูกค้าต้องการและได้รับอนุญาต' },
+                      },
+                      {
+                        '@type': 'Question',
+                        name: 'มีบริการออกแบบโครงสร้างและติดตั้งไหม?',
+                        acceptedAnswer: { '@type': 'Answer', text: 'มีบริการคำนวณโครงสร้างเบื้องต้น พร้อมทีมช่างบริการติดตั้งทั่วประเทศ สามารถทำงานร่วมกับวิศวกรที่ปรึกษาของลูกค้าได้' },
+                      },
+                    ],
+                  }),
+                }}
+              />
+              <h2 className="text-2xl font-bold text-charcoal mb-8">คำถามที่พบบ่อย</h2>
+              <div className="space-y-6">
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">เสาป้ายโฆษณาต้องขออนุญาตจากหน่วยงานไหนบ้าง?</h3>
+                  <p className="text-slate leading-relaxed">ต้องขออนุญาตกับเทศบาลหรือองค์กรปกครองส่วนท้องถิ่นในพื้นที่ หากตั้งอยู่ริมทางหลวงต้องขออนุญาตกรมทางหลวงด้วย ทางเราผลิตตามแบบที่ลูกค้าได้รับอนุมัติแล้ว</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">เสาทนแรงลมพายุได้ไหม?</h3>
+                  <p className="text-slate leading-relaxed">ออกแบบตามมาตรฐานวิศวกรรมโครงสร้าง รับแรงลมตามพื้นที่ติดตั้งและขนาดป้าย กรุณาระบุพื้นที่ติดตั้งและขนาดป้ายเพื่อคำนวณแรงลมที่ถูกต้อง</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ควรเลือกเสาเหล็กหรือเสาสแตนเลส?</h3>
+                  <p className="text-slate leading-relaxed">เหล็กพ่นสีกันสนิมราคาประหยัดกว่า เหมาะสำหรับพื้นที่ทั่วไป ส่วนสแตนเลสเหมาะสำหรับพื้นที่ชายฝั่งทะเลหรือที่มีความชื้นสูง เพราะทนการกัดกร่อนได้ดีกว่าและดูแลรักษาง่ายกว่า</p>
+                </div>
+                <div className="border-b border-fog-gray pb-6">
+                  <h3 className="font-bold text-charcoal mb-2">ความสูงมาตรฐานสำหรับบิลบอร์ดริมถนนคือเท่าไหร่?</h3>
+                  <p className="text-slate leading-relaxed">ขึ้นอยู่กับข้อกำหนดของแต่ละพื้นที่ โดยทั่วไปสูง 6–15 เมตร รับผลิตได้ตั้งแต่ 3–20 เมตรตามที่ลูกค้าต้องการและได้รับอนุญาต</p>
+                </div>
+                <div>
+                  <h3 className="font-bold text-charcoal mb-2">มีบริการออกแบบโครงสร้างและติดตั้งไหม?</h3>
+                  <p className="text-slate leading-relaxed">มีบริการคำนวณโครงสร้างเบื้องต้น พร้อมทีมช่างบริการติดตั้งทั่วประเทศ สามารถทำงานร่วมกับวิศวกรที่ปรึกษาของลูกค้าได้</p>
+                </div>
+              </div>
+            </div>
+
             {/* Related Products */}
             <div className="mt-12 bg-fog-gray p-8 rounded-lg">
-              <h3 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h3>
+              <h2 className="text-2xl font-bold text-charcoal mb-6">สินค้าที่เกี่ยวข้อง</h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <Link href="/products/water-filter/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องกรองน้ำ</h3>
                   <p className="text-slate text-sm">ระบบกรอง</p>
                 </Link>
                 <Link href="/products/reactor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h4>
+                  <h3 className="font-bold text-charcoal mb-2">เครื่องปฏิกรณ์</h3>
                   <p className="text-slate text-sm">อุปกรณ์แปรรูปเคมี</p>
                 </Link>
                 <Link href="/products/conveyor/" className="bg-ice-white rounded-lg p-6 hover:shadow-lg transition-shadow">
-                  <h4 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h4>
+                  <h3 className="font-bold text-charcoal mb-2">สายพานลำเลียง</h3>
                   <p className="text-slate text-sm">ระบบขนส่ง</p>
                 </Link>
               </div>

@@ -56,7 +56,7 @@ export default function FactoryPage() {
       <section 
         className="relative h-96 bg-cover bg-center"
         style={{
-          backgroundImage: 'url(/images/factory-hero.jpg)',
+          backgroundImage: 'url(/images/hero-factory.jpg)',
         }}
       >
         <div className="absolute inset-0 bg-charcoal opacity-50" aria-hidden="true"></div>
