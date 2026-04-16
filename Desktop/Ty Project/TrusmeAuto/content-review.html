@@ -250,6 +250,10 @@
     .pill-writing   { background: var(--w-bg); color: var(--w-ink); border-color: var(--w-bd); }
     .pill-approved  { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
     .pill-rejected  { background: var(--r-bg); color: var(--r-ink); border-color: var(--r-bd); }
+    .pill-error     { background: #FFF0F0; color: #C0392B; border-color: #F5AAAA; }
+    .row-error      { background: #FFFAFA; }
+    .btn-reapprove  { background: #FFF0F0; color: var(--danger); border-color: #F5AAAA; }
+    .btn-reapprove:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
 
     /* Action buttons */
     .row-actions { display: flex; align-items: center; gap: 6px; }
@@ -631,7 +635,7 @@ async function loadData() {
   try {
     allRows = await gsCall();
     reviewRows = allRows.filter(r =>
-      ['writing','approved','rejected'].includes(r.status)
+      ['writing','approved','rejected','error'].includes(r.status)
     );
     updateBadges();
     updateProgress();
@@ -736,9 +740,9 @@ function renderTable(rows) {
 
   body.innerHTML = rows.map((r, i) => {
     const st      = r.status;
-    const rowCls  = st === 'approved' ? 'row-approved' : st === 'rejected' ? 'row-rejected' : '';
+    const rowCls  = st === 'approved' ? 'row-approved' : st === 'rejected' ? 'row-rejected' : st === 'error' ? 'row-error' : '';
     const pillar  = PILLAR_MAP[r.content_pillars] || { label: r.content_pillars, cls: '' };
-    const pillCls = st === 'writing' ? 'pill-writing' : st === 'approved' ? 'pill-approved' : 'pill-rejected';
+    const pillCls = st === 'writing' ? 'pill-writing' : st === 'approved' ? 'pill-approved' : st === 'error' ? 'pill-error' : 'pill-rejected';
 
     const seasonalTag = r.seasonal_event_key && r.seasonal_event_key !== 'none'
       ? `<span class="tag tag-seasonal" style="margin-top:3px;display:inline-block">${r.seasonal_event_key}</span>`
@@ -751,6 +755,9 @@ function renderTable(rows) {
     ` : st === 'approved' ? `
       <span style="font-size:12px;color:var(--a-ink);font-weight:600;white-space:nowrap">✓ Approved</span>
       <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
+    ` : st === 'error' ? `
+      <span style="font-size:12px;color:var(--danger);font-weight:600;white-space:nowrap">⚠ Gen รูปล้มเหลว</span>
+      <button class="btn-row btn-reapprove" onclick="reApprove(${r.rowIndex})">Approve ใหม่</button>
     ` : `
       <span style="font-size:12px;color:var(--danger);font-weight:600;white-space:nowrap">✕ Rejected</span>
       <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
@@ -795,6 +802,7 @@ async function setStatus(rowIndex, newStatus) {
                : 'คืนสถานะเป็น รอ Review';
     showToast(msg, newStatus === 'approved' ? 'success' : '');
     updateBadges();
+    if (newStatus === 'approved') startPoll();
   } catch(e) {
     // Rollback
     row.status = prev;
@@ -802,6 +810,56 @@ async function setStatus(rowIndex, newStatus) {
     applyFilters();
     showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
   }
+}
+
+/* ═══════════════════════════════════════════════
+   POLLING — ตรวจ error จาก n8n ทุก 30 วิ
+═══════════════════════════════════════════════ */
+let pollTimer = null;
+
+function startPoll() {
+  if (pollTimer) return;
+  pollTimer = setInterval(async () => {
+    const approvedRows = reviewRows.filter(r => r.status === 'approved');
+    if (approvedRows.length === 0) { stopPoll(); return; }
+
+    try {
+      const fresh = await gsCall();
+      if (!fresh) return;
+      let changed = false;
+      for (const row of approvedRows) {
+        const updated = fresh.find(r => r.rowIndex === row.rowIndex);
+        if (!updated) continue;
+        if (updated.status === 'error') {
+          row.status = 'error';
+          changed = true;
+          showToast(`⚠️ Gen รูป ${row.row_id} ล้มเหลว — กด Approve ใหม่`, 'error');
+        } else if (['img gen','ready'].includes(updated.status)) {
+          row.status = updated.status;
+          changed = true;
+          if (updated.status === 'ready') showToast(`รูป ${row.row_id} พร้อมแล้ว ✓`, 'success');
+        }
+      }
+      if (changed) { updateProgress(); applyFilters(); }
+      const stillApproved = reviewRows.filter(r => r.status === 'approved');
+      if (stillApproved.length === 0) stopPoll();
+    } catch(_) {}
+  }, 30000);
+}
+
+function stopPoll() {
+  clearInterval(pollTimer);
+  pollTimer = null;
+}
+
+async function reApprove(rowIndex) {
+  const row = reviewRows.find(r => r.rowIndex === rowIndex);
+  if (!row) return;
+  row.status = 'writing';
+  await gsCall({ action: 'update', rowIndex, status: 'writing' });
+  await new Promise(r => setTimeout(r, 400));
+  await setStatus(rowIndex, 'approved');
+  showToast('ส่ง Approve ใหม่แล้ว รอ n8n gen รูปอีกครั้ง...', 'success');
 }
 
 /* ═══════════════════════════════════════════════
