@@ -401,6 +401,31 @@
 
     @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { to { opacity: 0; transform: translateY(6px); } }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .header { padding: 0 14px; }
+      .header-brand { font-size: 17px; margin-right: 10px; }
+      .header-brand span { display: none; }
+      .nav-tab { padding: 0 8px; font-size: 12px; }
+      .main { padding: 20px 14px; }
+      .page-head { flex-direction: column; gap: 10px; }
+      .card-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+      .toolbar { flex-wrap: wrap; }
+      .toolbar-left { flex-wrap: wrap; gap: 6px; }
+      .done-banner { flex-direction: column; text-align: center; align-items: center; }
+    }
+    @media (max-width: 540px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .summary-bar { gap: 8px; }
+      .sum-chip { flex: 1; justify-content: center; min-width: 0; }
+    }
+    @media (max-width: 400px) {
+      .toolbar-left { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+      .filter-chip { white-space: nowrap; flex-shrink: 0; }
+      .schedule-row { flex-wrap: wrap; }
+      .btn-skip { width: 100%; }
+    }
   </style>
 </head>
 <body>

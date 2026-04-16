@@ -401,6 +401,53 @@
     @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes spin  { to { transform: rotate(360deg); } }
     @keyframes fadeOut { to { opacity: 0; transform: translateY(6px); } }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .header { padding: 0 14px; }
+      .header-brand { font-size: 17px; margin-right: 10px; }
+      .nav-tab { padding: 0 8px; font-size: 12px; }
+      .header-brand span { display: none; }
+      .main { padding: 20px 14px; }
+      .page-head { flex-direction: column; gap: 12px; }
+      .head-actions { width: 100%; justify-content: space-between; }
+      .search-input { width: 150px; }
+      .toolbar-left { flex-wrap: wrap; gap: 6px; }
+      .done-banner { flex-direction: column; text-align: center; align-items: center; }
+    }
+    @media (max-width: 640px) {
+      /* Table → mobile card layout */
+      .table-head { display: none; }
+      .table-row {
+        display: block; min-width: 0; padding: 14px;
+      }
+      .table-row > div { margin-bottom: 5px; }
+      /* Checkbox: float right */
+      .table-row > div:nth-child(1) {
+        float: right; margin-left: 10px; margin-bottom: 0;
+      }
+      /* ID pill stays top-left */
+      .table-row > div:nth-child(2) { margin-bottom: 6px; }
+      /* Big idea: full width */
+      .table-row > div:nth-child(3) { margin-bottom: 8px; }
+      /* Tags (pillar, product, format): inline */
+      .table-row > div:nth-child(4),
+      .table-row > div:nth-child(5),
+      .table-row > div:nth-child(6) {
+        display: inline-block; margin-right: 5px; margin-bottom: 4px;
+      }
+      /* Actions: below tags, clear float */
+      .table-row > div:nth-child(7) {
+        margin-top: 10px; clear: both;
+      }
+      .row-actions { flex-wrap: wrap; gap: 5px; }
+      .btn-row { font-size: 12px; padding: 6px 10px; }
+      .btn-note { padding: 6px 10px; }
+    }
+    @media (max-width: 400px) {
+      .btn-approve-all span { display: none; }
+      .search-input { width: 120px; }
+    }
   </style>
 </head>
 <body>
