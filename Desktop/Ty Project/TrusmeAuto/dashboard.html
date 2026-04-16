@@ -142,8 +142,8 @@
 
     /* Image slider */
     .img-slider { position: relative; aspect-ratio: 1/1; background: var(--surface2); overflow: hidden; }
-    .img-slide  { position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; }
-    .img-slide.active { opacity: 1; }
+    .img-slide  { position: absolute; inset: 0; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .img-slide.active { opacity: 1; pointer-events: auto; }
     .img-slide img { width: 100%; height: 100%; object-fit: cover; }
     .img-placeholder {
       width: 100%; height: 100%;
@@ -910,7 +910,7 @@ function openLightboxFromCard(rowIndex, imgIdx) {
   if (!row) return;
   const imgs = [row.link1, row.link2, row.link3].filter(Boolean);
   if (!imgs.length) return;
-  openLightbox(imgs, imgIdx);
+  openLightbox(imgs, Math.min(imgIdx, imgs.length - 1));
 }
 
 function openLightbox(imgs, startIdx) {
