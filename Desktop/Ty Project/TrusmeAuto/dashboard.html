@@ -805,12 +805,11 @@ function renderCards(rows) {
     const dateStr = r['date (YYYY-MM-DD)'] || r.date || '';
 
     // Slider HTML
-    const imgsJson = JSON.stringify(imgs).replace(/'/g, '&#39;');
     const slidesHtml = imgCount > 0
       ? imgs.map((url, si) => `
           <div class="img-slide ${si===0?'active':''}" id="slide-${r.rowIndex}-${si}">
             <img src="${thumb(url)}" alt="Post image ${si+1}" loading="lazy"
-              onclick="openLightbox(${imgsJson},${si})"
+              onclick="openLightboxFromCard(${r.rowIndex},${si})"
               onerror="this.parentElement.innerHTML='<div class=img-placeholder><svg width=32 height=32 viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/><circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/><path d=&quot;M21 15l-5-5L5 21&quot;/></svg><span>ไม่พบรูปภาพ</span></div>'" />
           </div>`).join('')
       : `<div class="img-placeholder">
@@ -904,6 +903,14 @@ let lbImgs = [], lbIdx = 0;
 function fullUrl(url) {
   const m = url.match(/\/d\/([^/?]+)/);
   return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w2000` : url;
+}
+
+function openLightboxFromCard(rowIndex, imgIdx) {
+  const row = dashRows.find(r => r.rowIndex === rowIndex);
+  if (!row) return;
+  const imgs = [row.link1, row.link2, row.link3].filter(Boolean);
+  if (!imgs.length) return;
+  openLightbox(imgs, imgIdx);
 }
 
 function openLightbox(imgs, startIdx) {
