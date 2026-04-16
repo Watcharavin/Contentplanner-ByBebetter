@@ -603,22 +603,28 @@ let dashRows   = [];
 let currentFilter = 'ready';
 
 async function loadData() {
-  try {
-    allRows  = await gsCall();
-    dashRows = allRows.filter(r =>
-      ['ready','scheduled','published','posted','done','rejected'].includes(r.status)
-    );
-    updateBadges();
-    updateSummary();
-    applyFilter();
-    // ถ้ามี approved rows อยู่ → poll รอรูป
-    if (allRows.some(r => r.status === 'approved')) startAutoPoll();
-  } catch(e) {
-    allRows  = DEMO_DATA;
-    dashRows = allRows.filter(r => ['ready','scheduled','published','posted','done','rejected'].includes(r.status));
-    updateBadges(); updateSummary(); applyFilter();
-    showToast('ใช้ Demo data', 'error');
+  let data = null;
+  // retry 3 ครั้งก่อน fallback demo
+  for (let i = 0; i < 3; i++) {
+    try { data = await gsCall(); if (data) break; } catch(_) {}
+    await new Promise(r => setTimeout(r, 1500));
   }
+
+  if (data) {
+    allRows  = data;
+  } else {
+    allRows  = DEMO_DATA;
+    showToast('ไม่สามารถโหลดข้อมูลได้ — ใช้ Demo data', 'error');
+  }
+
+  dashRows = allRows.filter(r =>
+    ['ready','scheduled','published','posted','done','rejected'].includes(r.status)
+  );
+  updateBadges();
+  updateSummary();
+  applyFilter();
+  // poll ถ้ามี approved หรือ img gen อยู่
+  if (allRows.some(r => ['approved','img gen'].includes(r.status))) startAutoPoll();
 }
 
 /* ══════════════════════════════════════════════
@@ -1088,9 +1094,9 @@ function startAutoPoll() {
         showToast(`รูปพร้อมแล้ว ${newReady.length} posts ✓ ไปตั้งวันที่ได้เลย`, 'success');
       }
 
-      // ถ้าไม่มี approved rows ใน sheets แล้ว หยุด poll
-      const stillApproved = fresh.filter(r => r.status === 'approved');
-      if (stillApproved.length === 0) stopAutoPoll();
+      // ถ้าไม่มี approved/img gen rows แล้ว หยุด poll
+      const stillPending = fresh.filter(r => ['approved','img gen'].includes(r.status));
+      if (stillPending.length === 0) stopAutoPoll();
 
     } catch(_) {}
   }, 30000); // poll ทุก 30 วิ
