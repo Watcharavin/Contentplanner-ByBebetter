@@ -1068,44 +1068,80 @@ const DEMO_DATA = [
    AUTO POLL — รอรูปพร้อม (status: ready)
 ══════════════════════════════════════════════ */
 let autoPollTimer = null;
+const POLL_MS = 15000; // 15 วิ
+
+async function doPoll() {
+  try {
+    const fresh = await gsCall();
+    if (!fresh) return;
+
+    const freshDash = fresh.filter(r =>
+      ['ready','scheduled','published','posted','done','rejected'].includes(r.status)
+    );
+
+    // หา ready rows ใหม่ที่ยังไม่มีใน dashRows
+    const newReady = freshDash.filter(fr =>
+      fr.status === 'ready' && !dashRows.find(d => d.rowIndex === fr.rowIndex && d.status === 'ready')
+    );
+
+    if (newReady.length > 0) {
+      allRows  = fresh;
+      dashRows = freshDash;
+      updateBadges();
+      updateSummary();
+      applyFilter();
+      showToast(`รูปพร้อมแล้ว ${newReady.length} posts ✓ ตั้งวันที่ได้เลย`, 'success');
+      hidePollBanner();
+    }
+
+    // หยุด poll ถ้าไม่มี pending อีกแล้ว
+    const stillPending = fresh.filter(r => ['approved','img gen'].includes(r.status));
+    if (stillPending.length === 0) {
+      stopAutoPoll();
+      hidePollBanner();
+    }
+  } catch(_) {}
+}
 
 function startAutoPoll() {
   if (autoPollTimer) return;
-  autoPollTimer = setInterval(async () => {
-    try {
-      const fresh = await gsCall();
-      if (!fresh) return;
-
-      const freshReady = fresh.filter(r =>
-        ['ready','scheduled','published','posted','done','rejected'].includes(r.status)
-      );
-
-      // เช็คว่ามี ready row ใหม่ที่ยังไม่อยู่ใน dashRows
-      const newReady = freshReady.filter(fr =>
-        fr.status === 'ready' && !dashRows.find(d => d.rowIndex === fr.rowIndex)
-      );
-
-      if (newReady.length > 0) {
-        allRows  = fresh;
-        dashRows = freshReady;
-        updateBadges();
-        updateSummary();
-        applyFilter();
-        showToast(`รูปพร้อมแล้ว ${newReady.length} posts ✓ ไปตั้งวันที่ได้เลย`, 'success');
-      }
-
-      // ถ้าไม่มี approved/img gen rows แล้ว หยุด poll
-      const stillPending = fresh.filter(r => ['approved','img gen'].includes(r.status));
-      if (stillPending.length === 0) stopAutoPoll();
-
-    } catch(_) {}
-  }, 30000); // poll ทุก 30 วิ
+  showPollBanner();
+  doPoll(); // poll ทันทีรอบแรก
+  autoPollTimer = setInterval(doPoll, POLL_MS);
 }
 
 function stopAutoPoll() {
   clearInterval(autoPollTimer);
   autoPollTimer = null;
 }
+
+// Banner แสดงว่ากำลังรอรูป
+function showPollBanner() {
+  if (document.getElementById('pollBanner')) return;
+  const b = document.createElement('div');
+  b.id = 'pollBanner';
+  b.style.cssText = `
+    position:fixed; bottom:80px; left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; padding:12px 20px; border-radius:12px;
+    font-size:13px; font-weight:500; display:flex; align-items:center; gap:10px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.2); z-index:500; white-space:nowrap;
+  `;
+  b.innerHTML = `
+    <div style="width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0"></div>
+    กำลังรอรูปจาก n8n... (อัปเดตทุก 15 วิ)
+  `;
+  document.body.appendChild(b);
+}
+
+function hidePollBanner() {
+  const b = document.getElementById('pollBanner');
+  if (b) b.remove();
+}
+
+// poll ทันทีเมื่อกลับมาที่ tab
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && autoPollTimer) doPoll();
+});
 
 /* ══════════════════════════════════════════════
    INIT
