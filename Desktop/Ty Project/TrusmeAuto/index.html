@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trusme — Content Planner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #F5F3EE;
+      --surface:  #FFFFFF;
+      --surface2: #EFECE5;
+      --surface3: #E8E4DB;
+      --ink:      #1C1A16;
+      --ink2:     #6A6660;
+      --ink3:     #AAA69F;
+      --accent:   #2D6A4F;
+      --accent-l: #D6EDE3;
+      --accent-d: #1E4D38;
+      --danger:   #C0392B;
+      --danger-l: #FAEAEA;
+      --border:   #E2DDD4;
+
+      --w-bg: #FFF8EC; --w-ink: #7A5400; --w-bd: #F5D58A;
+      --a-bg: #E9F6EE; --a-ink: #1A5C35; --a-bd: #8FD4AC;
+      --r-bg: #FAEAEA; --r-ink: #7A1A1A; --r-bd: #F0A0A0;
+      --s-bg: #E6F3FB; --s-ink: #0C5460; --s-bd: #B5D4F4;
+      --d-bg: #E8F5EC; --d-ink: #155724; --d-bd: #9FE1CB;
+    }
+
+    html { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--ink); }
+    body { min-height: 100vh; }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      height: 56px; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 32px;
+    }
+    .header-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600;
+      color: var(--accent); letter-spacing: 0.04em;
+      margin-right: 40px;
+    }
+    .header-brand span { color: var(--ink3); font-weight: 400; font-size: 13px; margin-left: 6px; }
+    .nav-tabs { display: flex; gap: 0; height: 56px; }
+    .nav-tab {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 18px; font-size: 14px; font-weight: 500;
+      color: var(--ink3); text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-tab:hover { color: var(--ink2); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .nav-badge {
+      background: var(--w-bg); color: var(--w-ink);
+      border: 1px solid var(--w-bd);
+      font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 20px;
+      min-width: 20px; text-align: center;
+    }
+    .nav-badge.green { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
+    .header-spacer { flex: 1; }
+    .user-chip {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: var(--ink2);
+    }
+    .user-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent-l); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: var(--accent); font-weight: 600;
+    }
+    .user-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
+    /* ── Main ── */
+    .main { max-width: 1080px; margin: 0 auto; padding: 32px; }
+
+    /* ── Page title ── */
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px; font-weight: 600; color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .page-sub { font-size: 14px; color: var(--ink3); margin-bottom: 28px; }
+
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+      display: flex; flex-direction: column; gap: 6px;
+      animation: rise 0.4s ease both;
+    }
+    .stat-label { font-size: 12px; color: var(--ink3); font-weight: 500; letter-spacing: 0.03em; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px; font-weight: 700; color: var(--ink);
+      line-height: 1;
+    }
+    .stat-num.accent { color: var(--accent); }
+    .stat-num.warn   { color: var(--w-ink); }
+    .stat-num.done   { color: var(--d-ink); }
+    .stat-hint { font-size: 11px; color: var(--ink3); }
+
+    /* ── Hero Grid ── */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 11px; font-weight: 600; color: var(--ink3);
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* ── Pipeline bar ── */
+    .pipeline-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 24px; margin-bottom: 20px;
+      animation: rise 0.4s 0.05s ease both;
+    }
+    .pipeline-title { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .pipeline-sub   { font-size: 12px; color: var(--ink3); margin-bottom: 18px; }
+    .pipeline-steps { display: flex; align-items: center; gap: 0; }
+    .step-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; flex: 1; position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute; top: 14px; left: calc(50% + 14px);
+      width: calc(100% - 28px); height: 2px;
+      background: var(--border);
+    }
+    .step-item.done:not(:last-child)::after   { background: var(--accent); }
+    .step-item.active:not(:last-child)::after { background: var(--border); }
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--surface2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--ink3); font-weight: 600;
+      position: relative; z-index: 1; flex-shrink: 0;
+    }
+    .step-item.done .step-dot   { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .step-item.active .step-dot { background: var(--surface); border-color: var(--accent); color: var(--accent); box-shadow: 0 0 0 3px var(--accent-l); }
+    .step-name { font-size: 10px; color: var(--ink3); font-weight: 500; text-align: center; white-space: nowrap; }
+    .step-item.done .step-name   { color: var(--accent); font-weight: 600; }
+    .step-item.active .step-name { color: var(--ink2); font-weight: 600; }
+
+    /* ── Batch list ── */
+    .batches-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      animation: rise 0.4s 0.1s ease both;
+    }
+    .batches-head {
+      display: grid; grid-template-columns: 1fr 120px 100px 90px;
+      padding: 10px 20px; background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      font-size: 11px; color: var(--ink3); font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+    }
+    .batch-row {
+      display: grid; grid-template-columns: 1fr 120px 100px 90px;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      align-items: center; font-size: 13px;
+      animation: rise 0.3s ease both;
+      transition: background 0.12s;
+    }
+    .batch-row:last-child { border-bottom: none; }
+    .batch-row:hover { background: var(--surface2); }
+    .batch-name  { font-weight: 600; color: var(--ink); }
+    .batch-dates { font-size: 12px; color: var(--ink3); margin-top: 2px; }
+    .batch-progress-wrap { display: flex; align-items: center; gap: 8px; }
+    .batch-bar { flex: 1; height: 5px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+    .batch-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.6s ease; }
+    .batch-pct { font-size: 11px; color: var(--ink3); white-space: nowrap; }
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      border: 1px solid;
+    }
+    .pill-writing   { background: var(--w-bg); color: var(--w-ink); border-color: var(--w-bd); }
+    .pill-approved  { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
+    .pill-rejected  { background: var(--r-bg); color: var(--r-ink); border-color: var(--r-bd); }
+    .pill-scheduled { background: var(--s-bg); color: var(--s-ink); border-color: var(--s-bd); }
+    .pill-posted    { background: var(--d-bg); color: var(--d-ink); border-color: var(--d-bd); }
+    .pill-ready     { background: #F0EAFF; color: #5B3FA8; border-color: #C4AEF5; }
+
+    .batch-empty {
+      padding: 40px 20px; text-align: center;
+      color: var(--ink3); font-size: 14px;
+    }
+
+    /* ── Generate Card ── */
+    .gen-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      animation: rise 0.4s 0.05s ease both;
+      position: sticky; top: 76px;
+    }
+    .gen-card-head {
+      padding: 18px 22px 0;
+    }
+    .gen-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600; color: var(--ink);
+    }
+    .gen-card-sub { font-size: 13px; color: var(--ink3); margin-top: 4px; }
+    .gen-card-body { padding: 18px 22px; }
+
+    .form-label { font-size: 12px; font-weight: 600; color: var(--ink2); margin-bottom: 6px; display: block; }
+    .form-input {
+      width: 100%; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); color: var(--ink);
+      font-size: 14px; font-family: 'Sarabun', sans-serif;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-l);
+      background: var(--surface);
+    }
+
+    /* Preview days */
+    .preview-days { margin-top: 14px; }
+    .preview-days-label { font-size: 11px; color: var(--ink3); margin-bottom: 8px; font-weight: 500; }
+    .day-list { display: flex; flex-direction: column; gap: 4px; }
+    .day-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 7px 10px; border-radius: 8px;
+      background: var(--surface2); font-size: 12px; color: var(--ink2);
+    }
+    .day-item-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent-l); color: var(--accent);
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .day-item-date { font-weight: 600; color: var(--ink); }
+    .day-item-dow  { color: var(--ink3); font-size: 11px; }
+
+    /* Confirm button */
+    .btn-primary {
+      width: 100%; padding: 12px 20px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; margin-top: 16px;
+      transition: background 0.15s, transform 0.1s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-primary:hover { background: var(--accent-d); }
+    .btn-primary:active { transform: scale(0.98); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-ghost {
+      padding: 8px 16px; background: transparent;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 13px; color: var(--ink3); cursor: pointer;
+      font-family: 'Sarabun', sans-serif; transition: border-color 0.15s, color 0.15s;
+    }
+    .btn-ghost:hover { border-color: var(--ink3); color: var(--ink2); }
+
+    /* divider */
+    .gen-divider { height: 1px; background: var(--border); margin: 0 22px; }
+
+    /* ── Loading overlay ── */
+    .gen-loading {
+      padding: 32px 22px; text-align: center;
+      display: none; flex-direction: column; align-items: center; gap: 14px;
+    }
+    .gen-loading.active { display: flex; }
+    .spinner {
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+    }
+    .gen-loading-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+    .gen-loading-sub   { font-size: 13px; color: var(--ink3); }
+    .gen-loading-steps { display: flex; flex-direction: column; gap: 6px; width: 100%; text-align: left; }
+    .ls-item {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 12px; color: var(--ink3); padding: 6px 10px;
+      border-radius: 6px; background: var(--surface2);
+    }
+    .ls-item.done   { color: var(--a-ink); background: var(--a-bg); }
+    .ls-item.active { color: var(--ink2); background: var(--surface3); }
+    .ls-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+    .ls-item.done .ls-dot   { background: var(--accent); }
+    .ls-item.active .ls-dot { background: var(--ink3); animation: pulse 1s infinite; }
+
+    /* ── Toast ── */
+    .toast-wrap {
+      position: fixed; bottom: 28px; right: 28px;
+      display: flex; flex-direction: column; gap: 10px; z-index: 999;
+    }
+    .toast {
+      background: var(--ink); color: #fff;
+      padding: 12px 18px; border-radius: 12px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      animation: rise 0.3s ease;
+      max-width: 320px;
+    }
+    .toast.success { background: var(--accent); }
+    .toast.error   { background: var(--danger); }
+    .toast-icon { font-size: 16px; flex-shrink: 0; }
+    .toast-close {
+      margin-left: auto; background: none; border: none;
+      color: rgba(255,255,255,0.7); cursor: pointer; font-size: 16px; padding: 0;
+    }
+
+    /* ── Confirm modal ── */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(28,26,22,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .overlay.active { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface); border-radius: 20px;
+      padding: 28px; max-width: 420px; width: calc(100% - 40px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      transform: translateY(8px); transition: transform 0.2s;
+    }
+    .overlay.active .modal { transform: translateY(0); }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 6px;
+    }
+    .modal-sub { font-size: 13px; color: var(--ink3); margin-bottom: 20px; }
+    .modal-summary { background: var(--surface2); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+    .modal-summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0; }
+    .modal-summary-row .k { color: var(--ink3); }
+    .modal-summary-row .v { font-weight: 600; color: var(--ink); }
+    .modal-actions { display: flex; gap: 10px; }
+    .modal-actions .btn-primary { margin-top: 0; flex: 1; }
+    .modal-actions .btn-ghost   { flex: 0 0 auto; }
+
+    /* ── Empty state ── */
+    .empty-state {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 48px 24px;
+      text-align: center; animation: rise 0.4s ease both;
+    }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-title { font-size: 16px; font-weight: 600; color: var(--ink2); margin-bottom: 6px; }
+    .empty-sub   { font-size: 13px; color: var(--ink3); }
+
+    /* ── Next CTA ── */
+    .next-cta {
+      background: var(--accent-l); border: 1px solid var(--a-bd);
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px; animation: rise 0.3s ease both;
+    }
+    .next-cta-text { font-size: 14px; font-weight: 500; color: var(--a-ink); }
+    .next-cta-sub  { font-size: 12px; color: var(--accent); margin-top: 2px; }
+    .btn-accent {
+      padding: 8px 16px; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .btn-accent:hover { background: var(--accent-d); }
+
+    /* ── Animations ── */
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(6px); }
+    }
+
+    /* ── Login overlay ── */
+    .login-overlay {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 500;
+    }
+    .login-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px; max-width: 380px; width: 90%;
+      text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+    .login-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px; font-weight: 700; color: var(--accent);
+      letter-spacing: 0.04em; margin-bottom: 4px;
+    }
+    .login-sub { font-size: 13px; color: var(--ink3); margin-bottom: 32px; }
+    .btn-line {
+      width: 100%; padding: 13px 20px;
+      background: #06C755; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.15s;
+    }
+    .btn-line:hover { background: #05a547; }
+    .login-note { font-size: 11px; color: var(--ink3); margin-top: 14px; }
+
+    /* demo mode badge */
+    .demo-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #FFF3CD; color: #856404;
+      border: 1px solid #FFE08A; border-radius: 20px;
+      font-size: 10px; font-weight: 600; padding: 2px 8px;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Login Overlay ── -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-brand">Trusme</div>
+    <div class="login-sub">Content Planner — เข้าสู่ระบบด้วย LINE</div>
+    <button class="btn-line" onclick="lineLogin()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.064-.022.134-.032.2-.032.211 0 .391.09.51.25l2.444 3.317V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/>
+      </svg>
+      เข้าสู่ระบบด้วย LINE
+    </button>
+    <p class="login-note">ระบบสำหรับทีม Trusme เท่านั้น</p>
+    <div style="margin-top:16px">
+      <button onclick="demoLogin()" class="btn-ghost" style="width:100%;font-size:13px">
+        ทดลองใช้งาน (Demo Mode)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="header-brand">Trusme <span>Content Planner</span></div>
+  <nav class="nav-tabs">
+    <a href="index.html" class="nav-tab active">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 9h2v9h5v-5h2v5h5V9h2L10 2z"/></svg>
+      Overview
+    </a>
+    <a href="content-review.html" class="nav-tab" id="navReview">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 8h6M7 12h4"/></svg>
+      Content Review
+      <span class="nav-badge" id="reviewBadge">—</span>
+    </a>
+    <a href="dashboard.html" class="nav-tab" id="navSchedule">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 2v4M13 2v4M3 9h14"/></svg>
+      Schedule &amp; Publish
+      <span class="nav-badge green" id="scheduleBadge">—</span>
+    </a>
+  </nav>
+  <div class="header-spacer"></div>
+  <div class="user-chip">
+    <div class="user-avatar" id="userAvatar">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z"/></svg>
+    </div>
+    <span id="userName">—</span>
+    <span class="demo-badge" id="demoBadge" style="display:none">DEMO</span>
+    <button onclick="logout()" style="margin-left:6px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;font-size:12px;color:var(--ink3);cursor:pointer;font-family:'Sarabun',sans-serif;" onmouseover="this.style.color='var(--danger)';this.style.borderColor='#E8B4B4'" onmouseout="this.style.color='var(--ink3)';this.style.borderColor='var(--border)'">ออกจากระบบ</button>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main class="main">
+  <h1 class="page-title">Overview</h1>
+  <p class="page-sub" id="pageDate">วันนี้ — กำลังโหลด...</p>
+
+  <!-- Next CTA (hidden by default) -->
+  <div class="next-cta" id="nextCta" style="display:none">
+    <div>
+      <div class="next-cta-text">มี content รอ Review อยู่!</div>
+      <div class="next-cta-sub" id="nextCtaSub">—</div>
+    </div>
+    <a href="content-review.html" class="btn-accent">ไป Review →</a>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card" style="animation-delay:0ms">
+      <div class="stat-label">รอ Review</div>
+      <div class="stat-num warn" id="sWriting">—</div>
+      <div class="stat-hint">posts รอการอนุมัติ</div>
+    </div>
+    <div class="stat-card" style="animation-delay:40ms">
+      <div class="stat-label">รูปพร้อมแล้ว</div>
+      <div class="stat-num accent" id="sReady">—</div>
+      <div class="stat-hint">รอตั้ง Schedule</div>
+    </div>
+    <div class="stat-card" style="animation-delay:80ms">
+      <div class="stat-label">Scheduled</div>
+      <div class="stat-num" id="sScheduled" style="color:var(--s-ink)">—</div>
+      <div class="stat-hint">posts ที่ตั้งเวลาแล้ว</div>
+    </div>
+    <div class="stat-card" style="animation-delay:120ms">
+      <div class="stat-label">Posted แล้ว</div>
+      <div class="stat-num done" id="sPosted">—</div>
+      <div class="stat-hint">posts ที่ publish แล้ว</div>
+    </div>
+  </div>
+
+  <!-- Hero Grid -->
+  <div class="hero-grid">
+    <!-- Left column -->
+    <div>
+      <!-- Pipeline -->
+      <div class="section-label">Pipeline ล่าสุด</div>
+      <div class="pipeline-card" id="pipelineCard">
+        <div class="pipeline-title" id="pipelineTitle">—</div>
+        <div class="pipeline-sub"  id="pipelineSub">กำลังโหลด...</div>
+        <div class="pipeline-steps" id="pipelineSteps"></div>
+      </div>
+
+      <!-- Batches -->
+      <div class="section-label">Batches ทั้งหมด</div>
+      <div class="batches-card">
+        <div class="batches-head">
+          <div>Batch</div>
+          <div>Progress</div>
+          <div>Status</div>
+          <div>Posts</div>
+        </div>
+        <div id="batchList"></div>
+      </div>
+    </div>
+
+    <!-- Right column — Generate Card -->
+    <div>
+      <div class="section-label">สร้าง Content ใหม่</div>
+      <div class="gen-card">
+        <!-- Form -->
+        <div id="genForm">
+          <div class="gen-card-head">
+            <div class="gen-card-title">Generate Content Plan</div>
+            <div class="gen-card-sub">สร้าง content 7 วันด้วย AI</div>
+          </div>
+          <div class="gen-card-body">
+            <label class="form-label" for="startDate">วันเริ่มต้น</label>
+            <input type="date" class="form-input" id="startDate" />
+
+            <div class="preview-days" id="previewDays" style="display:none">
+              <div class="preview-days-label">จะสร้าง content สำหรับ 7 วันนี้</div>
+              <div class="day-list" id="dayList"></div>
+            </div>
+
+            <button class="btn-primary" id="btnGenerate" onclick="openConfirm()">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm1 5v2h2a1 1 0 110 2h-2v2a1 1 0 11-2 0v-2H7a1 1 0 110-2h2V7a1 1 0 112 0z"/></svg>
+              Generate 7 Posts
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading state -->
+        <div class="gen-loading" id="genLoading">
+          <div class="spinner"></div>
+          <div class="gen-loading-title">กำลัง Generate...</div>
+          <div class="gen-loading-sub">n8n กำลังสร้าง content plan</div>
+          <div class="gen-loading-steps" id="loadingSteps"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ── Confirm Modal ── -->
+<div class="overlay" id="confirmOverlay">
+  <div class="modal">
+    <div class="modal-title">ยืนยันการ Generate</div>
+    <div class="modal-sub">ระบบจะส่ง request ไป n8n เพื่อสร้าง content 7 posts</div>
+    <div class="modal-summary">
+      <div class="modal-summary-row"><span class="k">วันเริ่มต้น</span> <span class="v" id="confirmStart">—</span></div>
+      <div class="modal-summary-row"><span class="k">วันสุดท้าย</span> <span class="v" id="confirmEnd">—</span></div>
+      <div class="modal-summary-row"><span class="k">จำนวน posts</span> <span class="v">7 posts</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeConfirm()">ยกเลิก</button>
+      <button class="btn-primary" onclick="doGenerate()">
+        <svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+        ยืนยัน Generate
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast container ── -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   CONFIG — แก้ค่านี้ก่อน deploy
+═══════════════════════════════════════════════════════ */
+const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbzvMffclWcoVPjl3iNt9ifdvFhwubZRuQCVMd1kRAcsjwsGx4S0hCc0P_Z4fdVLRw/exec';
+const N8N_WEBHOOK = 'https://n8nsrv.arycu.com/webhook/generate-plan';
+
+const LINE_CLIENT_ID  = '2009815604';
+const REDIRECT_URI    = window.location.origin + '/callback.html';
+
+/* ═══════════════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════════════ */
+let session = null;
+
+function initAuth() {
+  const raw = localStorage.getItem('trusme_session');
+  if (raw) {
+    try { session = JSON.parse(raw); } catch(_) {}
+  }
+  if (session) {
+    showApp();
+  } else {
+    window.location.replace('landing.html');
+  }
+}
+
+function lineLogin() {
+  const state = Math.random().toString(36).slice(2);
+  localStorage.setItem('line_state', state);
+  const url = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=profile%20openid`;
+  window.location.href = url;
+}
+
+function demoLogin() {
+  session = { displayName: 'Demo User', userId: 'demo', pictureUrl: '' };
+  localStorage.setItem('trusme_session', JSON.stringify(session));
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('demoBadge').style.display = 'inline-flex';
+  showApp();
+}
+
+function logout() {
+  localStorage.removeItem('trusme_session');
+  localStorage.removeItem('line_state');
+  window.location.reload();
+}
+
+function showApp() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('userName').textContent = session?.displayName || '—';
+  if (session?.pictureUrl) {
+    document.getElementById('userAvatar').innerHTML = `<img src="${session.pictureUrl}" alt="avatar" />`;
+  }
+  loadData();
+}
+
+/* ═══════════════════════════════════════════════════════
+   DATE HELPERS
+═══════════════════════════════════════════════════════ */
+const DOW_TH = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+const MONTH_TH = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+
+function fmtDate(d) {
+  // d = Date object
+  return `${d.getDate()} ${MONTH_TH[d.getMonth()]} ${d.getFullYear() + 543}`;
+}
+function fmtDateISO(d) {
+  return d.toISOString().slice(0, 10);
+}
+function parseISO(s) {
+  const [y,m,d] = s.split('-').map(Number);
+  return new Date(y, m-1, d);
+}
+function addDays(d, n) {
+  const r = new Date(d);
+  r.setDate(r.getDate() + n);
+  return r;
+}
+
+// Set today as default start date
+function setDefaultDate() {
+  const today = new Date();
+  const iso = fmtDateISO(today);
+  document.getElementById('startDate').value = iso;
+  renderPreview(today);
+}
+
+document.getElementById('startDate').addEventListener('change', function() {
+  if (this.value) renderPreview(parseISO(this.value));
+  else document.getElementById('previewDays').style.display = 'none';
+});
+
+function renderPreview(startDate) {
+  const days = [];
+  for (let i = 0; i < 7; i++) days.push(addDays(startDate, i));
+  const list = document.getElementById('dayList');
+  list.innerHTML = days.map((d, i) => `
+    <div class="day-item" style="animation-delay:${i*20}ms;animation:rise 0.2s ${i*20}ms ease both">
+      <div class="day-item-num">${i+1}</div>
+      <span class="day-item-date">${fmtDate(d)}</span>
+      <span class="day-item-dow">${DOW_TH[d.getDay()]}</span>
+    </div>
+  `).join('');
+  document.getElementById('previewDays').style.display = 'block';
+  document.getElementById('pageDate').textContent = `วันนี้ ${fmtDate(new Date())}`;
+}
+
+/* ═══════════════════════════════════════════════════════
+   JSONP HELPER (แก้ CORS)
+═══════════════════════════════════════════════════════ */
+function gsCall(params = {}) {
+  return new Promise((resolve, reject) => {
+    const cb = '_gs' + Date.now();
+    const script = document.createElement('script');
+    const qs = new URLSearchParams({ ...params, callback: cb }).toString();
+    window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
+    script.src = SCRIPT_URL + '?' + qs;
+    document.head.appendChild(script);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   LOAD DATA FROM SHEETS
+═══════════════════════════════════════════════════════ */
+let allRows = [];
+
+async function loadData() {
+  try {
+    allRows = await gsCall();
+    renderStats();
+    renderPipeline();
+    renderBatches();
+  } catch(e) {
+    console.error(e);
+    showToast('โหลดข้อมูลไม่ได้ — ใช้ Demo mode', 'error');
+    allRows = DEMO_DATA;
+    renderStats();
+    renderPipeline();
+    renderBatches();
+  }
+}
+
+function renderStats() {
+  const writing   = allRows.filter(r => r.status === 'writing').length;
+  const ready     = allRows.filter(r => r.status === 'ready').length;
+  const scheduled = allRows.filter(r => r.status === 'scheduled').length;
+  const posted    = allRows.filter(r => ['published','posted','done'].includes(r.status)).length;
+
+  document.getElementById('sWriting').textContent   = writing;
+  document.getElementById('sReady').textContent     = ready;
+  document.getElementById('sScheduled').textContent = scheduled;
+  document.getElementById('sPosted').textContent    = posted;
+
+  document.getElementById('reviewBadge').textContent   = writing || '—';
+  document.getElementById('scheduleBadge').textContent = ready || '—';
+
+  if (writing > 0) {
+    document.getElementById('nextCta').style.display = 'flex';
+    document.getElementById('nextCtaSub').textContent = `${writing} posts รอการตรวจสอบและ approve`;
+  }
+}
+
+function renderPipeline() {
+  const steps = [
+    { id: 'generate', label: 'Generate' },
+    { id: 'review',   label: 'Review' },
+    { id: 'img',      label: 'Gen รูป' },
+    { id: 'schedule', label: 'Schedule' },
+    { id: 'post',     label: 'Posted' },
+  ];
+
+  const writing   = allRows.filter(r => r.status === 'writing').length;
+  const approved  = allRows.filter(r => r.status === 'approved').length;
+  const imgGen    = allRows.filter(r => r.status === 'img gen').length;
+  const ready     = allRows.filter(r => r.status === 'ready').length;
+  const scheduled = allRows.filter(r => r.status === 'scheduled').length;
+  const posted    = allRows.filter(r => ['published','posted','done'].includes(r.status)).length;
+
+  let activeStep = 0;
+  if (writing > 0)   activeStep = 1;
+  if (approved > 0 || imgGen > 0) activeStep = 2;
+  if (ready > 0)     activeStep = 3;
+  if (scheduled > 0) activeStep = 4; // still waiting to post
+
+  const statusLabels = ['ยังไม่มี batch', 'รอ Review', 'กำลัง Gen รูป', 'รอตั้ง Schedule', 'รอ Post', 'เสร็จสิ้น'];
+
+  document.getElementById('pipelineTitle').textContent = `Batch ล่าสุด — ${allRows.length} posts`;
+  document.getElementById('pipelineSub').textContent   = statusLabels[activeStep] || 'กำลังโหลด...';
+
+  const container = document.getElementById('pipelineSteps');
+  container.innerHTML = steps.map((s, i) => {
+    const cls = i < activeStep ? 'done' : i === activeStep ? 'active' : '';
+    const icon = i < activeStep ? '✓' : i + 1;
+    return `<div class="step-item ${cls}">
+      <div class="step-dot">${icon}</div>
+      <div class="step-name">${s.label}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderBatches() {
+  // Group by week (by first date in batch)
+  const groups = {};
+  allRows.forEach(r => {
+    const d = r['date (YYYY-MM-DD)'] || r.date || '';
+    const week = d ? d.slice(0, 7) : 'unknown';
+    if (!groups[week]) groups[week] = [];
+    groups[week].push(r);
+  });
+
+  const sorted = Object.entries(groups).sort((a,b) => b[0].localeCompare(a[0]));
+
+  if (sorted.length === 0) {
+    document.getElementById('batchList').innerHTML = `
+      <div class="batch-empty">
+        <div style="font-size:32px;margin-bottom:8px">📭</div>
+        ยังไม่มี batch — กด Generate เพื่อเริ่มต้น
+      </div>`;
+    return;
+  }
+
+  const statusPriority = ['writing','approved','img gen','ready','scheduled','published','posted','done','rejected'];
+
+  document.getElementById('batchList').innerHTML = sorted.map(([week, rows], i) => {
+    const total   = rows.length;
+    const done    = rows.filter(r => ['published','posted','done','scheduled'].includes(r.status)).length;
+    const pct     = Math.round(done / total * 100);
+    const dates   = rows.map(r => r['date (YYYY-MM-DD)'] || '').filter(Boolean).sort();
+    const dateRange = dates.length ? `${dates[0]} → ${dates[dates.length-1]}` : '—';
+
+    // dominant status
+    const counts = {};
+    rows.forEach(r => { counts[r.status] = (counts[r.status]||0)+1; });
+    const dom = Object.entries(counts).sort((a,b) => b[1]-a[1])[0]?.[0] || '—';
+    const pillCls = {
+      writing:'pill-writing', approved:'pill-approved', rejected:'pill-rejected',
+      scheduled:'pill-scheduled', published:'pill-posted', posted:'pill-posted',
+      done:'pill-posted', ready:'pill-ready', 'img gen':'pill-ready'
+    }[dom] || '';
+
+    return `<div class="batch-row" style="animation-delay:${i*30}ms">
+      <div>
+        <div class="batch-name">Batch ${week}</div>
+        <div class="batch-dates">${dateRange}</div>
+      </div>
+      <div class="batch-progress-wrap">
+        <div class="batch-bar"><div class="batch-bar-fill" style="width:${pct}%"></div></div>
+        <div class="batch-pct">${pct}%</div>
+      </div>
+      <div><span class="pill ${pillCls}">${dom}</span></div>
+      <div style="font-size:13px;color:var(--ink2)">${total} posts</div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONFIRM MODAL
+═══════════════════════════════════════════════════════ */
+function openConfirm() {
+  const val = document.getElementById('startDate').value;
+  if (!val) { showToast('กรุณาเลือกวันเริ่มต้นก่อนครับ', 'error'); return; }
+  const start = parseISO(val);
+  const end   = addDays(start, 6);
+  document.getElementById('confirmStart').textContent = fmtDate(start);
+  document.getElementById('confirmEnd').textContent   = fmtDate(end);
+  document.getElementById('confirmOverlay').classList.add('active');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('active');
+}
+
+document.getElementById('confirmOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeConfirm();
+});
+
+/* ═══════════════════════════════════════════════════════
+   GENERATE
+═══════════════════════════════════════════════════════ */
+const LOADING_STEPS = [
+  'ส่ง request ไป n8n',
+  'AI วิเคราะห์ strategy',
+  'สร้าง content plan 7 posts',
+  'บันทึกลง Google Sheets',
+  'ส่ง LINE Notify แจ้งทีม',
+];
+
+async function doGenerate() {
+  closeConfirm();
+
+  const val  = document.getElementById('startDate').value;
+  const payload = { startDate: val, days: 7 };
+
+  // Switch to loading view
+  document.getElementById('genForm').style.display    = 'none';
+  document.getElementById('genLoading').classList.add('active');
+
+  const stepsEl = document.getElementById('loadingSteps');
+  stepsEl.innerHTML = LOADING_STEPS.map(s => `
+    <div class="ls-item"><div class="ls-dot"></div>${s}</div>
+  `).join('');
+
+  // Animate steps
+  const items = stepsEl.querySelectorAll('.ls-item');
+  let idx = 0;
+  const tick = setInterval(() => {
+    if (idx > 0) items[idx-1]?.classList.replace('active','done');
+    if (idx < items.length) {
+      items[idx].classList.add('active');
+      idx++;
+    }
+  }, 900);
+
+  try {
+    if (N8N_WEBHOOK !== 'YOUR_N8N_WEBHOOK_URL') {
+      await fetch(N8N_WEBHOOK, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      // Demo: simulate delay
+      await new Promise(r => setTimeout(r, 5000));
+    }
+
+    clearInterval(tick);
+    items.forEach(el => el.classList.add('done'));
+    await new Promise(r => setTimeout(r, 600));
+
+    // Reset form
+    document.getElementById('genLoading').classList.remove('active');
+    document.getElementById('genForm').style.display = 'block';
+
+    showToast('Generate เสร็จแล้ว! ไปหน้า Content Review ได้เลยครับ', 'success');
+
+    // Highlight review tab
+    document.getElementById('navReview').style.color = 'var(--accent)';
+    document.getElementById('navReview').style.borderBottomColor = 'var(--accent)';
+
+    // Reload data
+    setTimeout(loadData, 800);
+
+  } catch(err) {
+    clearInterval(tick);
+    document.getElementById('genLoading').classList.remove('active');
+    document.getElementById('genForm').style.display = 'block';
+    showToast('เกิดข้อผิดพลาด — กรุณาลองใหม่', 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════════════ */
+function showToast(msg, type = '') {
+  const wrap = document.getElementById('toastWrap');
+  const icons = { success: '✓', error: '✕', '': 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span class="toast-icon">${icons[type]||'ℹ'}</span><span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'fadeOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
+}
+
+/* ═══════════════════════════════════════════════════════
+   DEMO DATA
+═══════════════════════════════════════════════════════ */
+const DEMO_DATA = [
+  { rowIndex:2, status:'writing',  row_id:'CP001', 'date (YYYY-MM-DD)':'2026-04-16', big_idea_line:'ผิวเปล่งประกายด้วย Lip Velvet Matte', content_pillars:'product_content', product_code:'LIP_VELVET_MATTE', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
+  { rowIndex:3, status:'writing',  row_id:'CP002', 'date (YYYY-MM-DD)':'2026-04-17', big_idea_line:'ความลับของ OEM คุณภาพระดับโรงงาน', content_pillars:'company_profile',  product_code:'OEM', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
+  { rowIndex:4, status:'writing',  row_id:'CP003', 'date (YYYY-MM-DD)':'2026-04-18', big_idea_line:'5 ข้อควรรู้ก่อนผลิตเครื่องสำอาง', content_pillars:'general_knowledge', product_code:'none', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
+  { rowIndex:5, status:'ready',    row_id:'CP004', 'date (YYYY-MM-DD)':'2026-04-19', big_idea_line:'PJ Formula สูตรเฉพาะของ Trusme', content_pillars:'product_content', product_code:'PJ', post_structure:'single_image', layout_family:'product_grid_board', seasonal_event_key:'none' },
+  { rowIndex:6, status:'scheduled',row_id:'CP005', 'date (YYYY-MM-DD)':'2026-04-20', big_idea_line:'Songkran Limited Edition', content_pillars:'seasonal', product_code:'CVA', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'songkran' },
+  { rowIndex:7, status:'posted',   row_id:'CP006', 'date (YYYY-MM-DD)':'2026-04-14', big_idea_line:'เปิดตัว Lip Velvet Collection', content_pillars:'product_content', product_code:'LIP_VELVET_MATTE', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
+  { rowIndex:8, status:'rejected', row_id:'CP007', 'date (YYYY-MM-DD)':'2026-04-15', big_idea_line:'(Rejected) ไอเดียเก่า', content_pillars:'company_profile', product_code:'none', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
+];
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+setDefaultDate();
+initAuth();
+</script>
+</body>
+</html>

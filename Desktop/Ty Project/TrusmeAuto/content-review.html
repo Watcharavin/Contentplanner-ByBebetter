@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trusme — Content Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #F5F3EE;
+      --surface:  #FFFFFF;
+      --surface2: #EFECE5;
+      --surface3: #E8E4DB;
+      --ink:      #1C1A16;
+      --ink2:     #6A6660;
+      --ink3:     #AAA69F;
+      --accent:   #2D6A4F;
+      --accent-l: #D6EDE3;
+      --accent-d: #1E4D38;
+      --danger:   #C0392B;
+      --danger-l: #FAEAEA;
+      --border:   #E2DDD4;
+
+      --w-bg: #FFF8EC; --w-ink: #7A5400; --w-bd: #F5D58A;
+      --a-bg: #E9F6EE; --a-ink: #1A5C35; --a-bd: #8FD4AC;
+      --r-bg: #FAEAEA; --r-ink: #7A1A1A; --r-bd: #F0A0A0;
+      --s-bg: #E6F3FB; --s-ink: #0C5460; --s-bd: #B5D4F4;
+      --d-bg: #E8F5EC; --d-ink: #155724; --d-bd: #9FE1CB;
+    }
+
+    html { font-family: 'Sarabun', sans-serif; background: var(--bg); color: var(--ink); }
+    body { min-height: 100vh; }
+
+    /* ── Header ── */
+    .header {
+      position: sticky; top: 0; z-index: 100;
+      height: 56px; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 32px;
+    }
+    .header-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px; font-weight: 600;
+      color: var(--accent); letter-spacing: 0.04em;
+      margin-right: 40px;
+    }
+    .header-brand span { color: var(--ink3); font-weight: 400; font-size: 13px; margin-left: 6px; }
+    .nav-tabs { display: flex; gap: 0; height: 56px; }
+    .nav-tab {
+      display: flex; align-items: center; gap: 6px;
+      padding: 0 18px; font-size: 14px; font-weight: 500;
+      color: var(--ink3); text-decoration: none;
+      border-bottom: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .nav-tab:hover { color: var(--ink2); }
+    .nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .nav-badge {
+      background: var(--w-bg); color: var(--w-ink);
+      border: 1px solid var(--w-bd);
+      font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 20px;
+      min-width: 20px; text-align: center;
+    }
+    .nav-badge.green { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
+    .header-spacer { flex: 1; }
+    .user-chip { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink2); }
+    .user-avatar {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent-l); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: var(--accent); font-weight: 600;
+      overflow: hidden;
+    }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .demo-badge {
+      display: inline-flex; align-items: center;
+      background: #FFF3CD; color: #856404;
+      border: 1px solid #FFE08A; border-radius: 20px;
+      font-size: 10px; font-weight: 600; padding: 2px 8px;
+    }
+
+    /* ── Main ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 32px; }
+
+    /* ── Page header ── */
+    .page-head {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px;
+      margin-bottom: 24px;
+    }
+    .page-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px; font-weight: 600; color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .page-sub { font-size: 13px; color: var(--ink3); }
+    .head-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+    /* ── Progress section ── */
+    .progress-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 18px 22px;
+      margin-bottom: 20px;
+      animation: rise 0.35s ease both;
+    }
+    .progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .progress-label { font-size: 13px; font-weight: 600; color: var(--ink2); }
+    .progress-pct   { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 700; color: var(--accent); }
+    .progress-bar-track { height: 6px; background: var(--surface3); border-radius: 3px; overflow: hidden; }
+    .progress-bar-fill  { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.6s ease; }
+    .progress-chips { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .pchip {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px; border: 1px solid;
+      font-size: 11px; font-weight: 600;
+    }
+    .pchip-pending  { background: var(--w-bg); color: var(--w-ink); border-color: var(--w-bd); }
+    .pchip-approved { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
+    .pchip-rejected { background: var(--r-bg); color: var(--r-ink); border-color: var(--r-bd); }
+
+    /* ── Toolbar ── */
+    .toolbar {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .toolbar-left  { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .toolbar-right { display: flex; align-items: center; gap: 8px; }
+
+    .filter-chip {
+      padding: 6px 14px; border-radius: 20px;
+      font-size: 12px; font-weight: 500;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--ink3); cursor: pointer;
+      transition: all 0.12s;
+    }
+    .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .filter-chip:hover:not(.active) { border-color: var(--ink3); color: var(--ink2); }
+
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ink3); }
+    .search-input {
+      padding: 7px 12px 7px 32px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface); color: var(--ink);
+      font-size: 13px; font-family: 'Sarabun', sans-serif;
+      outline: none; width: 220px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-l); }
+
+    /* Buttons */
+    .btn-approve-all {
+      padding: 8px 16px; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-approve-all:hover { background: var(--accent-d); }
+    .btn-approve-all:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .btn-next {
+      padding: 8px 18px; background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s;
+    }
+    .btn-next:hover { background: var(--accent-d); }
+
+    /* ── Table ── */
+    .table-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; overflow-x: auto;
+      animation: rise 0.4s 0.05s ease both;
+    }
+    .table-head {
+      display: grid;
+      grid-template-columns: 36px 72px 1fr 110px 100px 110px 220px;
+      min-width: 760px;
+      padding: 10px 16px;
+      background: var(--surface2); border-bottom: 1px solid var(--border);
+      font-size: 11px; color: var(--ink3); font-weight: 600;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      align-items: center;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: 36px 72px 1fr 110px 100px 110px 220px;
+      min-width: 760px;
+      padding: 13px 16px; border-bottom: 1px solid var(--border);
+      align-items: start; font-size: 13px;
+      transition: background 0.12s;
+      animation: rise 0.3s ease both;
+    }
+    .table-row:last-child { border-bottom: none; }
+    .table-row:hover { background: #FAFAF8; }
+    .table-row.row-approved { background: #FAFFFC; }
+    .table-row.row-rejected { background: #FFFAFA; }
+
+    /* Checkbox */
+    .row-check {
+      width: 16px; height: 16px; border-radius: 4px;
+      border: 1.5px solid var(--border); background: var(--surface);
+      cursor: pointer; appearance: none;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.12s;
+    }
+    .row-check:checked { background: var(--accent); border-color: var(--accent); }
+    .row-check:checked::after { content: '✓'; color: #fff; font-size: 10px; }
+    .row-check:focus { outline: none; box-shadow: 0 0 0 3px var(--accent-l); }
+
+    /* ID pill */
+    .id-pill {
+      font-size: 11px; font-weight: 600; color: var(--ink3);
+      background: var(--surface2); border: 1px solid var(--border);
+      padding: 3px 8px; border-radius: 6px;
+      font-family: monospace; letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    /* Big idea */
+    .big-idea { font-size: 13px; font-weight: 500; color: var(--ink); line-height: 1.4; white-space: normal; word-break: break-word; }
+    .big-idea-note { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+
+    /* Tags */
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 500; white-space: nowrap;
+    }
+    .tag-product  { background: var(--accent-l); color: var(--accent-d); }
+    .tag-company  { background: #EEF2FF; color: #3730A3; }
+    .tag-general  { background: #FFF7ED; color: #92400E; }
+    .tag-seasonal { background: #FDF4FF; color: #7E22CE; }
+
+    /* Pill */
+    .pill {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+      border: 1px solid; white-space: nowrap;
+    }
+    .pill-writing   { background: var(--w-bg); color: var(--w-ink); border-color: var(--w-bd); }
+    .pill-approved  { background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd); }
+    .pill-rejected  { background: var(--r-bg); color: var(--r-ink); border-color: var(--r-bd); }
+
+    /* Action buttons */
+    .row-actions { display: flex; align-items: center; gap: 6px; }
+    .btn-row {
+      padding: 5px 12px; border-radius: 6px;
+      font-size: 12px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; border: 1px solid; transition: all 0.12s;
+      white-space: nowrap;
+    }
+    .btn-approve {
+      background: var(--a-bg); color: var(--a-ink); border-color: var(--a-bd);
+    }
+    .btn-approve:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn-reject {
+      background: transparent; color: var(--danger); border-color: #E8B4B4;
+    }
+    .btn-reject:hover { background: var(--danger-l); }
+    .btn-undo {
+      background: var(--surface2); color: var(--ink3); border-color: var(--border);
+    }
+    .btn-undo:hover { color: var(--ink2); border-color: var(--ink3); }
+    .btn-note {
+      background: transparent; color: var(--ink3); border-color: var(--border);
+      padding: 5px 8px;
+    }
+    .btn-note:hover { color: var(--ink2); border-color: var(--ink3); }
+
+    /* Cell truncate */
+    .cell-trunc { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+
+    /* ── Empty / All done ── */
+    .empty-state {
+      padding: 60px 24px; text-align: center;
+    }
+    .empty-icon  { font-size: 48px; margin-bottom: 14px; }
+    .empty-title { font-size: 18px; font-weight: 600; color: var(--ink2); margin-bottom: 8px; }
+    .empty-sub   { font-size: 14px; color: var(--ink3); }
+
+    /* ── All done banner ── */
+    .done-banner {
+      background: var(--a-bg); border: 1px solid var(--a-bd);
+      border-radius: 14px; padding: 24px 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px; margin-bottom: 20px;
+      animation: rise 0.3s ease both;
+    }
+    .done-banner-icon { font-size: 36px; flex-shrink: 0; }
+    .done-banner-text { flex: 1; }
+    .done-banner-title { font-size: 17px; font-weight: 700; color: var(--a-ink); margin-bottom: 4px; }
+    .done-banner-sub   { font-size: 13px; color: var(--accent); }
+
+    /* ── Note modal ── */
+    .overlay {
+      position: fixed; inset: 0; background: rgba(28,26,22,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 200; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .overlay.active { opacity: 1; pointer-events: all; }
+    .modal {
+      background: var(--surface); border-radius: 20px;
+      padding: 28px; max-width: 440px; width: calc(100% - 40px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      transform: translateY(8px); transition: transform 0.2s;
+    }
+    .overlay.active .modal { transform: translateY(0); }
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px; font-weight: 600; color: var(--ink); margin-bottom: 6px;
+    }
+    .modal-sub { font-size: 13px; color: var(--ink3); margin-bottom: 16px; }
+    .modal-idea { font-size: 13px; font-weight: 500; color: var(--ink2); background: var(--surface2); border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; }
+    .modal-textarea {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); color: var(--ink);
+      font-size: 14px; font-family: 'Sarabun', sans-serif;
+      resize: vertical; min-height: 80px; max-height: 200px;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .modal-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-l); background: var(--surface); }
+    .modal-actions { display: flex; gap: 10px; margin-top: 14px; }
+    .btn-primary {
+      flex: 1; padding: 11px 20px;
+      background: var(--accent); color: #fff;
+      border: none; border-radius: 8px;
+      font-size: 14px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--accent-d); }
+    .btn-ghost {
+      padding: 11px 16px; background: transparent;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-size: 13px; color: var(--ink3); cursor: pointer;
+      font-family: 'Sarabun', sans-serif; transition: all 0.12s;
+    }
+    .btn-ghost:hover { border-color: var(--ink3); color: var(--ink2); }
+
+    /* ── Bulk confirm modal ── */
+    .bulk-modal-info { background: var(--a-bg); border: 1px solid var(--a-bd); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; font-size: 13px; color: var(--a-ink); }
+
+    /* ── Toast ── */
+    .toast-wrap { position: fixed; bottom: 28px; right: 28px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
+    .toast {
+      background: var(--ink); color: #fff;
+      padding: 12px 18px; border-radius: 12px;
+      font-size: 13px; font-weight: 500;
+      display: flex; align-items: center; gap: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      animation: rise 0.3s ease; max-width: 340px;
+    }
+    .toast.success { background: var(--accent); }
+    .toast.error   { background: var(--danger); }
+    .toast-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.7); cursor: pointer; font-size: 16px; padding: 0; }
+
+    /* ── Login overlay ── */
+    .login-overlay {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center; z-index: 500;
+    }
+    .login-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 40px; max-width: 380px; width: 90%;
+      text-align: center; box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+    .login-brand { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 700; color: var(--accent); letter-spacing: 0.04em; margin-bottom: 4px; }
+    .login-sub { font-size: 13px; color: var(--ink3); margin-bottom: 32px; }
+    .btn-line {
+      width: 100%; padding: 13px 20px; background: #06C755; color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: background 0.15s;
+    }
+    .btn-line:hover { background: #05a547; }
+    .login-note { font-size: 11px; color: var(--ink3); margin-top: 14px; }
+
+    /* Loading skeleton */
+    .skeleton { background: linear-gradient(90deg, var(--surface2) 25%, var(--surface3) 50%, var(--surface2) 75%); background-size: 200% 100%; animation: shimmer 1.2s infinite; border-radius: 4px; }
+    @keyframes shimmer { to { background-position: -200% 0; } }
+
+    /* Spinner inline */
+    .spin-sm { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: inline-block; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin  { to { transform: rotate(360deg); } }
+    @keyframes fadeOut { to { opacity: 0; transform: translateY(6px); } }
+  </style>
+</head>
+<body>
+
+<!-- Login Overlay -->
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-brand">Trusme</div>
+    <div class="login-sub">Content Review — เข้าสู่ระบบด้วย LINE</div>
+    <button class="btn-line" onclick="lineLogin()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.064-.022.134-.032.2-.032.211 0 .391.09.51.25l2.444 3.317V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+      เข้าสู่ระบบด้วย LINE
+    </button>
+    <p class="login-note">ระบบสำหรับทีม Trusme เท่านั้น</p>
+    <div style="margin-top:16px">
+      <button onclick="demoLogin()" class="btn-ghost" style="width:100%;font-size:13px">ทดลองใช้งาน (Demo Mode)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-brand">Trusme <span>Content Planner</span></div>
+  <nav class="nav-tabs">
+    <a href="index.html" class="nav-tab">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 9h2v9h5v-5h2v5h5V9h2L10 2z"/></svg>
+      Overview
+    </a>
+    <a href="content-review.html" class="nav-tab active">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 8h6M7 12h4"/></svg>
+      Content Review
+      <span class="nav-badge" id="reviewBadge">—</span>
+    </a>
+    <a href="dashboard.html" class="nav-tab">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 2v4M13 2v4M3 9h14"/></svg>
+      Schedule &amp; Publish
+      <span class="nav-badge green" id="scheduleBadge">—</span>
+    </a>
+  </nav>
+  <div class="header-spacer"></div>
+  <div class="user-chip">
+    <div class="user-avatar" id="userAvatar">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-6 8a6 6 0 1112 0H4z"/></svg>
+    </div>
+    <span id="userName">—</span>
+    <span class="demo-badge" id="demoBadge" style="display:none">DEMO</span>
+    <button onclick="logout()" style="margin-left:6px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;font-size:12px;color:var(--ink3);cursor:pointer;font-family:'Sarabun',sans-serif;" onmouseover="this.style.color='var(--danger)';this.style.borderColor='#E8B4B4'" onmouseout="this.style.color='var(--ink3)';this.style.borderColor='var(--border)'">ออกจากระบบ</button>
+  </div>
+</header>
+
+<!-- Main -->
+<main class="main">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Content Review</h1>
+      <p class="page-sub">ตรวจสอบและ approve content ก่อนส่ง generate รูป</p>
+    </div>
+    <div class="head-actions">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/></svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="ค้นหา idea, product..." oninput="applyFilters()" />
+      </div>
+      <button class="btn-approve-all" id="btnApproveAll" onclick="openBulkModal()" disabled>
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+        <span id="approveAllLabel">Approve ทั้งหมด</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Progress card -->
+  <div class="progress-card" id="progressCard">
+    <div class="progress-row">
+      <div class="progress-label">Progress การ Review</div>
+      <div class="progress-pct" id="progPct">—%</div>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progFill" style="width:0%"></div>
+    </div>
+    <div class="progress-chips">
+      <div class="pchip pchip-pending"><span id="chipPending">—</span> รอ Review</div>
+      <div class="pchip pchip-approved"><span id="chipApproved">—</span> Approved</div>
+      <div class="pchip pchip-rejected"><span id="chipRejected">—</span> Rejected</div>
+    </div>
+  </div>
+
+  <!-- Filter toolbar -->
+  <div class="toolbar">
+    <div class="toolbar-left">
+      <button class="filter-chip active" data-filter="writing"  onclick="setFilter('writing',this)">รอ Review</button>
+      <button class="filter-chip"        data-filter="approved" onclick="setFilter('approved',this)">Approved</button>
+      <button class="filter-chip"        data-filter="rejected" onclick="setFilter('rejected',this)">Rejected</button>
+      <button class="filter-chip"        data-filter="all"      onclick="setFilter('all',this)">ทั้งหมด</button>
+    </div>
+    <div class="toolbar-right">
+      <span id="rowCount" style="font-size:12px;color:var(--ink3)"></span>
+    </div>
+  </div>
+
+  <!-- Done banner (hidden until all reviewed) -->
+  <div class="done-banner" id="doneBanner" style="display:none">
+    <div class="done-banner-icon">🎉</div>
+    <div class="done-banner-text">
+      <div class="done-banner-title">Review ครบแล้ว!</div>
+      <div class="done-banner-sub">ไปตั้ง Schedule ได้เลยครับ — รูปจะ generate อัตโนมัติหลัง approve</div>
+    </div>
+    <a href="dashboard.html" class="btn-next">
+      ไปหน้า Schedule →
+    </a>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap" id="tableWrap">
+    <div class="table-head">
+      <div>
+        <input type="checkbox" class="row-check" id="checkAll" onchange="toggleAll(this)" />
+      </div>
+      <div>ID</div>
+      <div>Big Idea</div>
+      <div>Pillar</div>
+      <div>Product</div>
+      <div>Format</div>
+      <div>Actions</div>
+    </div>
+    <div id="tableBody">
+      <!-- rows rendered by JS -->
+      <div style="padding:40px;text-align:center">
+        <div class="skeleton" style="height:16px;width:60%;margin:0 auto 12px"></div>
+        <div class="skeleton" style="height:16px;width:80%;margin:0 auto 12px"></div>
+        <div class="skeleton" style="height:16px;width:50%;margin:0 auto"></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Note Modal -->
+<div class="overlay" id="noteOverlay">
+  <div class="modal">
+    <div class="modal-title">Reviewer Note</div>
+    <div class="modal-sub">เพิ่ม note สำหรับ n8n หรือ content writer</div>
+    <div class="modal-idea" id="noteModalIdea">—</div>
+    <textarea class="modal-textarea" id="noteModalText" placeholder="เขียน note ที่นี่..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeNote()">ยกเลิก</button>
+      <button class="btn-primary" onclick="saveNote()">บันทึก Note</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Approve Modal -->
+<div class="overlay" id="bulkOverlay">
+  <div class="modal">
+    <div class="modal-title">Approve ทั้งหมด?</div>
+    <div class="modal-sub">ระบบจะ approve posts ที่ยังรอ review ทั้งหมด</div>
+    <div class="bulk-modal-info" id="bulkInfo">—</div>
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeBulkModal()">ยกเลิก</button>
+      <button class="btn-primary" id="btnBulkConfirm" onclick="bulkApprove()">
+        Approve ทั้งหมด
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════ */
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzvMffclWcoVPjl3iNt9ifdvFhwubZRuQCVMd1kRAcsjwsGx4S0hCc0P_Z4fdVLRw/exec';
+const LINE_CLIENT_ID = '2009815604';
+const REDIRECT_URI   = window.location.origin + '/callback.html';
+
+/* ═══════════════════════════════════════════════
+   AUTH
+═══════════════════════════════════════════════ */
+let session = null;
+
+function initAuth() {
+  const raw = localStorage.getItem('trusme_session');
+  if (raw) { try { session = JSON.parse(raw); } catch(_) {} }
+  if (session) showApp(); else window.location.replace('landing.html');
+}
+function lineLogin() {
+  const state = Math.random().toString(36).slice(2);
+  localStorage.setItem('line_state', state);
+  window.location.href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=profile%20openid`;
+}
+function demoLogin() {
+  session = { displayName: 'Demo User', userId: 'demo', pictureUrl: '' };
+  localStorage.setItem('trusme_session', JSON.stringify(session));
+  document.getElementById('demoBadge').style.display = 'inline-flex';
+  showApp();
+}
+function logout() {
+  localStorage.removeItem('trusme_session');
+  localStorage.removeItem('line_state');
+  window.location.reload();
+}
+function showApp() {
+  document.getElementById('loginOverlay').style.display = 'none';
+  document.getElementById('userName').textContent = session?.displayName || '—';
+  if (session?.pictureUrl) document.getElementById('userAvatar').innerHTML = `<img src="${session.pictureUrl}" alt="avatar" />`;
+  loadData();
+}
+
+/* ═══════════════════════════════════════════════
+   JSONP HELPER (แก้ CORS)
+═══════════════════════════════════════════════ */
+function gsCall(params = {}) {
+  return new Promise((resolve, reject) => {
+    const cb = '_gs' + Date.now();
+    const script = document.createElement('script');
+    const qs = new URLSearchParams({ ...params, callback: cb }).toString();
+    window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
+    script.src = SCRIPT_URL + '?' + qs;
+    document.head.appendChild(script);
+  });
+}
+
+/* ═══════════════════════════════════════════════
+   DATA
+═══════════════════════════════════════════════ */
+let allRows     = [];
+let reviewRows  = [];
+let currentFilter = 'writing';
+let pendingUpdates = {};
+
+async function loadData() {
+  try {
+    allRows = await gsCall();
+    reviewRows = allRows.filter(r =>
+      ['writing','approved','rejected'].includes(r.status)
+    );
+    updateBadges();
+    updateProgress();
+    applyFilters();
+  } catch(e) {
+    console.error(e);
+    allRows    = DEMO_DATA;
+    reviewRows = allRows.filter(r => ['writing','approved','rejected'].includes(r.status));
+    updateBadges();
+    updateProgress();
+    applyFilters();
+    showToast('ใช้ Demo data (ยังไม่ได้เชื่อม Sheets)', 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   BADGES
+═══════════════════════════════════════════════ */
+function updateBadges() {
+  const writing   = allRows.filter(r => r.status === 'writing').length;
+  const ready     = allRows.filter(r => r.status === 'ready').length;
+  document.getElementById('reviewBadge').textContent   = writing  || '—';
+  document.getElementById('scheduleBadge').textContent = ready    || '—';
+}
+
+/* ═══════════════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════════════ */
+function updateProgress() {
+  const total    = reviewRows.length;
+  const approved = reviewRows.filter(r => r.status === 'approved').length;
+  const rejected = reviewRows.filter(r => r.status === 'rejected').length;
+  const pending  = reviewRows.filter(r => r.status === 'writing').length;
+  const done     = approved + rejected;
+  const pct      = total ? Math.round(done / total * 100) : 0;
+
+  document.getElementById('progPct').textContent    = pct + '%';
+  document.getElementById('progFill').style.width   = pct + '%';
+  document.getElementById('chipPending').textContent  = pending;
+  document.getElementById('chipApproved').textContent = approved;
+  document.getElementById('chipRejected').textContent = rejected;
+
+  // Approve-all button
+  const btnAA = document.getElementById('btnApproveAll');
+  btnAA.disabled = pending === 0;
+  document.getElementById('approveAllLabel').textContent = pending > 0 ? `Approve ${pending} รายการ` : 'Approve ทั้งหมด';
+
+  // Done banner
+  if (total > 0 && pending === 0) {
+    document.getElementById('doneBanner').style.display = 'flex';
+  } else {
+    document.getElementById('doneBanner').style.display = 'none';
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   FILTER & RENDER
+═══════════════════════════════════════════════ */
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  let rows = currentFilter === 'all' ? reviewRows : reviewRows.filter(r => r.status === currentFilter);
+  if (q) {
+    rows = rows.filter(r =>
+      (r.big_idea_line||'').toLowerCase().includes(q) ||
+      (r.product_code||'').toLowerCase().includes(q) ||
+      (r.row_id||'').toLowerCase().includes(q) ||
+      (r.content_pillars||'').toLowerCase().includes(q)
+    );
+  }
+  renderTable(rows);
+  document.getElementById('rowCount').textContent = `${rows.length} รายการ`;
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER TABLE
+═══════════════════════════════════════════════ */
+const PILLAR_MAP = {
+  product_content:  { label: 'Product',   cls: 'tag-product' },
+  company_profile:  { label: 'Company',   cls: 'tag-company' },
+  general_knowledge:{ label: 'General',   cls: 'tag-general' },
+  seasonal:         { label: 'Seasonal',  cls: 'tag-seasonal' },
+};
+
+function renderTable(rows) {
+  const body = document.getElementById('tableBody');
+
+  if (rows.length === 0) {
+    body.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">ไม่มีรายการในฟิลเตอร์นี้</div>
+      <div class="empty-sub">ลองเปลี่ยน filter หรือค้นหาใหม่</div>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = rows.map((r, i) => {
+    const st      = r.status;
+    const rowCls  = st === 'approved' ? 'row-approved' : st === 'rejected' ? 'row-rejected' : '';
+    const pillar  = PILLAR_MAP[r.content_pillars] || { label: r.content_pillars, cls: '' };
+    const pillCls = st === 'writing' ? 'pill-writing' : st === 'approved' ? 'pill-approved' : 'pill-rejected';
+
+    const seasonalTag = r.seasonal_event_key && r.seasonal_event_key !== 'none'
+      ? `<span class="tag tag-seasonal" style="margin-top:3px;display:inline-block">${r.seasonal_event_key}</span>`
+      : '';
+
+    const actionBtns = st === 'writing' ? `
+      <button class="btn-row btn-approve" onclick="setStatus(${r.rowIndex},'approved')">✓ Approve</button>
+      <button class="btn-row btn-reject"  onclick="setStatus(${r.rowIndex},'rejected')">✕ Reject</button>
+      <button class="btn-row btn-note"    onclick="openNote(${r.rowIndex},'${escHtml(r.big_idea_line||'')}')" title="เพิ่ม note">Note</button>
+    ` : st === 'approved' ? `
+      <span style="font-size:12px;color:var(--a-ink);font-weight:600;white-space:nowrap">✓ Approved</span>
+      <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
+    ` : `
+      <span style="font-size:12px;color:var(--danger);font-weight:600;white-space:nowrap">✕ Rejected</span>
+      <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
+    `;
+
+    return `<div class="table-row ${rowCls}" id="row-${r.rowIndex}" style="animation-delay:${i*25}ms">
+      <div><input type="checkbox" class="row-check" data-idx="${r.rowIndex}" onchange="updateSelectAll()" /></div>
+      <div><span class="id-pill">${r.row_id||'—'}</span></div>
+      <div>
+        <div class="big-idea">${escHtml(r.big_idea_line||'—')}</div>
+        ${seasonalTag}
+        ${r.reviewer_note ? `<div class="big-idea-note">📝 ${escHtml(r.reviewer_note)}</div>` : ''}
+      </div>
+      <div><span class="tag ${pillar.cls}">${pillar.label}</span></div>
+      <div style="font-size:12px;color:var(--ink2);font-weight:500" class="cell-trunc">${r.product_code||'—'}</div>
+      <div style="font-size:11px;color:var(--ink3)" class="cell-trunc">${r.post_structure||'—'}</div>
+      <div class="row-actions">${actionBtns}</div>
+    </div>`;
+  }).join('');
+
+  // Uncheck "select all" on re-render
+  document.getElementById('checkAll').checked = false;
+}
+
+/* ═══════════════════════════════════════════════
+   STATUS UPDATE
+═══════════════════════════════════════════════ */
+async function setStatus(rowIndex, newStatus) {
+  // Optimistic update
+  const row = reviewRows.find(r => r.rowIndex === rowIndex);
+  if (!row) return;
+  const prev = row.status;
+  row.status = newStatus;
+
+  updateProgress();
+  applyFilters();
+
+  try {
+    await gsCall({ action: 'update', rowIndex, status: newStatus });
+    const msg = newStatus === 'approved' ? 'Approved เรียบร้อย ✓'
+               : newStatus === 'rejected' ? 'Rejected แล้ว'
+               : 'คืนสถานะเป็น รอ Review';
+    showToast(msg, newStatus === 'approved' ? 'success' : '');
+    updateBadges();
+  } catch(e) {
+    // Rollback
+    row.status = prev;
+    updateProgress();
+    applyFilters();
+    showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   BULK APPROVE
+═══════════════════════════════════════════════ */
+function openBulkModal() {
+  const pending = reviewRows.filter(r => r.status === 'writing');
+  document.getElementById('bulkInfo').textContent = `จะ Approve ${pending.length} posts — ระบบจะเริ่ม generate รูปทันที`;
+  document.getElementById('bulkOverlay').classList.add('active');
+}
+function closeBulkModal() {
+  document.getElementById('bulkOverlay').classList.remove('active');
+}
+async function bulkApprove() {
+  const btn = document.getElementById('btnBulkConfirm');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin-sm"></span> กำลัง Approve...';
+
+  const pending = reviewRows.filter(r => r.status === 'writing');
+  closeBulkModal();
+
+  for (const row of pending) {
+    await setStatus(row.rowIndex, 'approved');
+    await new Promise(r => setTimeout(r, 120)); // small stagger
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Approve ทั้งหมด';
+  showToast(`Approve ${pending.length} posts เรียบร้อย!`, 'success');
+}
+
+/* ═══════════════════════════════════════════════
+   NOTE MODAL
+═══════════════════════════════════════════════ */
+let noteRowIndex = null;
+function openNote(rowIndex, idea) {
+  noteRowIndex = rowIndex;
+  const row = reviewRows.find(r => r.rowIndex === rowIndex);
+  document.getElementById('noteModalIdea').textContent = idea || '—';
+  document.getElementById('noteModalText').value = row?.reviewer_note || '';
+  document.getElementById('noteOverlay').classList.add('active');
+  setTimeout(() => document.getElementById('noteModalText').focus(), 100);
+}
+function closeNote() {
+  document.getElementById('noteOverlay').classList.remove('active');
+  noteRowIndex = null;
+}
+async function saveNote() {
+  const text = document.getElementById('noteModalText').value.trim();
+  const row  = reviewRows.find(r => r.rowIndex === noteRowIndex);
+  if (!row) return;
+  row.reviewer_note = text;
+  closeNote();
+  applyFilters(); // re-render to show note
+  showToast('บันทึก note เรียบร้อย', 'success');
+  // In production: also persist to Sheets via SCRIPT_URL (reviewer_note column)
+}
+
+/* ═══════════════════════════════════════════════
+   CHECKBOX
+═══════════════════════════════════════════════ */
+function toggleAll(master) {
+  document.querySelectorAll('.row-check[data-idx]').forEach(cb => {
+    cb.checked = master.checked;
+  });
+}
+function updateSelectAll() {
+  const all = document.querySelectorAll('.row-check[data-idx]');
+  const checked = document.querySelectorAll('.row-check[data-idx]:checked');
+  document.getElementById('checkAll').checked = all.length > 0 && all.length === checked.length;
+  document.getElementById('checkAll').indeterminate = checked.length > 0 && checked.length < all.length;
+}
+
+/* ═══════════════════════════════════════════════
+   MODAL CLOSE ON BACKDROP
+═══════════════════════════════════════════════ */
+document.getElementById('noteOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeNote(); });
+document.getElementById('bulkOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeBulkModal(); });
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+function showToast(msg, type = '') {
+  const icons = { success: '✓', error: '✕', '': 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(() => { el.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => el.remove(), 300); }, 4000);
+}
+
+/* ═══════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════ */
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ═══════════════════════════════════════════════
+   DEMO DATA
+═══════════════════════════════════════════════ */
+const DEMO_DATA = [
+  { rowIndex:2,  status:'writing',  row_id:'CP001', 'date (YYYY-MM-DD)':'2026-04-16', big_idea_line:'ผิวเปล่งประกายด้วย Lip Velvet Matte ใหม่ล่าสุด', content_pillars:'product_content',  product_code:'LIP_VELVET_MATTE', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none', reviewer_note:'' },
+  { rowIndex:3,  status:'writing',  row_id:'CP002', 'date (YYYY-MM-DD)':'2026-04-17', big_idea_line:'ความลับของ OEM คุณภาพระดับโรงงานที่คุณไว้ใจได้', content_pillars:'company_profile',   product_code:'OEM',             post_structure:'carousel_3',   layout_family:'carousel_3',          seasonal_event_key:'none', reviewer_note:'' },
+  { rowIndex:4,  status:'writing',  row_id:'CP003', 'date (YYYY-MM-DD)':'2026-04-18', big_idea_line:'5 ข้อควรรู้ก่อนเริ่มผลิตเครื่องสำอาง OEM', content_pillars:'general_knowledge', product_code:'none',            post_structure:'carousel_3',   layout_family:'carousel_3',          seasonal_event_key:'none', reviewer_note:'' },
+  { rowIndex:5,  status:'approved', row_id:'CP004', 'date (YYYY-MM-DD)':'2026-04-19', big_idea_line:'PJ Formula สูตรเฉพาะพัฒนาโดยผู้เชี่ยวชาญ', content_pillars:'product_content',  product_code:'PJ',              post_structure:'single_image', layout_family:'product_grid_board',  seasonal_event_key:'none', reviewer_note:'เน้นภาพ before-after' },
+  { rowIndex:6,  status:'rejected', row_id:'CP005', 'date (YYYY-MM-DD)':'2026-04-20', big_idea_line:'Songkran Limited Edition — CVA Collection', content_pillars:'seasonal',          product_code:'CVA',             post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'songkran', reviewer_note:'' },
+  { rowIndex:7,  status:'ready',    row_id:'CP006', 'date (YYYY-MM-DD)':'2026-04-21', big_idea_line:'เปิดตัว Lip Velvet Collection ใหม่', content_pillars:'product_content',  product_code:'LIP_VELVET_MATTE', post_structure:'carousel_3',   layout_family:'carousel_3',          seasonal_event_key:'none', reviewer_note:'' },
+  { rowIndex:8,  status:'scheduled',row_id:'CP007', 'date (YYYY-MM-DD)':'2026-04-22', big_idea_line:'Why Trusme — ทำไมต้องเลือก Trusme', content_pillars:'company_profile',   product_code:'none',            post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none', reviewer_note:'' },
+];
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+initAuth();
+</script>
+</body>
+</html>

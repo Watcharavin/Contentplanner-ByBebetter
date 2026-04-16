@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trusme — กำลังเข้าสู่ระบบ...</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Sarabun:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F5F3EE; --surface: #FFFFFF; --border: #E2DDD4;
+      --accent: #2D6A4F; --accent-l: #D6EDE3;
+      --ink: #1C1A16; --ink2: #6A6660; --ink3: #AAA69F;
+      --danger: #C0392B; --danger-l: #FAEAEA;
+    }
+    html, body { height: 100%; font-family: 'Sarabun', sans-serif; background: var(--bg); }
+    .wrap {
+      height: 100%; display: flex; align-items: center; justify-content: center;
+    }
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 44px 40px;
+      max-width: 380px; width: 90%; text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+    }
+    .brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px; font-weight: 600; color: var(--accent);
+      letter-spacing: 0.04em; margin-bottom: 24px;
+    }
+    .spinner {
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 3px solid var(--border); border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+    .status-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .status-sub   { font-size: 13px; color: var(--ink3); }
+
+    .icon-wrap {
+      width: 56px; height: 56px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px; font-size: 24px;
+    }
+    .icon-success { background: var(--accent-l); }
+    .icon-error   { background: var(--danger-l); }
+
+    .btn {
+      display: inline-block; margin-top: 20px;
+      padding: 11px 28px; border-radius: 9px;
+      font-size: 14px; font-weight: 600; font-family: 'Sarabun', sans-serif;
+      text-decoration: none; cursor: pointer; border: none;
+      transition: background 0.15s;
+    }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #1E4D38; }
+    .btn-ghost {
+      background: transparent; border: 1px solid var(--border); color: var(--ink3);
+    }
+    .btn-ghost:hover { border-color: var(--ink3); color: var(--ink2); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes rise { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    .card { animation: rise 0.3s ease; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="brand">Trusme</div>
+    <div id="stateLoading">
+      <div class="spinner"></div>
+      <div class="status-title">กำลังเข้าสู่ระบบ...</div>
+      <div class="status-sub">กรุณารอสักครู่</div>
+    </div>
+    <div id="stateSuccess" style="display:none">
+      <div class="icon-wrap icon-success">✓</div>
+      <div class="status-title">เข้าสู่ระบบสำเร็จ!</div>
+      <div class="status-sub" id="welcomeMsg">ยินดีต้อนรับ</div>
+      <div class="status-sub" style="margin-top:8px;font-size:12px;color:var(--ink3)">กำลังพาไปหน้าหลัก...</div>
+    </div>
+    <div id="stateError" style="display:none">
+      <div class="icon-wrap icon-error">✕</div>
+      <div class="status-title">เข้าสู่ระบบไม่ได้</div>
+      <div class="status-sub" id="errorMsg">เกิดข้อผิดพลาด กรุณาลองใหม่</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+        <button class="btn btn-ghost" onclick="window.location='index.html'">กลับหน้าหลัก</button>
+        <button class="btn btn-accent" onclick="retryLogin()">ลองใหม่</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   CONFIG — ต้องตรงกับในไฟล์อื่น ๆ
+══════════════════════════════════════════ */
+const SCRIPT_URL     = 'https://script.google.com/macros/s/AKfycbzvMffclWcoVPjl3iNt9ifdvFhwubZRuQCVMd1kRAcsjwsGx4S0hCc0P_Z4fdVLRw/exec';
+const LINE_CLIENT_ID = '2009815604';
+const REDIRECT_URI   = window.location.origin + '/callback.html';
+
+/* ══════════════════════════════════════════
+   JSONP helper
+══════════════════════════════════════════ */
+function gsCall(params = {}) {
+  return new Promise((resolve, reject) => {
+    const cb = '_gs' + Date.now();
+    const script = document.createElement('script');
+    const qs = new URLSearchParams({ ...params, callback: cb }).toString();
+    window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
+    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
+    script.src = SCRIPT_URL + '?' + qs;
+    document.head.appendChild(script);
+  });
+}
+
+/* ══════════════════════════════════════════
+   MAIN — handle LINE callback
+══════════════════════════════════════════ */
+async function handleCallback() {
+  const params   = new URLSearchParams(window.location.search);
+  const code     = params.get('code');
+  const state    = params.get('state');
+  const errorMsg = params.get('error');
+
+  // LINE returned an error
+  if (errorMsg) {
+    showError('LINE ปฏิเสธการ login: ' + (params.get('error_description') || errorMsg));
+    return;
+  }
+
+  // No code — ไม่ใช่ callback จริง
+  if (!code) {
+    showError('ไม่พบ authorization code');
+    return;
+  }
+
+  // Verify state (CSRF protection)
+  const savedState = localStorage.getItem('line_state');
+  if (state !== savedState) {
+    showError('State ไม่ตรง — อาจเป็นการโจมตี CSRF');
+    return;
+  }
+  localStorage.removeItem('line_state');
+
+  // Exchange code → profile via Apps Script proxy
+  try {
+    const res = await gsCall({
+      action:       'line_token',
+      code:         code,
+      redirect_uri: REDIRECT_URI,
+    });
+
+    if (!res.ok || !res.profile) {
+      showError(res.error || 'ไม่สามารถดึงข้อมูล profile ได้');
+      return;
+    }
+
+    const { userId, displayName, pictureUrl } = res.profile;
+
+    // Store session
+    const session = { userId, displayName, pictureUrl };
+    localStorage.setItem('trusme_session', JSON.stringify(session));
+
+    // Show success
+    showSuccess(displayName);
+
+    // Redirect to index after 1.5s
+    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+
+  } catch(e) {
+    showError('เกิดข้อผิดพลาด: ' + e.message);
+  }
+}
+
+/* ══════════════════════════════════════════
+   UI helpers
+══════════════════════════════════════════ */
+function showSuccess(name) {
+  document.getElementById('stateLoading').style.display = 'none';
+  document.getElementById('stateSuccess').style.display = 'block';
+  document.getElementById('welcomeMsg').textContent = `ยินดีต้อนรับ, ${name}!`;
+}
+function showError(msg) {
+  document.getElementById('stateLoading').style.display = 'none';
+  document.getElementById('stateError').style.display   = 'block';
+  document.getElementById('errorMsg').textContent = msg;
+}
+function retryLogin() {
+  window.location.href = 'index.html';
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+handleCallback();
+</script>
+</body>
+</html>
