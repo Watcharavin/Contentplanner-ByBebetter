@@ -438,6 +438,16 @@
       /* Hide username + logout */
       .user-chip > span:first-of-type { display: none; }
       .user-chip > button { display: none !important; }
+      /* Fix date input overflow in gen-card */
+      .gen-card-head { padding: 16px 16px 0; }
+      .gen-card-body { padding: 14px 16px; }
+      .gen-divider { margin: 0 16px; }
+      .form-input[type="date"] {
+        font-size: 13px;
+        padding: 10px 10px;
+        max-width: 100%;
+        overflow: hidden;
+      }
     }
 
     /* ── Login overlay ── */
