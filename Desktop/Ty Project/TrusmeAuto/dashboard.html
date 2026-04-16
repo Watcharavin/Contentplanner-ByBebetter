@@ -402,6 +402,49 @@
     @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes fadeOut { to { opacity: 0; transform: translateY(6px); } }
 
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0,0,0,0.93);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+      padding: 16px;
+    }
+    .lightbox.active { opacity: 1; pointer-events: all; }
+    .lightbox-img {
+      max-width: 100%; max-height: 100%;
+      object-fit: contain; border-radius: 6px;
+      user-select: none; -webkit-user-select: none;
+    }
+    .lightbox-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 38px; height: 38px; border-radius: 50%;
+      background: rgba(255,255,255,0.18); border: none;
+      color: #fff; font-size: 22px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.3); }
+    .lightbox-counter {
+      position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+      background: rgba(0,0,0,0.5); color: rgba(255,255,255,0.8);
+      font-size: 12px; padding: 4px 12px; border-radius: 20px;
+    }
+    .lightbox-prev, .lightbox-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 42px; height: 42px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); border: none;
+      color: #fff; font-size: 24px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-prev:hover, .lightbox-next:hover { background: rgba(255,255,255,0.28); }
+    .lightbox-prev { left: 12px; }
+    .lightbox-next { right: 12px; }
+    .lightbox-prev:disabled, .lightbox-next:disabled { opacity: 0.2; cursor: default; }
+    /* make card images show pointer cursor */
+    .img-slide img { cursor: zoom-in; }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .header { padding: 0 14px; }
@@ -573,6 +616,15 @@
 
 <!-- Toast -->
 <div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <button class="lightbox-prev" id="lbPrev" onclick="lbSlide(-1,event)">‹</button>
+  <img class="lightbox-img" id="lbImg" src="" alt="" />
+  <button class="lightbox-next" id="lbNext" onclick="lbSlide(1,event)">›</button>
+  <div class="lightbox-counter" id="lbCounter"></div>
+</div>
 
 <script>
 /* ══════════════════════════════════════════════
@@ -753,10 +805,13 @@ function renderCards(rows) {
     const dateStr = r['date (YYYY-MM-DD)'] || r.date || '';
 
     // Slider HTML
+    const imgsJson = JSON.stringify(imgs).replace(/'/g, '&#39;');
     const slidesHtml = imgCount > 0
       ? imgs.map((url, si) => `
           <div class="img-slide ${si===0?'active':''}" id="slide-${r.rowIndex}-${si}">
-            <img src="${thumb(url)}" alt="Post image ${si+1}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=img-placeholder><svg width=32 height=32 viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/><circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/><path d=&quot;M21 15l-5-5L5 21&quot;/></svg><span>ไม่พบรูปภาพ</span></div>'" />
+            <img src="${thumb(url)}" alt="Post image ${si+1}" loading="lazy"
+              onclick="openLightbox(${imgsJson},${si})"
+              onerror="this.parentElement.innerHTML='<div class=img-placeholder><svg width=32 height=32 viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/><circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/><path d=&quot;M21 15l-5-5L5 21&quot;/></svg><span>ไม่พบรูปภาพ</span></div>'" />
           </div>`).join('')
       : `<div class="img-placeholder">
           <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
@@ -841,6 +896,48 @@ function renderCards(rows) {
 /* ══════════════════════════════════════════════
    SLIDER
 ══════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════
+   LIGHTBOX
+══════════════════════════════════════════════ */
+let lbImgs = [], lbIdx = 0;
+
+function fullUrl(url) {
+  const m = url.match(/\/d\/([^/?]+)/);
+  return m ? `https://drive.google.com/thumbnail?id=${m[1]}&sz=w2000` : url;
+}
+
+function openLightbox(imgs, startIdx) {
+  lbImgs = imgs; lbIdx = startIdx;
+  renderLb();
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderLb() {
+  document.getElementById('lbImg').src = fullUrl(lbImgs[lbIdx]);
+  document.getElementById('lbCounter').textContent = lbImgs.length > 1 ? `${lbIdx+1} / ${lbImgs.length}` : '';
+  document.getElementById('lbPrev').disabled = lbIdx === 0;
+  document.getElementById('lbNext').disabled = lbIdx >= lbImgs.length - 1;
+  document.getElementById('lbPrev').style.display = lbImgs.length > 1 ? '' : 'none';
+  document.getElementById('lbNext').style.display = lbImgs.length > 1 ? '' : 'none';
+}
+
+function lbSlide(dir, e) {
+  if (e) e.stopPropagation();
+  const next = lbIdx + dir;
+  if (next < 0 || next >= lbImgs.length) return;
+  lbIdx = next; renderLb();
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== e.currentTarget && !e.target.closest('.lightbox-close')) return;
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// close on ESC
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
 function goSlide(rowIndex, targetIdx) {
   const container = document.querySelector(`[data-idx="${rowIndex}"]`);
   if (!container) return;
@@ -971,7 +1068,8 @@ function renderModalImg() {
     const img = document.createElement('img');
     img.src = thumb(modalImgs[modalImgIdx]);
     img.alt = `Image ${modalImgIdx + 1}`;
-    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;cursor:zoom-in;';
+    img.onclick = () => openLightbox(modalImgs, modalImgIdx);
     wrap.insertBefore(img, wrap.querySelector('.modal-img-nav'));
   } else {
     wrap.innerHTML = `<div class="img-placeholder" style="height:280px">
