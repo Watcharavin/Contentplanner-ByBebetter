@@ -43,13 +43,32 @@
       display: flex; align-items: center;
       padding: 0 32px;
     }
-    .header-brand {
+    /* ── Brand Switcher ── */
+    .brand-switcher { position: relative; margin-right: 32px; }
+    .brand-btn {
+      display: flex; align-items: center; gap: 5px;
       font-family: 'Cormorant Garamond', serif;
       font-size: 20px; font-weight: 600;
       color: var(--accent); letter-spacing: 0.04em;
-      margin-right: 40px;
+      background: none; border: none; cursor: pointer; padding: 0;
     }
-    .header-brand span { color: var(--ink3); font-weight: 400; font-size: 13px; margin-left: 6px; }
+    .brand-chevron { color: var(--ink3); transition: transform 0.15s; flex-shrink: 0; }
+    .brand-switcher.open .brand-chevron { transform: rotate(180deg); }
+    .brand-menu {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      min-width: 180px; overflow: hidden; z-index: 200;
+    }
+    .brand-switcher.open .brand-menu { display: block; }
+    .brand-item {
+      display: block; width: 100%; padding: 10px 14px;
+      font-size: 14px; color: var(--ink); text-align: left;
+      background: none; border: none; cursor: pointer;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .brand-item:hover { background: var(--surface2); }
+    .brand-item.active { color: var(--accent); font-weight: 600; }
     .nav-tabs { display: flex; gap: 0; height: 56px; }
     .nav-tab {
       display: flex; align-items: center; gap: 6px;
@@ -407,7 +426,8 @@
     }
     @media (max-width: 768px) {
       .header { padding: 0 16px; }
-      .header-brand { margin-right: 12px; font-size: 18px; }
+      .brand-switcher { margin-right: 12px; }
+      .brand-btn { font-size: 18px; }
       .nav-tab { padding: 0 10px; font-size: 13px; }
       .main { padding: 20px 16px; }
       .pipeline-card { padding: 16px; }
@@ -422,7 +442,6 @@
       .page-title { font-size: 26px; }
     }
     @media (max-width: 480px) {
-      .header-brand span { display: none; }
       .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       .stat-card { padding: 14px 16px; }
       .stat-num { font-size: 28px; }
@@ -430,7 +449,8 @@
     }
     @media (max-width: 600px) {
       .header { padding: 0 10px; }
-      .header-brand { margin-right: 6px; font-size: 17px; }
+      .brand-switcher { margin-right: 6px; }
+      .brand-btn { font-size: 17px; }
       /* Hide tab text, show icons + badges only */
       .nav-tab { padding: 0 5px; font-size: 0; gap: 2px; }
       .nav-tab svg { flex-shrink: 0; }
@@ -513,18 +533,24 @@
 
 <!-- ── Header ── -->
 <header class="header">
-  <div class="header-brand">Trusme <span>Content Planner</span></div>
+  <div class="brand-switcher" id="brandSwitcher">
+    <button class="brand-btn" onclick="toggleBrandMenu(event)">
+      <span id="brandName">Trusme</span>
+      <svg class="brand-chevron" width="12" height="12" viewBox="0 0 20 20" fill="currentColor"><path d="M5 8l5 5 5-5H5z"/></svg>
+    </button>
+    <div class="brand-menu" id="brandMenu"></div>
+  </div>
   <nav class="nav-tabs">
-    <a href="index.html" class="nav-tab active">
+    <a href="index.html" class="nav-tab active" data-page="index">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2L2 9h2v9h5v-5h2v5h5V9h2L10 2z"/></svg>
       Overview
     </a>
-    <a href="content-review.html" class="nav-tab" id="navReview">
+    <a href="content-review.html" class="nav-tab" id="navReview" data-page="content-review">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 8h6M7 12h4"/></svg>
       Content Review
       <span class="nav-badge" id="reviewBadge">—</span>
     </a>
-    <a href="dashboard.html" class="nav-tab" id="navSchedule">
+    <a href="dashboard.html" class="nav-tab" id="navSchedule" data-page="dashboard">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="14" height="14" rx="2"/><path d="M7 2v4M13 2v4M3 9h14"/></svg>
       Schedule &amp; Publish
       <span class="nav-badge green" id="scheduleBadge">—</span>
@@ -667,10 +693,65 @@
 
 <script>
 /* ═══════════════════════════════════════════════════════
-   CONFIG — แก้ค่านี้ก่อน deploy
+   CONFIG — เพิ่มแบรนด์ใหม่ได้ที่นี่
 ═══════════════════════════════════════════════════════ */
-const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxRJjVcDTTNr8R7K4twkFN4AO_AgJsKw3WiNDvBaMDAmWe0NoOJ7bD6k0wRD741UKY/exec';
-const N8N_WEBHOOK = 'https://n8nsrv.arycu.com/webhook/generate-plan';
+const BRANDS = {
+  trusme: {
+    name:      'Trusme Cosmet',
+    scriptUrl: 'https://script.google.com/macros/s/AKfycbxRJjVcDTTNr8R7K4twkFN4AO_AgJsKw3WiNDvBaMDAmWe0NoOJ7bD6k0wRD741UKY/exec',
+    webhook:   'https://n8nsrv.arycu.com/webhook/generate-plan',
+    colors: { accent: '#C4437A', accentL: '#FCE4EF', accentD: '#9E2F5E' },
+  },
+  shoza: {
+    name:      'Shoza',
+    scriptUrl: 'YOUR_SHOZA_SCRIPT_URL',
+    webhook:   'YOUR_SHOZA_WEBHOOK',
+    colors: { accent: '#C4621A', accentL: '#FDEBD8', accentD: '#9E4D12' },
+  },
+};
+
+/* ── Brand helpers ── */
+function getCurrentBrandKey() {
+  const fromUrl   = new URLSearchParams(location.search).get('brand');
+  const fromStore = localStorage.getItem('trusme_brand');
+  const key = fromUrl || fromStore || Object.keys(BRANDS)[0];
+  return BRANDS[key] ? key : Object.keys(BRANDS)[0];
+}
+function getBrand() { return BRANDS[getCurrentBrandKey()]; }
+function switchBrand(key) {
+  localStorage.setItem('trusme_brand', key);
+  const u = new URL(location.href);
+  u.searchParams.set('brand', key);
+  location.href = u.toString();
+}
+function toggleBrandMenu(e) {
+  e && e.stopPropagation();
+  document.getElementById('brandSwitcher').classList.toggle('open');
+}
+function renderBrandMenu() {
+  const cur = getCurrentBrandKey();
+  document.getElementById('brandMenu').innerHTML = Object.entries(BRANDS)
+    .map(([k, b]) => `<button class="brand-item${k === cur ? ' active' : ''}" onclick="switchBrand('${k}')">${b.name}</button>`)
+    .join('');
+}
+function applyBrandColors() {
+  const { colors } = getBrand();
+  if (!colors) return;
+  const s = document.documentElement.style;
+  s.setProperty('--accent',   colors.accent);
+  s.setProperty('--accent-l', colors.accentL);
+  s.setProperty('--accent-d', colors.accentD);
+}
+function updateNavLinks() {
+  const bk = getCurrentBrandKey();
+  document.querySelectorAll('.nav-tab').forEach(a => {
+    try {
+      const u = new URL(a.getAttribute('href'), location.href);
+      u.searchParams.set('brand', bk);
+      a.setAttribute('href', u.toString());
+    } catch(_) {}
+  });
+}
 
 const LINE_CLIENT_ID  = '2009815604';
 const REDIRECT_URI    = window.location.origin + '/callback.html';
@@ -719,6 +800,14 @@ function showApp() {
   if (session?.pictureUrl) {
     document.getElementById('userAvatar').innerHTML = `<img src="${session.pictureUrl}" alt="avatar" />`;
   }
+  // Init brand switcher
+  applyBrandColors();
+  document.getElementById('brandName').textContent = getBrand().name;
+  renderBrandMenu();
+  updateNavLinks();
+  document.addEventListener('click', () => {
+    document.getElementById('brandSwitcher').classList.remove('open');
+  });
   loadData();
 }
 
@@ -783,7 +872,7 @@ function gsCall(params = {}) {
     const qs = new URLSearchParams({ ...params, callback: cb }).toString();
     window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
     script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
-    script.src = SCRIPT_URL + '?' + qs;
+    script.src = getBrand().scriptUrl + '?' + qs;
     document.head.appendChild(script);
   });
 }
@@ -981,8 +1070,9 @@ async function doGenerate() {
   }, 900);
 
   try {
-    if (N8N_WEBHOOK !== 'YOUR_N8N_WEBHOOK_URL') {
-      await fetch(N8N_WEBHOOK, {
+    const wh = getBrand().webhook;
+    if (!wh.startsWith('YOUR_')) {
+      await fetch(wh, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
