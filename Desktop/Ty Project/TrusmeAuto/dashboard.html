@@ -1623,7 +1623,7 @@ function setCalView(mode) {
   calViewMode = mode;
   document.getElementById('btnMonthView').classList.toggle('active', mode === 'month');
   document.getElementById('btnWeekView').classList.toggle('active', mode === 'week');
-  if (mode === 'week') calWeekStart = weekStartOf(new Date(calYear, calMonth, 1));
+  if (mode === 'week') calWeekStart = weekStartOf(new Date());
   renderCalendar();
 }
 
