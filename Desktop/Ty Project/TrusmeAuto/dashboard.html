@@ -465,6 +465,102 @@
     /* make card images show pointer cursor */
     .img-slide img { cursor: zoom-in; }
 
+    /* ── View Toggle ── */
+    .view-toggle { display: flex; gap: 3px; background: var(--surface2); border-radius: 8px; padding: 3px; }
+    .view-btn {
+      padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+      border: none; background: transparent; color: var(--ink3); cursor: pointer;
+      display: flex; align-items: center; gap: 5px; font-family: 'Sarabun', sans-serif;
+      transition: all 0.12s; white-space: nowrap;
+    }
+    .view-btn.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    /* ── Calendar wrap ── */
+    .cal-wrap { display: flex; gap: 20px; align-items: flex-start; }
+    .cal-main { flex: 1; min-width: 0; }
+    .cal-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px;
+      position: sticky; top: 76px;
+      max-height: calc(100vh - 120px); overflow-y: auto;
+    }
+    .cal-sidebar-title {
+      font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .cal-sidebar-badge {
+      background: var(--accent-l); color: var(--accent);
+      font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+    }
+    /* Calendar header */
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .cal-month-label { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--ink); }
+    .cal-nav { display: flex; gap: 6px; }
+    .cal-nav-btn {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--surface2); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 16px; color: var(--ink2); transition: all 0.12s;
+    }
+    .cal-nav-btn:hover { background: var(--surface3); border-color: var(--ink3); }
+    /* Day-of-week row */
+    .cal-dow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
+    .cal-dow-cell { text-align: center; font-size: 11px; font-weight: 600; color: var(--ink3); padding: 4px 0; }
+    /* Day grid */
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-day {
+      min-height: 88px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 5px 5px 4px;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .cal-day.other-month { background: var(--surface2); opacity: 0.55; }
+    .cal-day.today { border-color: var(--accent); }
+    .cal-day.drag-over { border-color: var(--accent) !important; background: var(--accent-l) !important; border-style: dashed; }
+    .cal-day-num { font-size: 11px; font-weight: 600; color: var(--ink3); margin-bottom: 3px; line-height: 1; }
+    .cal-day.today .cal-day-num {
+      background: var(--accent); color: #fff;
+      width: 18px; height: 18px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-size: 10px;
+    }
+    /* Chips inside cells */
+    .cal-chip {
+      display: flex; align-items: flex-start; gap: 3px;
+      padding: 3px 5px; border-radius: 5px; margin-bottom: 2px;
+      font-size: 10px; line-height: 1.3; cursor: grab;
+      border: 1px solid rgba(0,0,0,0.07); user-select: none;
+      transition: opacity 0.15s;
+    }
+    .cal-chip:active { cursor: grabbing; }
+    .cal-chip.dragging { opacity: 0.3; }
+    .cal-chip-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; background: currentColor; opacity: 0.7; }
+    .cal-chip-inner { overflow: hidden; }
+    .cal-chip-id  { font-size: 9px; opacity: 0.6; font-family: monospace; white-space: nowrap; }
+    .cal-chip-txt { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
+    /* Chip colour by pillar */
+    .cal-chip-product  { background: var(--accent-l); color: var(--accent-d); }
+    .cal-chip-company  { background: #EEF2FF; color: #3730A3; }
+    .cal-chip-general  { background: #FFF7ED; color: #92400E; }
+    .cal-chip-seasonal { background: #FDF4FF; color: #7E22CE; }
+    /* Override for scheduled / posted */
+    .cal-chip.chip-scheduled { background: var(--s-bg) !important; color: var(--s-ink) !important; border-color: var(--s-bd) !important; }
+    .cal-chip.chip-posted    { background: var(--d-bg) !important; color: var(--d-ink) !important; border-color: var(--d-bd) !important; cursor: default !important; }
+    /* Sidebar post chips */
+    .sb-chip {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 10px; border-radius: 8px; margin-bottom: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      cursor: grab; user-select: none; transition: opacity 0.15s, box-shadow 0.12s;
+    }
+    .sb-chip:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .sb-chip:active { cursor: grabbing; }
+    .sb-chip.dragging { opacity: 0.3; }
+    .sb-chip-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 3px; }
+    .sb-chip-id   { font-size: 10px; color: var(--ink3); font-family: monospace; }
+    .sb-chip-text { font-size: 11px; font-weight: 600; color: var(--ink); line-height: 1.3; margin-top: 2px;
+      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
+    .sb-empty { text-align: center; padding: 24px 8px; color: var(--ink3); font-size: 12px; line-height: 1.6; }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .header { padding: 0 14px; }
@@ -477,6 +573,8 @@
       .toolbar { flex-wrap: wrap; }
       .toolbar-left { flex-wrap: wrap; gap: 6px; }
       .done-banner { flex-direction: column; text-align: center; align-items: center; }
+      .cal-wrap { flex-direction: column; }
+      .cal-sidebar { width: 100%; position: static; max-height: none; order: -1; }
     }
     @media (max-width: 540px) {
       .card-grid { grid-template-columns: 1fr; }
@@ -586,13 +684,23 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <div class="toolbar-left">
+    <div class="toolbar-left" id="filterChips">
       <button class="filter-chip active" onclick="setFilter('ready',this)">รอตั้ง Schedule</button>
       <button class="filter-chip" onclick="setFilter('scheduled',this)">Scheduled</button>
       <button class="filter-chip" onclick="setFilter('posted',this)">Posted</button>
       <button class="filter-chip" onclick="setFilter('all',this)">ทั้งหมด</button>
     </div>
     <span class="row-count" id="rowCount"></span>
+    <div class="view-toggle">
+      <button class="view-btn active" id="btnCardView" onclick="setView('card')">
+        <svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor"><rect x="2" y="2" width="7" height="7" rx="1"/><rect x="11" y="2" width="7" height="7" rx="1"/><rect x="2" y="11" width="7" height="7" rx="1"/><rect x="11" y="11" width="7" height="7" rx="1"/></svg>
+        Cards
+      </button>
+      <button class="view-btn" id="btnCalView" onclick="setView('calendar')">
+        <svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M6 2v4M14 2v4M2 9h16"/></svg>
+        Calendar
+      </button>
+    </div>
   </div>
 
   <!-- Card grid -->
@@ -613,6 +721,45 @@
         <div class="skeleton" style="height:14px;width:40%"></div>
         <div class="skeleton" style="height:18px;width:80%;margin-top:4px"></div>
         <div class="skeleton" style="height:12px;width:100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar View -->
+  <div id="calendarView" style="display:none">
+    <div class="cal-wrap">
+      <!-- Calendar main -->
+      <div class="cal-main">
+        <div class="cal-header">
+          <div class="cal-month-label" id="calMonthLabel"></div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+            <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+          </div>
+        </div>
+        <div class="cal-dow">
+          <div class="cal-dow-cell">อา</div>
+          <div class="cal-dow-cell">จ</div>
+          <div class="cal-dow-cell">อ</div>
+          <div class="cal-dow-cell">พ</div>
+          <div class="cal-dow-cell">พฤ</div>
+          <div class="cal-dow-cell">ศ</div>
+          <div class="cal-dow-cell">ส</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+      </div>
+      <!-- Sidebar: unscheduled posts -->
+      <div class="cal-sidebar">
+        <div class="cal-sidebar-title">
+          รอตั้งวันที่
+          <span class="cal-sidebar-badge" id="calSidebarCount">0</span>
+        </div>
+        <div id="calSidebarList">
+          <div class="sb-empty">กำลังโหลด...</div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);font-size:11px;color:var(--ink3);line-height:1.6;">
+          ลาก post จาก sidebar ไปวางในช่องวันที่<br/>หรือลากระหว่างวันเพื่อเปลี่ยนวัน
+        </div>
       </div>
     </div>
   </div>
@@ -801,6 +948,7 @@ async function loadData() {
   updateBadges();
   updateSummary();
   applyFilter();
+  if (currentView === 'calendar') renderCalendar();
   // poll ถ้ามี approved หรือ img gen อยู่
   if (allRows.some(r => ['approved','img gen'].includes(r.status))) startAutoPoll();
 }
@@ -1322,6 +1470,7 @@ async function doPoll() {
       updateBadges();
       updateSummary();
       applyFilter();
+      if (currentView === 'calendar') renderCalendar();
       showToast(`รูปพร้อมแล้ว ${newReady.length} posts ✓ ตั้งวันที่ได้เลย`, 'success');
       hidePollBanner();
     }
@@ -1374,6 +1523,267 @@ function hidePollBanner() {
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && autoPollTimer) doPoll();
 });
+
+/* ══════════════════════════════════════════════
+   VIEW TOGGLE (Card ↔ Calendar)
+══════════════════════════════════════════════ */
+let currentView = 'card';
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+
+function setView(v) {
+  currentView = v;
+  const isCard = v === 'card';
+  document.getElementById('cardGrid').style.display      = isCard ? '' : 'none';
+  document.getElementById('calendarView').style.display  = isCard ? 'none' : '';
+  document.getElementById('filterChips').style.display   = isCard ? '' : 'none';
+  document.getElementById('rowCount').style.display      = isCard ? '' : 'none';
+  document.getElementById('btnCardView').classList.toggle('active', isCard);
+  document.getElementById('btnCalView').classList.toggle('active', !isCard);
+  if (!isCard) renderCalendar();
+}
+
+function prevMonth() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+function nextMonth() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+/* ══════════════════════════════════════════════
+   CALENDAR RENDER
+══════════════════════════════════════════════ */
+const THAI_MONTHS_LONG = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+function renderCalendar() {
+  const today = todayISO();
+
+  // Update month label (Thai Buddhist Year)
+  document.getElementById('calMonthLabel').textContent =
+    `${THAI_MONTHS_LONG[calMonth]} ${calYear + 543}`;
+
+  // Build calendar cells
+  const firstDow = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+
+  const cells = [];
+  // Pad before (previous month)
+  for (let i = firstDow - 1; i >= 0; i--) {
+    cells.push({ d: daysInPrev - i, date: null, otherMonth: true });
+  }
+  // Current month
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isoDate = `${calYear}-${String(calMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    cells.push({ d, date: isoDate, otherMonth: false, isToday: isoDate === today });
+  }
+  // Pad after (next month)
+  let nd = 1;
+  while (cells.length % 7 !== 0) {
+    cells.push({ d: nd++, date: null, otherMonth: true });
+  }
+
+  // Group scheduled/posted posts by date
+  const byDate = {};
+  dashRows.forEach(r => {
+    if (!['scheduled','published','posted','done'].includes(r.status)) return;
+    const d = String(r['date (YYYY-MM-DD)'] || '').slice(0,10);
+    if (!d) return;
+    if (!byDate[d]) byDate[d] = [];
+    byDate[d].push(r);
+  });
+
+  // Render grid
+  document.getElementById('calGrid').innerHTML = cells.map(cell => {
+    if (cell.otherMonth) {
+      return `<div class="cal-day other-month"><div class="cal-day-num">${cell.d}</div></div>`;
+    }
+    const isToday = cell.isToday ? ' today' : '';
+    const posts = byDate[cell.date] || [];
+    const chipsHtml = posts.map(r => buildCalChip(r)).join('');
+    return `<div class="cal-day${isToday}" data-date="${cell.date}"
+        ondragover="calDragOver(event,this)"
+        ondragleave="calDragLeave(this)"
+        ondrop="calDrop(event,this)">
+      <div class="cal-day-num">${cell.d}</div>
+      ${chipsHtml}
+    </div>`;
+  }).join('');
+
+  // Render sidebar (status: ready)
+  const unscheduled = dashRows.filter(r => r.status === 'ready');
+  document.getElementById('calSidebarCount').textContent = unscheduled.length;
+  document.getElementById('calSidebarList').innerHTML = unscheduled.length
+    ? unscheduled.map(r => buildSidebarChip(r)).join('')
+    : `<div class="sb-empty">ไม่มี post รอตั้งวัน 🎉<br/>ทุก post ถูกตั้งวันแล้ว</div>`;
+
+  attachTouchListeners();
+}
+
+function pillarChipCls(p) {
+  return { product_content:'cal-chip-product', company_profile:'cal-chip-company',
+           general_knowledge:'cal-chip-general', seasonal:'cal-chip-seasonal' }[p] || '';
+}
+function pillarDotColor(p) {
+  return { product_content:'var(--accent)', company_profile:'#4338CA',
+           general_knowledge:'#92400E', seasonal:'#7E22CE' }[p] || '#6A6660';
+}
+
+function buildCalChip(r) {
+  const isPosted = ['published','posted','done'].includes(r.status);
+  const extraCls = isPosted ? ' chip-posted' : r.status === 'scheduled' ? ' chip-scheduled' : '';
+  const draggable = isPosted ? '' : 'draggable="true"';
+  const text = escHtml(r.headline || r.big_idea_line || '—');
+  return `<div class="cal-chip ${pillarChipCls(r.content_pillars)}${extraCls}"
+      id="calchip-${r.rowIndex}" data-row="${r.rowIndex}"
+      ${draggable}
+      ondragstart="chipDragStart(event,${r.rowIndex})"
+      onclick="openPreview(${r.rowIndex})"
+      style="cursor:pointer">
+    <div class="cal-chip-dot"></div>
+    <div class="cal-chip-inner">
+      <div class="cal-chip-id">${r.row_id||''}</div>
+      <div class="cal-chip-txt">${text}</div>
+    </div>
+  </div>`;
+}
+
+function buildSidebarChip(r) {
+  const color = pillarDotColor(r.content_pillars);
+  const text  = escHtml(r.headline || r.big_idea_line || '—');
+  return `<div class="sb-chip" id="sbchip-${r.rowIndex}" data-row="${r.rowIndex}"
+      draggable="true"
+      ondragstart="chipDragStart(event,${r.rowIndex})"
+      onclick="openPreview(${r.rowIndex})">
+    <div class="sb-chip-dot" style="background:${color}"></div>
+    <div>
+      <div class="sb-chip-id">${r.row_id||''}</div>
+      <div class="sb-chip-text">${text}</div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════
+   DRAG & DROP (desktop)
+══════════════════════════════════════════════ */
+let draggingRow = null;
+
+function chipDragStart(e, rowIndex) {
+  draggingRow = rowIndex;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', String(rowIndex));
+  setTimeout(() => {
+    const el = document.getElementById(`calchip-${rowIndex}`) || document.getElementById(`sbchip-${rowIndex}`);
+    if (el) el.classList.add('dragging');
+  }, 0);
+}
+
+function calDragOver(e, cell) {
+  if (!cell.dataset.date) return;
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  cell.classList.add('drag-over');
+}
+
+function calDragLeave(cell) {
+  cell.classList.remove('drag-over');
+}
+
+async function calDrop(e, cell) {
+  e.preventDefault();
+  cell.classList.remove('drag-over');
+  const newDate = cell.dataset.date;
+  const rowIndex = draggingRow;
+  draggingRow = null;
+  document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+  if (!newDate || rowIndex == null) return;
+  await assignToDate(rowIndex, newDate);
+}
+
+/* ══════════════════════════════════════════════
+   TOUCH DRAG (mobile)
+══════════════════════════════════════════════ */
+let touchRow   = null;
+let touchClone = null;
+
+function attachTouchListeners() {
+  document.querySelectorAll('[id^="calchip-"],[id^="sbchip-"]').forEach(el => {
+    const rowIndex = parseInt(el.dataset.row);
+    const row = dashRows.find(r => r.rowIndex === rowIndex);
+    if (!row || ['published','posted','done'].includes(row.status)) return;
+
+    el.addEventListener('touchstart', e => {
+      touchRow = rowIndex;
+      const t = e.touches[0];
+      const rect = el.getBoundingClientRect();
+      el.style.opacity = '0.3';
+      touchClone = el.cloneNode(true);
+      touchClone.removeAttribute('id');
+      touchClone.style.cssText = `position:fixed;left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;
+        opacity:0.85;z-index:9999;pointer-events:none;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,0.18);`;
+      document.body.appendChild(touchClone);
+    }, { passive: true });
+
+    el.addEventListener('touchmove', e => {
+      if (!touchClone) return;
+      e.preventDefault();
+      const t = e.touches[0];
+      touchClone.style.left = (t.clientX - 40) + 'px';
+      touchClone.style.top  = (t.clientY - 20) + 'px';
+      // Highlight cell under finger
+      touchClone.style.pointerEvents = 'none';
+      const under = document.elementFromPoint(t.clientX, t.clientY);
+      document.querySelectorAll('.cal-day.drag-over').forEach(c => c.classList.remove('drag-over'));
+      const cell = under?.closest('.cal-day');
+      if (cell?.dataset.date) cell.classList.add('drag-over');
+    }, { passive: false });
+
+    el.addEventListener('touchend', e => {
+      el.style.opacity = '';
+      if (touchClone) { touchClone.remove(); touchClone = null; }
+      const t = e.changedTouches[0];
+      document.querySelectorAll('.cal-day.drag-over').forEach(c => c.classList.remove('drag-over'));
+      const under = document.elementFromPoint(t.clientX, t.clientY);
+      const cell = under?.closest('.cal-day');
+      const row = touchRow; touchRow = null;
+      if (cell?.dataset.date && row != null) assignToDate(row, cell.dataset.date);
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════
+   ASSIGN POST TO DATE (calendar drop / touch)
+══════════════════════════════════════════════ */
+async function assignToDate(rowIndex, newDate) {
+  const row = dashRows.find(r => r.rowIndex === rowIndex);
+  if (!row) return;
+  if (['published','posted','done'].includes(row.status)) return;
+
+  const prevDate   = row['date (YYYY-MM-DD)'];
+  const prevStatus = row.status;
+
+  // Optimistic update
+  row['date (YYYY-MM-DD)'] = newDate;
+  row.status = 'scheduled';
+  updateSummary();
+  if (currentView === 'calendar') renderCalendar();
+  showToast(`ตั้งวัน ${fmtDateTH(newDate)} เรียบร้อย ✓`, 'success');
+
+  try {
+    await gsCall({ action: 'update', rowIndex, status: 'scheduled', date: newDate });
+    updateBadges();
+  } catch {
+    row['date (YYYY-MM-DD)'] = prevDate;
+    row.status = prevStatus;
+    updateSummary();
+    if (currentView === 'calendar') renderCalendar();
+    showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
+  }
+}
 
 /* ══════════════════════════════════════════════
    INIT
