@@ -477,6 +477,106 @@
       .user-chip > span:first-of-type { display: none; }
       .user-chip > button { display: none !important; }
     }
+
+    /* ── Reject Reason Popover ── */
+    .reason-overlay {
+      position: fixed; inset: 0; background: rgba(28,26,22,0.45);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .reason-overlay.active { opacity: 1; pointer-events: all; }
+    .reason-modal {
+      background: var(--surface); border-radius: 16px;
+      padding: 24px; max-width: 380px; width: calc(100% - 40px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      transform: translateY(8px); transition: transform 0.2s;
+    }
+    .reason-overlay.active .reason-modal { transform: translateY(0); }
+    .reason-title { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .reason-sub   { font-size: 12px; color: var(--ink3); margin-bottom: 14px; }
+    .reason-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+    .reason-chip {
+      padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 500;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--ink2); cursor: pointer; transition: all 0.12s;
+    }
+    .reason-chip:hover  { border-color: #F0A0A0; color: var(--r-ink); background: var(--r-bg); }
+    .reason-chip.selected { background: var(--r-bg); color: var(--r-ink); border-color: var(--r-bd); }
+    .reason-textarea {
+      width: 100%; padding: 10px 12px;
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--surface2); color: var(--ink);
+      font-size: 13px; font-family: 'Sarabun', sans-serif;
+      resize: none; height: 68px; outline: none; margin-bottom: 14px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .reason-textarea:focus { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-l); background: var(--surface); }
+    .reason-actions { display: flex; gap: 8px; }
+    .btn-reject-confirm {
+      flex: 1; padding: 10px 16px; background: var(--danger); color: #fff;
+      border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
+      font-family: 'Sarabun', sans-serif; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-reject-confirm:hover { background: #a93226; }
+
+    /* ── Side Drawer ── */
+    .drawer-overlay {
+      position: fixed; inset: 0; background: rgba(28,26,22,0.3);
+      z-index: 250; opacity: 0; pointer-events: none; transition: opacity 0.25s;
+    }
+    .drawer-overlay.active { opacity: 1; pointer-events: all; }
+    .drawer {
+      position: fixed; top: 0; right: 0; bottom: 0;
+      width: 420px; max-width: 100vw;
+      background: var(--surface); border-left: 1px solid var(--border);
+      box-shadow: -8px 0 40px rgba(0,0,0,0.10);
+      z-index: 251; display: flex; flex-direction: column;
+      transform: translateX(100%); transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+      overflow: hidden;
+    }
+    .drawer.active { transform: translateX(0); }
+    .drawer-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .drawer-id {
+      font-size: 11px; font-weight: 600; color: var(--ink3); font-family: monospace;
+      background: var(--surface2); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--border);
+    }
+    .drawer-close {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--ink3); font-size: 17px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; transition: all 0.12s;
+    }
+    .drawer-close:hover { background: var(--surface2); color: var(--ink); }
+    .drawer-body {
+      flex: 1; overflow-y: auto; padding: 20px;
+      display: flex; flex-direction: column; gap: 15px;
+    }
+    .drawer-label { font-size: 10px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+    .drawer-big-idea { font-size: 15px; font-weight: 600; color: var(--ink); line-height: 1.45; }
+    .drawer-text { font-size: 13px; color: var(--ink); line-height: 1.65; }
+    .drawer-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .drawer-empty { font-size: 13px; color: var(--ink3); font-style: italic; }
+    .drawer-footer {
+      padding: 14px 20px; border-top: 1px solid var(--border);
+      display: flex; gap: 10px; align-items: center; flex-shrink: 0;
+    }
+    .drawer-footer .btn-row {
+      flex: 1; justify-content: center; padding: 10px 14px; font-size: 13px;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ── Undo toast extra ── */
+    .toast-undo-btn {
+      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35);
+      color: #fff; padding: 3px 10px; border-radius: 6px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      font-family: 'Sarabun', sans-serif; transition: background 0.12s;
+      white-space: nowrap;
+    }
+    .toast-undo-btn:hover { background: rgba(255,255,255,0.3); }
   </style>
 </head>
 <body>
@@ -646,6 +746,37 @@
   </div>
 </div>
 
+<!-- Reject Reason Modal -->
+<div class="reason-overlay" id="reasonOverlay">
+  <div class="reason-modal">
+    <div class="reason-title">เหตุผลที่ Reject</div>
+    <div class="reason-sub">เลือกหรือพิมพ์เหตุผล เพื่อส่งให้ content writer แก้ไข</div>
+    <div class="reason-chips">
+      <button class="reason-chip" onclick="selectReason(this,'ข้อความไม่ตรงแบรนด์')">ข้อความไม่ตรงแบรนด์</button>
+      <button class="reason-chip" onclick="selectReason(this,'Product ผิด')">Product ผิด</button>
+      <button class="reason-chip" onclick="selectReason(this,'ซ้ำกับ post เก่า')">ซ้ำกับ post เก่า</button>
+      <button class="reason-chip" onclick="selectReason(this,'Visual ไม่เหมาะ')">Visual ไม่เหมาะ</button>
+      <button class="reason-chip" onclick="selectReason(this,'Tone ไม่ถูก')">Tone ไม่ถูก</button>
+    </div>
+    <textarea class="reason-textarea" id="reasonText" placeholder="หรือพิมพ์เหตุผลเองที่นี่..." oninput="clearReasonChips()"></textarea>
+    <div class="reason-actions">
+      <button class="btn-ghost" onclick="closeRejectReason()">ยกเลิก</button>
+      <button class="btn-reject-confirm" onclick="confirmReject()">✕ Reject</button>
+    </div>
+  </div>
+</div>
+
+<!-- Side Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="contentDrawer">
+  <div class="drawer-header">
+    <span class="drawer-id" id="drawerRowId">—</span>
+    <button class="drawer-close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-footer" id="drawerFooter"></div>
+</div>
+
 <!-- Toast -->
 <div class="toast-wrap" id="toastWrap"></div>
 
@@ -773,10 +904,11 @@ function gsCall(params = {}) {
 /* ═══════════════════════════════════════════════
    DATA
 ═══════════════════════════════════════════════ */
-let allRows     = [];
-let reviewRows  = [];
+let allRows       = [];
+let reviewRows    = [];
 let currentFilter = 'writing';
-let pendingUpdates = {};
+let pendingUpdates   = {};
+let pendingTimeouts  = {}; // rowIndex → { id } for undo
 
 async function loadData() {
   try {
@@ -896,22 +1028,22 @@ function renderTable(rows) {
       : '';
 
     const actionBtns = st === 'writing' ? `
-      <button class="btn-row btn-approve" onclick="setStatus(${r.rowIndex},'approved')">✓ Approve</button>
-      <button class="btn-row btn-reject"  onclick="setStatus(${r.rowIndex},'rejected')">✕ Reject</button>
-      <button class="btn-row btn-note"    onclick="openNote(${r.rowIndex},'${escHtml(r.big_idea_line||'')}')" title="เพิ่ม note">Note</button>
+      <button class="btn-row btn-approve" onclick="event.stopPropagation();setStatus(${r.rowIndex},'approved')">✓ Approve</button>
+      <button class="btn-row btn-reject"  onclick="event.stopPropagation();openRejectReason(${r.rowIndex})">✕ Reject</button>
+      <button class="btn-row btn-note"    onclick="event.stopPropagation();openNote(${r.rowIndex},'${escHtml(r.big_idea_line||'')}')" title="เพิ่ม note">Note</button>
     ` : st === 'approved' ? `
       <span style="font-size:12px;color:var(--a-ink);font-weight:600;white-space:nowrap">✓ Approved</span>
-      <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
+      <button class="btn-row btn-undo" onclick="event.stopPropagation();setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
     ` : st === 'error' ? `
       <span style="font-size:12px;color:var(--danger);font-weight:600;white-space:nowrap">⚠ Gen รูปล้มเหลว</span>
-      <button class="btn-row btn-reapprove" onclick="reApprove(${r.rowIndex})">Approve ใหม่</button>
+      <button class="btn-row btn-reapprove" onclick="event.stopPropagation();reApprove(${r.rowIndex})">Approve ใหม่</button>
     ` : `
       <span style="font-size:12px;color:var(--danger);font-weight:600;white-space:nowrap">✕ Rejected</span>
-      <button class="btn-row btn-undo" onclick="setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
+      <button class="btn-row btn-undo" onclick="event.stopPropagation();setStatus(${r.rowIndex},'writing')">เปลี่ยนใจ</button>
     `;
 
-    return `<div class="table-row ${rowCls}" id="row-${r.rowIndex}" style="animation-delay:${i*25}ms">
-      <div><input type="checkbox" class="row-check" data-idx="${r.rowIndex}" onchange="updateSelectAll()" /></div>
+    return `<div class="table-row ${rowCls}" id="row-${r.rowIndex}" style="animation-delay:${i*25}ms;cursor:pointer" onclick="openDrawer(${r.rowIndex})">
+      <div><input type="checkbox" class="row-check" data-idx="${r.rowIndex}" onchange="updateSelectAll()" onclick="event.stopPropagation()" /></div>
       <div><span class="id-pill">${r.row_id||'—'}</span></div>
       <div>
         <div class="big-idea">${escHtml(r.big_idea_line||'—')}</div>
@@ -930,32 +1062,76 @@ function renderTable(rows) {
 }
 
 /* ═══════════════════════════════════════════════
-   STATUS UPDATE
+   STATUS UPDATE  (skipToast = true for bulk)
 ═══════════════════════════════════════════════ */
-async function setStatus(rowIndex, newStatus) {
-  // Optimistic update
+async function setStatus(rowIndex, newStatus, skipToast = false) {
   const row = reviewRows.find(r => r.rowIndex === rowIndex);
   if (!row) return;
   const prev = row.status;
-  row.status = newStatus;
 
+  // Cancel any pending deferred API call for this row
+  if (pendingTimeouts[rowIndex]) {
+    clearTimeout(pendingTimeouts[rowIndex].id);
+    delete pendingTimeouts[rowIndex];
+  }
+
+  // Optimistic update
+  row.status = newStatus;
   updateProgress();
   applyFilters();
 
-  try {
-    await gsCall({ action: 'update', rowIndex, status: newStatus });
-    const msg = newStatus === 'approved' ? 'Approved เรียบร้อย ✓'
-               : newStatus === 'rejected' ? 'Rejected แล้ว'
-               : 'คืนสถานะเป็น รอ Review';
-    showToast(msg, newStatus === 'approved' ? 'success' : '');
-    updateBadges();
-    if (newStatus === 'approved') startPoll();
-  } catch(e) {
-    // Rollback
-    row.status = prev;
-    updateProgress();
-    applyFilters();
-    showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
+  // Approve / Reject → undo toast + deferred API
+  const useUndo = !skipToast && (newStatus === 'approved' || newStatus === 'rejected');
+
+  if (useUndo) {
+    const msg  = newStatus === 'approved' ? 'Approved เรียบร้อย ✓' : 'Rejected แล้ว';
+    const type = newStatus === 'approved' ? 'success' : '';
+
+    showUndoToast(msg, type, () => {
+      // Undo clicked — cancel pending & reverse
+      if (pendingTimeouts[rowIndex]) {
+        clearTimeout(pendingTimeouts[rowIndex].id);
+        delete pendingTimeouts[rowIndex];
+      }
+      row.status = prev;
+      updateProgress();
+      applyFilters();
+      showToast('ยกเลิกแล้ว', '');
+    });
+
+    const id = setTimeout(async () => {
+      delete pendingTimeouts[rowIndex];
+      try {
+        await gsCall({ action: 'update', rowIndex, status: newStatus });
+        updateBadges();
+        if (newStatus === 'approved') startPoll();
+      } catch(e) {
+        row.status = prev;
+        updateProgress();
+        applyFilters();
+        showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
+      }
+    }, 5000);
+    pendingTimeouts[rowIndex] = { id };
+
+  } else {
+    // Immediate API call (writing revert, bulk, re-approve)
+    try {
+      await gsCall({ action: 'update', rowIndex, status: newStatus });
+      if (!skipToast) {
+        const msg = newStatus === 'approved' ? 'Approved เรียบร้อย ✓'
+                   : newStatus === 'rejected' ? 'Rejected แล้ว'
+                   : 'คืนสถานะเป็น รอ Review';
+        showToast(msg, newStatus === 'approved' ? 'success' : '');
+      }
+      updateBadges();
+      if (newStatus === 'approved') startPoll();
+    } catch(e) {
+      row.status = prev;
+      updateProgress();
+      applyFilters();
+      showToast('เกิดข้อผิดพลาด — ลองใหม่', 'error');
+    }
   }
 }
 
@@ -1029,8 +1205,8 @@ async function bulkApprove() {
   closeBulkModal();
 
   for (const row of pending) {
-    await setStatus(row.rowIndex, 'approved');
-    await new Promise(r => setTimeout(r, 120)); // small stagger
+    await setStatus(row.rowIndex, 'approved', true); // skipToast — show aggregate at end
+    await new Promise(r => setTimeout(r, 120));
   }
 
   btn.disabled = false;
@@ -1085,6 +1261,137 @@ function updateSelectAll() {
 ═══════════════════════════════════════════════ */
 document.getElementById('noteOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeNote(); });
 document.getElementById('bulkOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeBulkModal(); });
+document.getElementById('reasonOverlay').addEventListener('click', e => { if (e.target === e.currentTarget) closeRejectReason(); });
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeDrawer(); closeRejectReason(); closeNote(); closeBulkModal(); }
+});
+
+/* ═══════════════════════════════════════════════
+   REJECT WITH REASON
+═══════════════════════════════════════════════ */
+let rejectRowIndex = null;
+
+function openRejectReason(rowIndex) {
+  rejectRowIndex = rowIndex;
+  document.getElementById('reasonText').value = '';
+  document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('reasonOverlay').classList.add('active');
+  setTimeout(() => document.getElementById('reasonText').focus(), 150);
+}
+function closeRejectReason() {
+  document.getElementById('reasonOverlay').classList.remove('active');
+  rejectRowIndex = null;
+}
+function selectReason(el, text) {
+  document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('reasonText').value = text;
+}
+function clearReasonChips() {
+  document.querySelectorAll('.reason-chip').forEach(c => c.classList.remove('selected'));
+}
+async function confirmReject() {
+  if (rejectRowIndex === null) return;
+  const reason = document.getElementById('reasonText').value.trim();
+  const row = reviewRows.find(r => r.rowIndex === rejectRowIndex);
+  if (!row) { closeRejectReason(); return; }
+  if (reason) {
+    row.reviewer_note = reason;
+    gsCall({ action: 'update', rowIndex: rejectRowIndex, reviewer_note: reason }).catch(() => {});
+  }
+  const ri = rejectRowIndex;
+  closeRejectReason();
+  setStatus(ri, 'rejected');
+}
+
+/* ═══════════════════════════════════════════════
+   SIDE DRAWER
+═══════════════════════════════════════════════ */
+let drawerRowIndex = null;
+
+function openDrawer(rowIndex) {
+  const row = reviewRows.find(r => r.rowIndex === rowIndex);
+  if (!row) return;
+  drawerRowIndex = rowIndex;
+  const pillar = PILLAR_MAP[row.content_pillars] || { label: row.content_pillars || '—', cls: '' };
+  const st = row.status;
+
+  document.getElementById('drawerRowId').textContent = row.row_id || '—';
+
+  // Body
+  const body = document.getElementById('drawerBody');
+  body.innerHTML = `
+    <div>
+      <div class="drawer-label">Big Idea</div>
+      <div class="drawer-big-idea">${escHtml(row.big_idea_line || '—')}</div>
+    </div>
+    <div>
+      <div class="drawer-tags">
+        <span class="tag ${pillar.cls}">${pillar.label}</span>
+        ${row.product_code && row.product_code !== 'none' ? `<span class="tag tag-product">${escHtml(row.product_code)}</span>` : ''}
+        ${row.post_structure ? `<span class="tag" style="background:var(--surface2);color:var(--ink2)">${escHtml(row.post_structure)}</span>` : ''}
+        ${row.seasonal_event_key && row.seasonal_event_key !== 'none' ? `<span class="tag tag-seasonal">${escHtml(row.seasonal_event_key)}</span>` : ''}
+      </div>
+    </div>
+    ${row.headline ? `<div>
+      <div class="drawer-label">Headline</div>
+      <div class="drawer-text" style="font-weight:600">${escHtml(row.headline)}</div>
+    </div>` : `<div>
+      <div class="drawer-label">Headline</div>
+      <div class="drawer-empty">ยังไม่มีข้อมูล — จะปรากฏหลัง generate content</div>
+    </div>`}
+    ${row.body_copy ? `<div>
+      <div class="drawer-label">Caption / Body Copy</div>
+      <div class="drawer-text" style="white-space:pre-wrap">${escHtml(row.body_copy)}</div>
+    </div>` : ''}
+    ${row.cta ? `<div>
+      <div class="drawer-label">Call to Action</div>
+      <div class="drawer-text">${escHtml(row.cta)}</div>
+    </div>` : ''}
+    ${row.angle_tags ? `<div>
+      <div class="drawer-label">Hashtags</div>
+      <div class="drawer-text" style="color:var(--ink3);font-size:12px">${escHtml(row.angle_tags)}</div>
+    </div>` : ''}
+    ${row.visual_direction_note ? `<div>
+      <div class="drawer-label">Visual Direction</div>
+      <div class="drawer-text" style="color:var(--ink2);font-style:italic">${escHtml(row.visual_direction_note)}</div>
+    </div>` : ''}
+    ${row.reviewer_note ? `<div>
+      <div class="drawer-label">Reviewer Note</div>
+      <div class="drawer-text" style="background:var(--surface2);padding:10px 12px;border-radius:8px;color:var(--ink2)">${escHtml(row.reviewer_note)}</div>
+    </div>` : ''}
+  `;
+
+  // Footer
+  const footer = document.getElementById('drawerFooter');
+  if (st === 'writing') {
+    footer.innerHTML = `
+      <button class="btn-row btn-approve" onclick="setStatus(${rowIndex},'approved');closeDrawer()">✓ Approve</button>
+      <button class="btn-row btn-reject"  onclick="closeDrawer();openRejectReason(${rowIndex})">✕ Reject</button>
+    `;
+  } else if (st === 'approved') {
+    footer.innerHTML = `
+      <span style="font-size:13px;color:var(--a-ink);font-weight:600">✓ Approved</span>
+      <button class="btn-row btn-undo" onclick="setStatus(${rowIndex},'writing');closeDrawer()" style="margin-left:auto">เปลี่ยนใจ</button>
+    `;
+  } else if (st === 'rejected') {
+    footer.innerHTML = `
+      <span style="font-size:13px;color:var(--danger);font-weight:600">✕ Rejected</span>
+      <button class="btn-row btn-undo" onclick="setStatus(${rowIndex},'writing');closeDrawer()" style="margin-left:auto">เปลี่ยนใจ</button>
+    `;
+  } else {
+    footer.innerHTML = '';
+  }
+
+  document.getElementById('drawerOverlay').classList.add('active');
+  document.getElementById('contentDrawer').classList.add('active');
+}
+
+function closeDrawer() {
+  document.getElementById('drawerOverlay').classList.remove('active');
+  document.getElementById('contentDrawer').classList.remove('active');
+  drawerRowIndex = null;
+}
 
 /* ═══════════════════════════════════════════════
    TOAST
@@ -1096,6 +1403,33 @@ function showToast(msg, type = '') {
   el.innerHTML = `<span>${icons[type]||'ℹ'}</span><span>${msg}</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>`;
   document.getElementById('toastWrap').appendChild(el);
   setTimeout(() => { el.style.animation = 'fadeOut 0.3s ease forwards'; setTimeout(() => el.remove(), 300); }, 4000);
+}
+
+function showUndoToast(msg, type, undoFn) {
+  const icons = { success: '✓', error: '✕', '': 'ℹ' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `
+    <span>${icons[type]||'ℹ'}</span>
+    <span style="flex:1">${msg}</span>
+    <button class="toast-undo-btn" id="_undoBtn_${Date.now()}">Undo</button>
+    <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+  `;
+  // Store undo fn on the element
+  el._undoFn = undoFn;
+  el.querySelector('.toast-undo-btn').onclick = () => {
+    if (!el._undoFn) return;
+    el._undoFn();
+    el._undoFn = null;
+    clearTimeout(el._autoRemove);
+    el.style.animation = 'fadeOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  };
+  document.getElementById('toastWrap').appendChild(el);
+  el._autoRemove = setTimeout(() => {
+    el.style.animation = 'fadeOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }, 5000);
 }
 
 /* ═══════════════════════════════════════════════
