@@ -561,6 +561,63 @@
       overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
     .sb-empty { text-align: center; padding: 24px 8px; color: var(--ink3); font-size: 12px; line-height: 1.6; }
 
+    /* ── Today button ── */
+    .cal-today-btn {
+      padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border); background: var(--surface); color: var(--ink2);
+      cursor: pointer; font-family: 'Sarabun', sans-serif; transition: all 0.12s;
+    }
+    .cal-today-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Month/Week sub-toggle ── */
+    .cal-sub-toggle { display: flex; gap: 2px; background: var(--surface2); border-radius: 7px; padding: 2px; }
+    .cal-sub-btn {
+      padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600;
+      border: none; background: transparent; color: var(--ink3); cursor: pointer;
+      font-family: 'Sarabun', sans-serif; transition: all 0.12s;
+    }
+    .cal-sub-btn.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    /* ── Week view cell (taller) ── */
+    .cal-day.week-cell { min-height: 160px; }
+
+    /* ── "+N more" badge ── */
+    .cal-more {
+      font-size: 10px; font-weight: 600; color: var(--ink3);
+      padding: 2px 5px; cursor: pointer; border-radius: 4px;
+      transition: background 0.1s, color 0.1s; display: inline-block;
+    }
+    .cal-more:hover { background: var(--surface3); color: var(--ink2); }
+
+    /* ── Day popover ── */
+    .day-popover {
+      position: fixed; z-index: 1000;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px 12px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.14);
+      min-width: 210px; max-width: 280px; animation: rise 0.15s ease;
+    }
+    .pop-title { font-size: 10px; font-weight: 700; color: var(--ink3); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; }
+    .pop-item {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 8px; border-radius: 7px; cursor: pointer;
+      font-size: 12px; color: var(--ink); transition: background 0.1s;
+    }
+    .pop-item:hover { background: var(--surface2); }
+    .pop-item-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .pop-item-text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .pop-item-id { font-size: 10px; color: var(--ink3); font-family: monospace; flex-shrink: 0; }
+
+    /* ── Pillar legend ── */
+    .cal-legend {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      margin-top: 12px; padding: 10px 14px;
+      background: var(--surface2); border-radius: 8px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink2); }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .legend-sep { width: 1px; height: 14px; background: var(--border); flex-shrink: 0; }
+
     /* ── Responsive ── */
     @media (max-width: 768px) {
       .header { padding: 0 14px; }
@@ -732,9 +789,16 @@
       <div class="cal-main">
         <div class="cal-header">
           <div class="cal-month-label" id="calMonthLabel"></div>
-          <div class="cal-nav">
-            <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
-            <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="cal-sub-toggle">
+              <button class="cal-sub-btn active" id="btnMonthView" onclick="setCalView('month')">เดือน</button>
+              <button class="cal-sub-btn" id="btnWeekView" onclick="setCalView('week')">สัปดาห์</button>
+            </div>
+            <button class="cal-today-btn" onclick="goToday()">วันนี้</button>
+            <div class="cal-nav">
+              <button class="cal-nav-btn" onclick="prevPeriod()">‹</button>
+              <button class="cal-nav-btn" onclick="nextPeriod()">›</button>
+            </div>
           </div>
         </div>
         <div class="cal-dow">
@@ -747,6 +811,7 @@
           <div class="cal-dow-cell">ส</div>
         </div>
         <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-legend" id="calLegend"></div>
       </div>
       <!-- Sidebar: unscheduled posts -->
       <div class="cal-sidebar">
@@ -1528,9 +1593,19 @@ document.addEventListener('visibilitychange', () => {
 /* ══════════════════════════════════════════════
    VIEW TOGGLE (Card ↔ Calendar)
 ══════════════════════════════════════════════ */
-let currentView = 'card';
-let calYear  = new Date().getFullYear();
-let calMonth = new Date().getMonth();
+let currentView  = 'card';
+let calViewMode  = 'month'; // 'month' | 'week'
+let calYear      = new Date().getFullYear();
+let calMonth     = new Date().getMonth();
+let calWeekStart = weekStartOf(new Date());
+
+function weekStartOf(d) {
+  const r = new Date(d); r.setHours(0,0,0,0);
+  r.setDate(r.getDate() - r.getDay()); return r;
+}
+function isoOf(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
 
 function setView(v) {
   currentView = v;
@@ -1544,14 +1619,38 @@ function setView(v) {
   if (!isCard) renderCalendar();
 }
 
-function prevMonth() {
-  calMonth--;
-  if (calMonth < 0) { calMonth = 11; calYear--; }
+function setCalView(mode) {
+  calViewMode = mode;
+  document.getElementById('btnMonthView').classList.toggle('active', mode === 'month');
+  document.getElementById('btnWeekView').classList.toggle('active', mode === 'week');
+  if (mode === 'week') calWeekStart = weekStartOf(new Date(calYear, calMonth, 1));
   renderCalendar();
 }
-function nextMonth() {
-  calMonth++;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
+
+function goToday() {
+  const now = new Date();
+  calYear  = now.getFullYear();
+  calMonth = now.getMonth();
+  calWeekStart = weekStartOf(now);
+  renderCalendar();
+}
+
+function prevPeriod() {
+  if (calViewMode === 'month') {
+    calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
+  } else {
+    calWeekStart = new Date(calWeekStart);
+    calWeekStart.setDate(calWeekStart.getDate() - 7);
+  }
+  renderCalendar();
+}
+function nextPeriod() {
+  if (calViewMode === 'month') {
+    calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
+  } else {
+    calWeekStart = new Date(calWeekStart);
+    calWeekStart.setDate(calWeekStart.getDate() + 7);
+  }
   renderCalendar();
 }
 
@@ -1559,71 +1658,133 @@ function nextMonth() {
    CALENDAR RENDER
 ══════════════════════════════════════════════ */
 const THAI_MONTHS_LONG = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MAX_CHIPS_MONTH = 3;
 
-function renderCalendar() {
-  const today = todayISO();
-
-  // Update month label (Thai Buddhist Year)
-  document.getElementById('calMonthLabel').textContent =
-    `${THAI_MONTHS_LONG[calMonth]} ${calYear + 543}`;
-
-  // Build calendar cells
-  const firstDow = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
-
-  const cells = [];
-  // Pad before (previous month)
-  for (let i = firstDow - 1; i >= 0; i--) {
-    cells.push({ d: daysInPrev - i, date: null, otherMonth: true });
-  }
-  // Current month
-  for (let d = 1; d <= daysInMonth; d++) {
-    const isoDate = `${calYear}-${String(calMonth + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    cells.push({ d, date: isoDate, otherMonth: false, isToday: isoDate === today });
-  }
-  // Pad after (next month)
-  let nd = 1;
-  while (cells.length % 7 !== 0) {
-    cells.push({ d: nd++, date: null, otherMonth: true });
-  }
-
-  // Group scheduled/posted posts by date
-  const byDate = {};
+function buildByDate() {
+  const map = {};
   dashRows.forEach(r => {
     if (!['scheduled','published','posted','done'].includes(r.status)) return;
-    const d = String(r['date (YYYY-MM-DD)'] || '').slice(0,10);
+    const d = String(r['date (YYYY-MM-DD)']||'').slice(0,10);
     if (!d) return;
-    if (!byDate[d]) byDate[d] = [];
-    byDate[d].push(r);
+    if (!map[d]) map[d] = [];
+    map[d].push(r);
   });
+  return map;
+}
 
-  // Render grid
-  document.getElementById('calGrid').innerHTML = cells.map(cell => {
-    if (cell.otherMonth) {
-      return `<div class="cal-day other-month"><div class="cal-day-num">${cell.d}</div></div>`;
+function buildDayCell(cell, byDate, mode) {
+  if (cell.otherMonth && mode === 'month') {
+    return `<div class="cal-day other-month"><div class="cal-day-num">${cell.d}</div></div>`;
+  }
+  const isToday = cell.isToday ? ' today' : '';
+  const weekCls = mode === 'week' ? ' week-cell' : '';
+  const posts   = byDate[cell.date] || [];
+  const maxShow = mode === 'week' ? 999 : MAX_CHIPS_MONTH;
+  const shown   = posts.slice(0, maxShow);
+  const extra   = posts.length - shown.length;
+  const chipsHtml = shown.map(r => buildCalChip(r)).join('');
+  const moreBadge = extra > 0
+    ? `<div class="cal-more" onclick="showDayPopover('${cell.date}',event)">+${extra} more</div>` : '';
+  return `<div class="cal-day${isToday}${weekCls}" data-date="${cell.date}"
+      ondragover="calDragOver(event,this)"
+      ondragleave="calDragLeave(this)"
+      ondrop="calDrop(event,this)">
+    <div class="cal-day-num">${cell.d}</div>
+    ${chipsHtml}${moreBadge}
+  </div>`;
+}
+
+function renderCalendar() {
+  const today  = todayISO();
+  const byDate = buildByDate();
+  let cells = [], labelText = '';
+
+  if (calViewMode === 'month') {
+    const firstDow    = new Date(calYear, calMonth, 1).getDay();
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+    for (let i = firstDow - 1; i >= 0; i--)
+      cells.push({ d: daysInPrev - i, date: null, otherMonth: true });
+    for (let d = 1; d <= daysInMonth; d++) {
+      const iso = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      cells.push({ d, date: iso, otherMonth: false, isToday: iso === today });
     }
-    const isToday = cell.isToday ? ' today' : '';
-    const posts = byDate[cell.date] || [];
-    const chipsHtml = posts.map(r => buildCalChip(r)).join('');
-    return `<div class="cal-day${isToday}" data-date="${cell.date}"
-        ondragover="calDragOver(event,this)"
-        ondragleave="calDragLeave(this)"
-        ondrop="calDrop(event,this)">
-      <div class="cal-day-num">${cell.d}</div>
-      ${chipsHtml}
-    </div>`;
-  }).join('');
+    let nd = 1;
+    while (cells.length % 7 !== 0) cells.push({ d: nd++, date: null, otherMonth: true });
+    labelText = `${THAI_MONTHS_LONG[calMonth]} ${calYear + 543}`;
 
-  // Render sidebar (status: ready)
+  } else {
+    // Week view
+    const ws = calWeekStart;
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(ws); d.setDate(ws.getDate() + i);
+      const iso = isoOf(d);
+      cells.push({ d: d.getDate(), date: iso, otherMonth: false, isToday: iso === today });
+    }
+    const we = new Date(ws); we.setDate(ws.getDate() + 6);
+    labelText = ws.getMonth() === we.getMonth()
+      ? `${ws.getDate()}–${we.getDate()} ${THAI_MONTHS_LONG[ws.getMonth()]} ${ws.getFullYear()+543}`
+      : `${ws.getDate()} ${THAI_MONTHS_LONG[ws.getMonth()]} – ${we.getDate()} ${THAI_MONTHS_LONG[we.getMonth()]} ${we.getFullYear()+543}`;
+    // Sync calYear/calMonth to displayed week for nav continuity
+    calYear  = we.getFullYear();
+    calMonth = we.getMonth();
+  }
+
+  document.getElementById('calMonthLabel').textContent = labelText;
+  document.getElementById('calGrid').innerHTML = cells.map(c => buildDayCell(c, byDate, calViewMode)).join('');
+
+  // Sidebar
   const unscheduled = dashRows.filter(r => r.status === 'ready');
   document.getElementById('calSidebarCount').textContent = unscheduled.length;
   document.getElementById('calSidebarList').innerHTML = unscheduled.length
     ? unscheduled.map(r => buildSidebarChip(r)).join('')
     : `<div class="sb-empty">ไม่มี post รอตั้งวัน 🎉<br/>ทุก post ถูกตั้งวันแล้ว</div>`;
 
+  // Legend
+  const leg = document.getElementById('calLegend');
+  if (leg) {
+    const pillars = [
+      ['product_content','Product'], ['company_profile','Company'],
+      ['general_knowledge','General'], ['seasonal','Seasonal'],
+    ];
+    const statuses = [
+      ['var(--s-ink)','Scheduled'], ['var(--d-ink)','Posted'],
+    ];
+    leg.innerHTML =
+      pillars.map(([p,l]) => `<div class="legend-item"><span class="legend-dot" style="background:${pillarDotColor(p)}"></span>${l}</div>`).join('') +
+      `<span class="legend-sep"></span>` +
+      statuses.map(([c,l]) => `<div class="legend-item"><span class="legend-dot" style="background:${c}"></span>${l}</div>`).join('');
+  }
+
   attachTouchListeners();
 }
+
+/* ── Day popover for "+N more" ── */
+function showDayPopover(date, e) {
+  e.stopPropagation();
+  closePopover();
+  const posts = dashRows.filter(r => {
+    const d = String(r['date (YYYY-MM-DD)']||'').slice(0,10);
+    return d === date && ['scheduled','published','posted','done'].includes(r.status);
+  });
+  if (!posts.length) return;
+  const pop = document.createElement('div');
+  pop.id = 'dayPopover';
+  pop.className = 'day-popover';
+  pop.innerHTML = `<div class="pop-title">${fmtDateTH(date)}</div>` +
+    posts.map(r => `<div class="pop-item" onclick="openPreview(${r.rowIndex});closePopover()">
+      <span class="pop-item-dot" style="background:${pillarDotColor(r.content_pillars)}"></span>
+      <span class="pop-item-id">${r.row_id||''}</span>
+      <span class="pop-item-text">${escHtml((r.headline||r.big_idea_line||'').slice(0,40))}</span>
+    </div>`).join('');
+  document.body.appendChild(pop);
+  const x = Math.min(e.clientX, window.innerWidth - 295);
+  const y = Math.min(e.clientY + 6, window.innerHeight - (posts.length * 36 + 60));
+  pop.style.left = x + 'px';
+  pop.style.top  = y + 'px';
+  setTimeout(() => document.addEventListener('click', closePopover, { once: true }), 0);
+}
+function closePopover() { document.getElementById('dayPopover')?.remove(); }
 
 function pillarChipCls(p) {
   return { product_content:'cal-chip-product', company_profile:'cal-chip-company',
