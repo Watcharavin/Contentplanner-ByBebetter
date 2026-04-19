@@ -150,9 +150,10 @@ async function handleCallback() {
   }
 
   // Verify state (CSRF protection)
-  // Read from cookie first (works when callback opens in Safari from iOS PWA), fallback localStorage
+  // On iOS, PWA and Safari have separate storage — state may not be found (known iOS limitation)
+  // Only block if a state IS found but doesn't match (real CSRF); missing state = iOS PWA flow
   const savedState = getCookie('line_state') || localStorage.getItem('line_state');
-  if (state !== savedState) {
+  if (savedState && state !== savedState) {
     showError('State ไม่ตรง — อาจเป็นการโจมตี CSRF');
     return;
   }

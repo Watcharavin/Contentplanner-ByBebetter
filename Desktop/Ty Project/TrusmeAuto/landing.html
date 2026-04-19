@@ -442,13 +442,23 @@
 const LINE_CLIENT_ID = '2009815604';
 const REDIRECT_URI   = window.location.origin + '/callback.html';
 
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
 // ถ้า login อยู่แล้ว → ไป overview เลย
-const session = localStorage.getItem('trusme_session');
-if (session) { window.location.replace('index.html'); }
+const existingSession = getCookie('pellow_session') || localStorage.getItem('trusme_session');
+if (existingSession) { window.location.replace('index.html'); }
 
 function lineLogin() {
   const state = Math.random().toString(36).slice(2);
+  // Store in both localStorage and cookie (cookie works cross-context on desktop)
   localStorage.setItem('line_state', state);
+  try {
+    const exp = new Date(Date.now() + 10 * 60000).toUTCString();
+    document.cookie = `line_state=${state};expires=${exp};path=/;SameSite=Lax`;
+  } catch(_) {}
   window.location.href = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=profile%20openid`;
 }
 </script>
