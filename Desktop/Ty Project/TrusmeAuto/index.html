@@ -785,8 +785,22 @@ const REDIRECT_URI    = window.location.origin + '/callback.html';
 ═══════════════════════════════════════════════════════ */
 let session = null;
 
+/* ── Cookie helpers (shared between Safari & iOS PWA) ── */
+function setCookie(name, value, minutes) {
+  const exp = new Date(Date.now() + minutes * 60000).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${exp};path=/;SameSite=Lax`;
+}
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function deleteCookie(name) {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+}
+
 function initAuth() {
-  const raw = localStorage.getItem('trusme_session');
+  // Read session from cookie first (works across Safari ↔ iOS PWA), fallback localStorage
+  const raw = getCookie('pellow_session') || localStorage.getItem('trusme_session');
   if (raw) {
     try { session = JSON.parse(raw); } catch(_) {}
   }
@@ -799,20 +813,26 @@ function initAuth() {
 
 function lineLogin() {
   const state = Math.random().toString(36).slice(2);
-  localStorage.setItem('line_state', state);
+  // Use cookie so callback.html (may open in Safari) can verify state from PWA
+  setCookie('line_state', state, 10);
+  localStorage.setItem('line_state', state); // keep for non-PWA flows
   const url = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&state=${state}&scope=profile%20openid`;
   window.location.href = url;
 }
 
 function demoLogin() {
   session = { displayName: 'Demo User', userId: 'demo', pictureUrl: '' };
-  localStorage.setItem('trusme_session', JSON.stringify(session));
+  const raw = JSON.stringify(session);
+  setCookie('pellow_session', raw, 60 * 24 * 30);
+  localStorage.setItem('trusme_session', raw);
   document.getElementById('loginOverlay').style.display = 'none';
   document.getElementById('demoBadge').style.display = 'inline-flex';
   showApp();
 }
 
 function logout() {
+  deleteCookie('pellow_session');
+  deleteCookie('line_state');
   localStorage.removeItem('trusme_session');
   localStorage.removeItem('line_state');
   window.location.reload();

@@ -100,6 +100,19 @@ const SCRIPT_URL     = 'https://script.google.com/macros/s/AKfycbz1S1fOX9aZcrvSc
 const LINE_CLIENT_ID = '2009815604';
 const REDIRECT_URI   = window.location.origin + '/callback.html';
 
+/* ── Cookie helpers (shared between Safari & iOS PWA) ── */
+function setCookie(name, value, minutes) {
+  const exp = new Date(Date.now() + minutes * 60000).toUTCString();
+  document.cookie = `${name}=${encodeURIComponent(value)};expires=${exp};path=/;SameSite=Lax`;
+}
+function getCookie(name) {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+function deleteCookie(name) {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+}
+
 /* ══════════════════════════════════════════
    JSONP helper
 ══════════════════════════════════════════ */
@@ -137,11 +150,13 @@ async function handleCallback() {
   }
 
   // Verify state (CSRF protection)
-  const savedState = localStorage.getItem('line_state');
+  // Read from cookie first (works when callback opens in Safari from iOS PWA), fallback localStorage
+  const savedState = getCookie('line_state') || localStorage.getItem('line_state');
   if (state !== savedState) {
     showError('State ไม่ตรง — อาจเป็นการโจมตี CSRF');
     return;
   }
+  deleteCookie('line_state');
   localStorage.removeItem('line_state');
 
   // Exchange code → profile via Apps Script proxy
@@ -159,9 +174,11 @@ async function handleCallback() {
 
     const { userId, displayName, pictureUrl } = res.profile;
 
-    // Store session
+    // Store session in cookie (shared Safari ↔ PWA) + localStorage
     const session = { userId, displayName, pictureUrl };
-    localStorage.setItem('trusme_session', JSON.stringify(session));
+    const raw = JSON.stringify(session);
+    setCookie('pellow_session', raw, 60 * 24 * 30); // 30 days
+    localStorage.setItem('trusme_session', raw);
 
     // Show success
     showSuccess(displayName);
