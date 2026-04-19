@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trusme — Auto Content Planner</title>
+  <title>Pellow — Auto Content Planner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -100,22 +100,32 @@
 
     /* ── STATS ROW ── */
     .stats-row {
-      display: flex; justify-content: center; gap: 0;
+      padding: 48px 40px;
+      background: var(--surface);
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      background: var(--surface);
+    }
+    .stats-inner {
+      max-width: 900px; margin: 0 auto;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
     }
     .stat-item {
-      flex: 1; max-width: 220px;
-      padding: 28px 24px; text-align: center;
-      border-right: 1px solid var(--border);
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 16px; padding: 28px 20px;
+      text-align: center; transition: box-shadow 0.2s, transform 0.2s;
     }
-    .stat-item:last-child { border-right: none; }
+    .stat-item:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.06); transform: translateY(-2px); }
+    .stat-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: var(--accent-l); margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+    }
     .stat-num {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 36px; font-weight: 700; color: var(--accent);
+      font-size: 40px; font-weight: 700; color: var(--accent);
+      line-height: 1;
     }
-    .stat-label { font-size: 13px; color: var(--ink3); margin-top: 4px; }
+    .stat-label { font-size: 13px; color: var(--ink3); margin-top: 6px; font-weight: 500; }
 
     /* ── SECTION ── */
     .section { padding: 80px 40px; max-width: 1000px; margin: 0 auto; }
@@ -210,19 +220,16 @@
     @media (max-width: 768px) {
       .nav { padding: 0 20px; }
       .hero { padding: 84px 20px 48px; }
-      .stats-row { flex-wrap: wrap; }
-      .stat-item { flex: 0 0 50%; max-width: none; }
-      .stat-item:nth-child(2) { border-right: none; }
-      .stat-item:nth-child(3),
-      .stat-item:nth-child(4) { border-top: 1px solid var(--border); }
+      .stats-row { padding: 32px 20px; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .section { padding: 48px 20px; }
       .cta-section { padding: 48px 20px; }
       .footer { padding: 20px; justify-content: center; text-align: center; }
     }
     @media (max-width: 480px) {
-      .stats-row { flex-direction: column; }
-      .stat-item { flex: none; max-width: 100%; border-right: none !important; border-top: 1px solid var(--border) !important; }
-      .stat-item:first-child { border-top: none !important; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .stat-item { padding: 20px 14px; }
+      .stat-num { font-size: 32px; }
       .features-grid { grid-template-columns: 1fr; }
       .step { grid-template-columns: 48px 1fr; gap: 16px; }
       .hero-sub br { display: none; }
@@ -234,7 +241,7 @@
 
 <!-- Nav -->
 <nav class="nav">
-  <div class="nav-brand">Trusme</div>
+  <div class="nav-brand">Pellow</div>
   <button class="nav-cta" onclick="lineLogin()">เข้าสู่ระบบ</button>
 </nav>
 
@@ -243,7 +250,7 @@
   <div class="hero-inner">
     <div class="hero-badge">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="6" cy="6" r="6"/></svg>
-      Auto Content Planner สำหรับ Trusme Cosmet
+      Auto Content Planner for Social Media
     </div>
     <h1 class="hero-title">
       สร้าง Content<br/>
@@ -262,27 +269,41 @@
         ดูวิธีใช้งาน ↓
       </button>
     </div>
-    <p class="hero-note">สำหรับทีม Trusme เท่านั้น · เข้าสู่ระบบด้วย LINE Account ที่ลงทะเบียนไว้</p>
+    <p class="hero-note">เข้าสู่ระบบด้วย LINE Account ที่ได้รับสิทธิ์เท่านั้น</p>
   </div>
 </section>
 
 <!-- Stats -->
 <div class="stats-row">
-  <div class="stat-item">
-    <div class="stat-num">7</div>
-    <div class="stat-label">posts ต่อ batch</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">3</div>
-    <div class="stat-label">ขั้นตอนทั้งหมด</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">AI</div>
-    <div class="stat-label">สร้างรูปอัตโนมัติ</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">Auto</div>
-    <div class="stat-label">Post Facebook</div>
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      </div>
+      <div class="stat-num">7</div>
+      <div class="stat-label">posts ต่อ batch</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div class="stat-num">3</div>
+      <div class="stat-label">ขั้นตอนทั้งหมด</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+      </div>
+      <div class="stat-num">AI</div>
+      <div class="stat-label">สร้างรูปอัตโนมัติ</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D6A4F" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+      </div>
+      <div class="stat-num">Auto</div>
+      <div class="stat-label">Post Facebook</div>
+    </div>
   </div>
 </div>
 
@@ -343,7 +364,7 @@
 <section class="section">
   <div class="section-label">ฟีเจอร์</div>
   <h2 class="section-title">ครบทุกขั้นตอน</h2>
-  <p class="section-sub">ออกแบบมาเพื่อทีม Trusme โดยเฉพาะ</p>
+  <p class="section-sub">ออกแบบมาเพื่อทีม content โดยเฉพาะ</p>
 
   <div class="features-grid">
 
@@ -407,14 +428,14 @@
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.064-.022.134-.032.2-.032.211 0 .391.09.51.25l2.444 3.317V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63.349 0 .631.285.631.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.281.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
       เริ่มใช้งานด้วย LINE
     </button>
-    <p class="cta-note">สำหรับทีม Trusme เท่านั้น</p>
+    <p class="cta-note">เข้าสู่ระบบด้วย LINE Account ที่ได้รับสิทธิ์</p>
   </div>
 </section>
 
 <!-- Footer -->
 <footer class="footer">
-  <div class="footer-brand">Trusme</div>
-  <div class="footer-copy">© 2026 Trusme Cosmet · Auto Content Planner</div>
+  <div class="footer-brand">Pellow</div>
+  <div class="footer-copy">© 2026 Pellow · Auto Content Planner</div>
 </footer>
 
 <script>
