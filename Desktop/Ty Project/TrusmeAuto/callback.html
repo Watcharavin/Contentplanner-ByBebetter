@@ -114,12 +114,11 @@ function deleteCookie(name) {
 }
 
 /* ══════════════════════════════════════════
-   FETCH helper
+   API HELPER (Vercel proxy → Apps Script)
 ══════════════════════════════════════════ */
 function gsCall(params = {}) {
-  const qs = new URLSearchParams(params).toString();
-  const url = SCRIPT_URL + (qs ? '?' + qs : '');
-  return fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  const qs = new URLSearchParams({ ...params, brand: 'trusme' }).toString();
+  return fetch('/api/sheets?' + qs).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 }
 
 /* ══════════════════════════════════════════

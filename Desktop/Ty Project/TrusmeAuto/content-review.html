@@ -903,12 +903,11 @@ function showApp() {
 }
 
 /* ═══════════════════════════════════════════════
-   FETCH HELPER
+   API HELPER (Vercel proxy → Apps Script)
 ═══════════════════════════════════════════════ */
 function gsCall(params = {}) {
-  const qs = new URLSearchParams(params).toString();
-  const url = getBrand().scriptUrl + (qs ? '?' + qs : '');
-  return fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  const qs = new URLSearchParams({ ...params, brand: getCurrentBrandKey() }).toString();
+  return fetch('/api/sheets?' + qs).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 }
 
 /* ═══════════════════════════════════════════════
