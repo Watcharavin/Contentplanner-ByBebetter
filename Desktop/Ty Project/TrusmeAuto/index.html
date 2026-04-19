@@ -924,14 +924,16 @@ let pollTimer      = null;
 
 async function initNotifications() {
   if (!('Notification' in window) || !('serviceWorker' in navigator)) return;
-  // Register service worker
+  // Register SW then wait until it's actually active
   try {
-    swRegistration = await navigator.serviceWorker.register('/sw.js');
+    await navigator.serviceWorker.register('/sw.js');
+    swRegistration = await navigator.serviceWorker.ready;
   } catch(e) { console.warn('SW register failed', e); }
-  // Restore button state
+  // Restore button state + restart poll if already permitted
   if (Notification.permission === 'granted') {
     document.getElementById('notifBtn').classList.remove('pulse');
     document.getElementById('notifBtn').classList.add('enabled');
+    startDataPoll();
   }
 }
 
@@ -959,6 +961,11 @@ async function toggleNotif() {
   if (result === 'granted') {
     updateNotifBtn();
     showToast('เปิดการแจ้งเตือนสำเร็จ!', 'success');
+    // Ensure SW is active before showing test notification
+    try {
+      if (!swRegistration) swRegistration = await navigator.serviceWorker.ready;
+      showPush('การแจ้งเตือนพร้อมใช้งาน! 🔔', 'คุณจะได้รับแจ้งเมื่อ content หรือรูปพร้อม', window.location.pathname);
+    } catch(e) { console.warn('test push failed', e); }
     startDataPoll();
   } else {
     showToast('ไม่ได้รับอนุญาตการแจ้งเตือน', 'error');
@@ -967,12 +974,15 @@ async function toggleNotif() {
 
 function showPush(title, body, url) {
   if (Notification.permission !== 'granted') return;
-  const opts = { body, icon: '/favicon.ico', data: { url }, badge: '/favicon.ico' };
+  const opts = { body, data: { url } };
   if (swRegistration) {
-    swRegistration.showNotification(title, opts);
+    swRegistration.showNotification(title, opts).catch(e => console.warn('showNotification failed', e));
   } else {
-    const n = new Notification(title, opts);
-    n.onclick = () => { window.focus(); if (url) window.location.href = url; n.close(); };
+    // Fallback: only works in desktop browsers (not iOS)
+    try {
+      const n = new Notification(title, opts);
+      n.onclick = () => { window.focus(); if (url) window.location.href = url; n.close(); };
+    } catch(e) { console.warn('Notification constructor failed', e); }
   }
 }
 
