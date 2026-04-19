@@ -1034,8 +1034,15 @@ function startDataPoll() {
 let allRows = [];
 
 async function loadData() {
+  // Separate fetch error from render error so a JS bug doesn't mask data load success
   try {
     allRows = await gsCall();
+  } catch(e) {
+    console.error('loadData fetch error:', e);
+    showToast('โหลดข้อมูลไม่ได้: ' + e.message, 'error');
+    allRows = DEMO_DATA;
+  }
+  try {
     renderStats();
     renderPipeline();
     renderBatches();
@@ -1043,12 +1050,7 @@ async function loadData() {
     checkMorningAlert(allRows);
     if (Notification.permission === 'granted') startDataPoll();
   } catch(e) {
-    console.error(e);
-    showToast('โหลดข้อมูลไม่ได้ — ใช้ Demo mode', 'error');
-    allRows = DEMO_DATA;
-    renderStats();
-    renderPipeline();
-    renderBatches();
+    console.error('loadData render error:', e);
   }
 }
 
