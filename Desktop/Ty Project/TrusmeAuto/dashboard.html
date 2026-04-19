@@ -989,18 +989,12 @@ function showApp() {
 }
 
 /* ══════════════════════════════════════════════
-   JSONP HELPER (แก้ CORS)
+   FETCH HELPER
 ══════════════════════════════════════════════ */
 function gsCall(params = {}) {
-  return new Promise((resolve, reject) => {
-    const cb = '_gs' + Date.now();
-    const script = document.createElement('script');
-    const qs = new URLSearchParams({ ...params, callback: cb }).toString();
-    window[cb] = (data) => { delete window[cb]; script.remove(); resolve(data); };
-    script.onerror = () => { delete window[cb]; script.remove(); reject(new Error('JSONP error')); };
-    script.src = getBrand().scriptUrl + '?' + qs;
-    document.head.appendChild(script);
-  });
+  const qs = new URLSearchParams(params).toString();
+  const url = getBrand().scriptUrl + (qs ? '?' + qs : '');
+  return fetch(url).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 }
 
 /* ══════════════════════════════════════════════
