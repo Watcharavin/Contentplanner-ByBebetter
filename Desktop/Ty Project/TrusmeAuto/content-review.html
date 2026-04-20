@@ -787,13 +787,13 @@
 const BRANDS = {
   trusme: {
     name:      'Trusme Cosmet',
-    scriptUrl: 'https://script.google.com/macros/s/AKfycbz1S1fOX9aZcrvScrqbVjCcZZhaD8ybXIjCGe6ZrkPRDaEC3mncWyDKnLQ2Hc6zA9U/exec',
+    proxyPath: '/api/sheets',
     webhook:   'https://n8nsrv.arycu.com/webhook/generate-plan',
     colors: { accent: '#C4437A', accentL: '#FCE4EF', accentD: '#9E2F5E' },
   },
   shoza: {
     name:      'Shoza',
-    scriptUrl: 'YOUR_SHOZA_SCRIPT_URL',
+    proxyPath: '/api/sheets-shoza',
     webhook:   'YOUR_SHOZA_WEBHOOK',
     colors: { accent: '#C4621A', accentL: '#FDEBD8', accentD: '#9E4D12' },
   },
@@ -907,7 +907,8 @@ function showApp() {
 ═══════════════════════════════════════════════ */
 function gsCall(params = {}) {
   const qs = new URLSearchParams(params).toString();
-  return fetch('/api/sheets' + (qs ? '?' + qs : '')).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+  const path = getBrand().proxyPath || '/api/sheets';
+  return fetch(path + (qs ? '?' + qs : '')).then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
 }
 
 /* ═══════════════════════════════════════════════
