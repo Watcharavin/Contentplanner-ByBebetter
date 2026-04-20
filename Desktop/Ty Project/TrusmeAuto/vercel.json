@@ -3,6 +3,10 @@
     {
       "source": "/api/sheets",
       "destination": "https://script.google.com/macros/s/AKfycbz1S1fOX9aZcrvScrqbVjCcZZhaD8ybXIjCGe6ZrkPRDaEC3mncWyDKnLQ2Hc6zA9U/exec"
+    },
+    {
+      "source": "/api/sheets-shoza",
+      "destination": "https://script.google.com/macros/s/AKfycby2d9hsYa4bd-5f93bgLXTJuAiKplKQ0nqS97hpx5SRLonpzqSHLug6e4BhhwvLF-Qx/exec"
     }
   ]
 }
