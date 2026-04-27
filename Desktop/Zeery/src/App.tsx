@@ -10,6 +10,7 @@ import NetWorth from './pages/NetWorth'
 import Recurring from './pages/Recurring'
 import Report from './pages/Report'
 import Export from './pages/Export'
+import SlipOCR from './pages/SlipOCR'
 
 function App() {
   const { loading } = useAuth()
@@ -43,6 +44,7 @@ function App() {
           <Route path="recurring" element={<Recurring />} />
           <Route path="report" element={<Report />} />
           <Route path="export" element={<Export />} />
+          <Route path="slip" element={<SlipOCR />} />
         </Route>
       </Routes>
     </BrowserRouter>

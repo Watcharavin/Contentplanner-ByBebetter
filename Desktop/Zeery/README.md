@@ -14,7 +14,7 @@
 | 3 | Layout | `[x]` |
 | 4 | Dashboard | `[x]` |
 | 5 | Add transaction | `[x]` |
-| 6 | E-Slip OCR | `[ ]` |
+| 6 | E-Slip OCR | `[x]` |
 | 7 | Budget | `[ ]` |
 | 8 | Savings goals | `[ ]` |
 | 9 | Net worth | `[ ]` |

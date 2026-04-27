@@ -292,25 +292,31 @@ export default function Dashboard() {
         </div>
 
         {latest.length === 0 ? (
-          <div
-            onClick={() => navigate('/add')}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              cursor: 'pointer',
-              border: '2px dashed var(--border)',
-              borderRadius: '8px',
-              color: 'var(--text2)',
-              fontSize: '0.85rem',
-              padding: '24px',
-            }}
-          >
-            <span style={{ fontSize: '1.5rem' }}>📷</span>
-            <span>วาง slip หรือ + เพิ่มรายการแรก</span>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div
+              onClick={() => navigate('/slip')}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                justifyContent: 'center', gap: '6px', cursor: 'pointer',
+                border: '2px dashed var(--border)', borderRadius: '8px',
+                color: 'var(--text2)', fontSize: '0.8rem', padding: '20px 8px',
+              }}
+            >
+              <span style={{ fontSize: '1.4rem' }}>📷</span>
+              <span>สแกน slip</span>
+            </div>
+            <div
+              onClick={() => navigate('/add')}
+              style={{
+                flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                justifyContent: 'center', gap: '6px', cursor: 'pointer',
+                border: '2px dashed var(--border)', borderRadius: '8px',
+                color: 'var(--text2)', fontSize: '0.8rem', padding: '20px 8px',
+              }}
+            >
+              <span style={{ fontSize: '1.4rem' }}>✏️</span>
+              <span>เพิ่มรายการ</span>
+            </div>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
