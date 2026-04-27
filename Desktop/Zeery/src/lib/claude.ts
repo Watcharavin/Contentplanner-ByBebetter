@@ -62,7 +62,17 @@ export async function readSlip(base64Image: string, mimeType: string): Promise<S
   try {
     // strip markdown code fences if present: ```json ... ``` or ``` ... ```
     const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
-    return JSON.parse(clean) as SlipData
+    const parsed = JSON.parse(clean) as SlipData
+
+    // normalize Buddhist calendar year → Gregorian (e.g. 2569 → 2026)
+    if (parsed.date) {
+      const m = parsed.date.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+      if (m && parseInt(m[1]) > 2400) {
+        parsed.date = `${parseInt(m[1]) - 543}-${m[2]}-${m[3]}`
+      }
+    }
+
+    return parsed
   } catch {
     throw new Error(`Failed to parse OCR response: ${text}`)
   }
