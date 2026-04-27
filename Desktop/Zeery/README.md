@@ -16,7 +16,7 @@
 | 5 | Add transaction | `[x]` |
 | 6 | E-Slip OCR | `[x]` |
 | 7 | Budget | `[x]` |
-| 8 | Savings goals | `[ ]` |
+| 8 | Savings goals | `[x]` |
 | 9 | Net worth | `[ ]` |
 | 10 | Recurring | `[ ]` |
 | 11 | Report | `[ ]` |
