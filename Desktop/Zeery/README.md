@@ -17,7 +17,7 @@
 | 6 | E-Slip OCR | `[x]` |
 | 7 | Budget | `[x]` |
 | 8 | Savings goals | `[x]` |
-| 9 | Net worth | `[ ]` |
+| 9 | Net worth | `[x]` |
 | 10 | Recurring | `[ ]` |
 | 11 | Report | `[ ]` |
 | 12 | Export | `[ ]` |
