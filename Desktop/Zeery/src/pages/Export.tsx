@@ -47,29 +47,52 @@ const MONTHS_BACK = Array.from({ length: 12 }, (_, i) => {
   return d.toISOString().slice(0, 7)
 })
 
+type PreviewData =
+  | { kind: 'csv'; rows: Transaction[]; total: number }
+  | { kind: 'json'; text: string }
+
 export default function Export() {
   const { uid } = useAuth()
   const [fromMonth, setFromMonth] = useState(MONTHS_BACK[1])
   const [toMonth, setToMonth] = useState(MONTHS_BACK[0])
   const [csvLoading, setCsvLoading] = useState(false)
   const [jsonLoading, setJsonLoading] = useState(false)
+  const [preview, setPreview] = useState<PreviewData | null>(null)
+
+  // Fetch filtered transactions (shared by preview + download)
+  const fetchCSVTxs = (): Promise<Transaction[]> => {
+    return new Promise(resolve => {
+      if (!uid) { resolve([]); return }
+      const from = fromMonth + '-01'
+      const to = toMonth + '-31'
+      const unsub = subscribeTransactions(uid, txs => {
+        unsub()
+        resolve(
+          txs
+            .filter(tx => tx.date >= from && tx.date <= to)
+            .sort((a, b) => a.date.localeCompare(b.date))
+        )
+      })
+    })
+  }
+
+  const handleCSVPreview = async () => {
+    if (!uid) return
+    setCsvLoading(true)
+    try {
+      const txs = await fetchCSVTxs()
+      setPreview({ kind: 'csv', rows: txs, total: txs.length })
+    } finally {
+      setCsvLoading(false)
+    }
+  }
 
   const handleCSV = async () => {
     if (!uid) return
     setCsvLoading(true)
     try {
-      const from = fromMonth + '-01'
-      const to = toMonth + '-31'
-      await new Promise<void>(resolve => {
-        const unsub = subscribeTransactions(uid, txs => {
-          unsub()
-          const filtered = txs.filter(tx => tx.date >= from && tx.date <= to)
-            .sort((a, b) => a.date.localeCompare(b.date))
-          const csv = txToCSV(filtered)
-          downloadText(csv, `flow-transactions-${fromMonth}-${toMonth}.csv`)
-          resolve()
-        })
-      })
+      const txs = await fetchCSVTxs()
+      downloadText(txToCSV(txs), `flow-transactions-${fromMonth}-${toMonth}.csv`)
     } finally {
       setCsvLoading(false)
     }
@@ -79,30 +102,44 @@ export default function Export() {
     window.print()
   }
 
+  const fetchJSONDump = async () => {
+    if (!uid) return null
+    const [txSnap, budgetSnap, goalSnap, assetSnap, liabSnap, recurSnap] = await Promise.all([
+      getDocs(userCol(uid, 'transactions')),
+      getDocs(userCol(uid, 'budgets')),
+      getDocs(userCol(uid, 'goals')),
+      getDocs(userCol(uid, 'assets')),
+      getDocs(userCol(uid, 'liabilities')),
+      getDocs(userCol(uid, 'recurring')),
+    ])
+    return {
+      exportedAt: new Date().toISOString(),
+      transactions: txSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+      budgets: budgetSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+      goals: goalSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+      assets: assetSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+      liabilities: liabSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+      recurring: recurSnap.docs.map(d => ({ id: d.id, ...d.data() })),
+    }
+  }
+
+  const handleJSONPreview = async () => {
+    if (!uid) return
+    setJsonLoading(true)
+    try {
+      const dump = await fetchJSONDump()
+      if (dump) setPreview({ kind: 'json', text: JSON.stringify(dump, null, 2) })
+    } finally {
+      setJsonLoading(false)
+    }
+  }
+
   const handleJSON = async () => {
     if (!uid) return
     setJsonLoading(true)
     try {
-      const [txSnap, budgetSnap, goalSnap, assetSnap, liabSnap, recurSnap] = await Promise.all([
-        getDocs(userCol(uid, 'transactions')),
-        getDocs(userCol(uid, 'budgets')),
-        getDocs(userCol(uid, 'goals')),
-        getDocs(userCol(uid, 'assets')),
-        getDocs(userCol(uid, 'liabilities')),
-        getDocs(userCol(uid, 'recurring')),
-      ])
-
-      const dump = {
-        exportedAt: new Date().toISOString(),
-        transactions: txSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        budgets: budgetSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        goals: goalSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        assets: assetSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        liabilities: liabSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-        recurring: recurSnap.docs.map(d => ({ id: d.id, ...d.data() })),
-      }
-
-      downloadText(JSON.stringify(dump, null, 2), `flow-backup-${new Date().toISOString().slice(0, 10)}.json`, 'application/json')
+      const dump = await fetchJSONDump()
+      if (dump) downloadText(JSON.stringify(dump, null, 2), `flow-backup-${new Date().toISOString().slice(0, 10)}.json`, 'application/json')
     } finally {
       setJsonLoading(false)
     }
@@ -156,9 +193,18 @@ export default function Export() {
               </select>
             </div>
           </div>
-          <ActionButton onClick={handleCSV} loading={csvLoading} color="var(--green)">
-            ⬇ ดาวน์โหลด CSV
-          </ActionButton>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={handleCSVPreview}
+              disabled={csvLoading}
+              style={{ ...ghostBtn, flex: 1 }}
+            >
+              👁 ดูตัวอย่าง
+            </button>
+            <ActionButton onClick={handleCSV} loading={csvLoading} color="var(--green)">
+              ⬇ ดาวน์โหลด
+            </ActionButton>
+          </div>
         </ExportCard>
 
         {/* PDF */}
@@ -180,11 +226,120 @@ export default function Export() {
           description="ข้อมูลทั้งหมดจาก Firestore"
           columns="transactions + budgets + goals + assets + liabilities + recurring"
         >
-          <ActionButton onClick={handleJSON} loading={jsonLoading} color="var(--purple)">
-            ⬇ ดาวน์โหลด JSON
-          </ActionButton>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button
+              onClick={handleJSONPreview}
+              disabled={jsonLoading}
+              style={{ ...ghostBtn, flex: 1 }}
+            >
+              👁 ดูตัวอย่าง
+            </button>
+            <ActionButton onClick={handleJSON} loading={jsonLoading} color="var(--purple)">
+              ⬇ ดาวน์โหลด
+            </ActionButton>
+          </div>
         </ExportCard>
       </div>
+
+      {/* Preview modal */}
+      {preview && (
+        <div
+          style={{
+            position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)',
+            display: 'flex', alignItems: 'flex-end', justifyContent: 'center', zIndex: 300,
+          }}
+          onClick={e => { if (e.target === e.currentTarget) setPreview(null) }}
+        >
+          <div style={{
+            background: 'var(--bg2)', borderRadius: '20px 20px 0 0',
+            width: '100%', maxWidth: '600px', maxHeight: '80vh',
+            display: 'flex', flexDirection: 'column',
+          }}>
+            {/* Modal header */}
+            <div style={{
+              display: 'flex', alignItems: 'center', padding: '16px 20px',
+              borderBottom: '1px solid var(--border)', flexShrink: 0,
+            }}>
+              <span style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text)', flex: 1 }}>
+                {preview.kind === 'csv'
+                  ? `ตัวอย่าง CSV — ${preview.total} รายการ`
+                  : 'ตัวอย่าง JSON Backup'}
+              </span>
+              <button
+                onClick={() => setPreview(null)}
+                style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', fontSize: '1.1rem', padding: '4px' }}
+              >✕</button>
+            </div>
+
+            {/* Content */}
+            <div style={{ overflowY: 'auto', flex: 1, padding: '0' }}>
+              {preview.kind === 'csv' && (
+                preview.rows.length === 0 ? (
+                  <p style={{ padding: '32px', textAlign: 'center', color: 'var(--text2)', fontSize: '0.85rem' }}>
+                    ไม่มีรายการในช่วงนี้
+                  </p>
+                ) : (
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+                    <thead>
+                      <tr style={{ background: 'var(--bg3)', position: 'sticky', top: 0 }}>
+                        {['วันที่', 'ชื่อ', 'หมวด', 'จำนวน', 'โน้ต'].map(h => (
+                          <th key={h} style={{ padding: '10px 12px', textAlign: 'left', color: 'var(--text2)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {preview.rows.map((tx, i) => {
+                        const cat = CATEGORIES.find(c => c.id === tx.catId)
+                        return (
+                          <tr key={tx.id} style={{ borderBottom: '1px solid var(--border)', background: i % 2 === 0 ? 'transparent' : 'var(--bg3)' }}>
+                            <td style={{ padding: '8px 12px', color: 'var(--text2)', fontFamily: 'DM Mono, monospace', whiteSpace: 'nowrap' }}>{tx.date}</td>
+                            <td style={{ padding: '8px 12px', color: 'var(--text)', maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.name}</td>
+                            <td style={{ padding: '8px 12px', color: 'var(--text2)', whiteSpace: 'nowrap' }}>{cat?.emoji} {cat?.label}</td>
+                            <td style={{ padding: '8px 12px', fontFamily: 'DM Mono, monospace', fontWeight: 600, color: tx.amount > 0 ? 'var(--green)' : 'var(--red)', whiteSpace: 'nowrap' }}>
+                              {tx.amount > 0 ? '+' : ''}{tx.amount.toLocaleString('th-TH')}
+                            </td>
+                            <td style={{ padding: '8px 12px', color: 'var(--text2)', maxWidth: '100px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tx.note ?? ''}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                )
+              )}
+
+              {preview.kind === 'json' && (
+                <pre style={{
+                  margin: 0, padding: '16px 20px',
+                  fontFamily: 'DM Mono, monospace', fontSize: '0.72rem',
+                  color: 'var(--text)', lineHeight: 1.6,
+                  whiteSpace: 'pre-wrap', wordBreak: 'break-all',
+                }}>
+                  {preview.text.slice(0, 8000)}{preview.text.length > 8000 ? '\n\n... (ตัดสั้นเพื่อแสดงผล)' : ''}
+                </pre>
+              )}
+            </div>
+
+            {/* Modal footer */}
+            <div style={{ padding: '12px 20px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
+              <button
+                onClick={() => {
+                  if (preview.kind === 'csv') handleCSV()
+                  else handleJSON()
+                  setPreview(null)
+                }}
+                style={{
+                  width: '100%', padding: '11px', borderRadius: '10px', border: 'none',
+                  background: preview.kind === 'csv' ? 'var(--green)' : 'var(--purple)',
+                  color: '#fff', fontWeight: 600, fontFamily: 'DM Sans, sans-serif',
+                  fontSize: '0.9rem', cursor: 'pointer',
+                }}
+              >
+                ⬇ ดาวน์โหลด{preview.kind === 'csv' ? ' CSV' : ' JSON'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Print area */}
       <div id="print-area" style={{ display: 'none' }}>
@@ -261,4 +416,10 @@ const selectStyle: React.CSSProperties = {
   border: '1px solid var(--border)', background: 'var(--bg3)',
   color: 'var(--text)', fontFamily: 'DM Sans, sans-serif', fontSize: '0.85rem',
   outline: 'none', cursor: 'pointer',
+}
+
+const ghostBtn: React.CSSProperties = {
+  padding: '10px', borderRadius: '10px', border: '1px solid var(--border)',
+  background: 'var(--bg3)', color: 'var(--text2)', fontWeight: 600,
+  fontFamily: 'DM Sans, sans-serif', fontSize: '0.88rem', cursor: 'pointer',
 }
