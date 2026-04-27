@@ -10,7 +10,7 @@
 | # | Task | สถานะ |
 |---|------|--------|
 | 1 | Project setup | `[x]` |
-| 2 | Auth | `[ ]` |
+| 2 | Auth | `[x]` |
 | 3 | Layout | `[ ]` |
 | 4 | Dashboard | `[ ]` |
 | 5 | Add transaction | `[ ]` |
@@ -81,10 +81,10 @@ src/
 ## Task 2 — Auth
 **เป้าหมาย:** user sign-in อัตโนมัติ ไม่ต้อง login
 
-- [ ] เปิด Anonymous Auth ใน Firebase console
-- [ ] `signInAnonymously()` ตอน app โหลด ครั้งแรก
-- [ ] persist session ใน localStorage — กลับมาใช้ uid เดิม
-- [ ] สร้าง `AuthContext` เก็บ `uid`, `isAnonymous`
+- [ ] เปิด Anonymous Auth ใน Firebase console (ทำใน Firebase console ด้วยตัวเอง)
+- [x] `signInAnonymously()` ตอน app โหลด ครั้งแรก
+- [x] persist session ใน IndexedDB อัตโนมัติผ่าน Firebase SDK
+- [x] สร้าง `AuthContext` เก็บ `uid`, `isAnonymous`, `loading`
 - [ ] ปุ่ม "เชื่อมต่อ Google account" ใน Settings (optional — ซิงค์ข้ามเครื่อง)
 
 ---
