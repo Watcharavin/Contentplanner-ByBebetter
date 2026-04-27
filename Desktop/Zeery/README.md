@@ -19,7 +19,7 @@
 | 8 | Savings goals | `[x]` |
 | 9 | Net worth | `[x]` |
 | 10 | Recurring | `[x]` |
-| 11 | Report | `[ ]` |
+| 11 | Report | `[x]` |
 | 12 | Export | `[ ]` |
 
 ---
