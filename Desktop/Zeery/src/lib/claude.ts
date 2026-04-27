@@ -60,7 +60,9 @@ export async function readSlip(base64Image: string, mimeType: string): Promise<S
   const text: string = data.choices?.[0]?.message?.content ?? ''
 
   try {
-    return JSON.parse(text) as SlipData
+    // strip markdown code fences if present: ```json ... ``` or ``` ... ```
+    const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
+    return JSON.parse(clean) as SlipData
   } catch {
     throw new Error(`Failed to parse OCR response: ${text}`)
   }
