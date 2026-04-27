@@ -130,7 +130,18 @@ export default function AddTransaction() {
         >
           ←
         </button>
-        <h1 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)' }}>เพิ่มรายการ</h1>
+        <h1 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text)', flex: 1 }}>เพิ่มรายการ</h1>
+        <button
+          onClick={() => navigate('/slip')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            padding: '7px 12px', borderRadius: '8px', border: '1px solid var(--border)',
+            background: 'var(--bg3)', color: 'var(--text2)', cursor: 'pointer',
+            fontFamily: 'DM Sans, sans-serif', fontSize: '0.82rem', fontWeight: 500,
+          }}
+        >
+          📷 สแกน Slip
+        </button>
       </div>
 
       {/* Type selector */}

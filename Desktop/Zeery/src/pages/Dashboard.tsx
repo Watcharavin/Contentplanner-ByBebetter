@@ -273,22 +273,30 @@ export default function Dashboard() {
       <div style={{ ...card, gridColumn: 'span 2' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={label}>รายการล่าสุด</span>
-          <button
-            onClick={() => navigate('/add')}
-            style={{
-              background: 'var(--accent)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              padding: '4px 12px',
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontFamily: 'DM Sans, sans-serif',
-            }}
-          >
-            + เพิ่ม
-          </button>
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <button
+              onClick={() => navigate('/slip')}
+              style={{
+                background: 'var(--bg3)', color: 'var(--text2)',
+                border: '1px solid var(--border)', borderRadius: '8px',
+                padding: '4px 10px', fontSize: '0.78rem', fontWeight: 500,
+                cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
+              }}
+            >
+              📷 Slip
+            </button>
+            <button
+              onClick={() => navigate('/add')}
+              style={{
+                background: 'var(--accent)', color: '#fff',
+                border: 'none', borderRadius: '8px',
+                padding: '4px 12px', fontSize: '0.78rem', fontWeight: 600,
+                cursor: 'pointer', fontFamily: 'DM Sans, sans-serif',
+              }}
+            >
+              + เพิ่ม
+            </button>
+          </div>
         </div>
 
         {latest.length === 0 ? (
