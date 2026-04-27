@@ -11,7 +11,7 @@
 |---|------|--------|
 | 1 | Project setup | `[x]` |
 | 2 | Auth | `[x]` |
-| 3 | Layout | `[ ]` |
+| 3 | Layout | `[x]` |
 | 4 | Dashboard | `[ ]` |
 | 5 | Add transaction | `[ ]` |
 | 6 | E-Slip OCR | `[ ]` |

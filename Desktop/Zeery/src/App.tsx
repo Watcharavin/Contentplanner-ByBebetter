@@ -1,23 +1,51 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { useAuth } from './hooks/useAuth'
+import AppShell from './components/layout/AppShell'
+import Dashboard from './pages/Dashboard'
+import Transactions from './pages/Transactions'
+import AddTransaction from './pages/AddTransaction'
+import Budget from './pages/Budget'
+import Savings from './pages/Savings'
+import NetWorth from './pages/NetWorth'
+import Recurring from './pages/Recurring'
+import Report from './pages/Report'
+import Export from './pages/Export'
 
 function App() {
-  const { uid, loading } = useAuth()
+  const { loading } = useAuth()
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100svh', color: 'var(--text2)' }}>
-        <p style={{ fontFamily: 'DM Sans, sans-serif' }}>กำลังโหลด...</p>
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100svh',
+        background: 'var(--bg)',
+        color: 'var(--text2)',
+        fontFamily: 'DM Sans, sans-serif',
+      }}>
+        <p>กำลังโหลด...</p>
       </div>
     )
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100svh', color: 'var(--text)' }}>
-      <div style={{ textAlign: 'center', fontFamily: 'DM Sans, sans-serif' }}>
-        <p style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Flow — Finance Tracker</p>
-        <p style={{ fontSize: '0.75rem', color: 'var(--text2)', fontFamily: 'DM Mono, monospace' }}>uid: {uid}</p>
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppShell />}>
+          <Route index element={<Dashboard />} />
+          <Route path="transactions" element={<Transactions />} />
+          <Route path="add" element={<AddTransaction />} />
+          <Route path="budget" element={<Budget />} />
+          <Route path="savings" element={<Savings />} />
+          <Route path="networth" element={<NetWorth />} />
+          <Route path="recurring" element={<Recurring />} />
+          <Route path="report" element={<Report />} />
+          <Route path="export" element={<Export />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
