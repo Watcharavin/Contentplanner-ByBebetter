@@ -34,7 +34,8 @@ export async function readSlip(base64Image: string, mimeType: string): Promise<S
             {
               type: 'text',
               text: `คุณคือ OCR สำหรับ e-slip โอนเงินไทย
-ตอบกลับเป็น JSON เท่านั้น ไม่มีข้อความอื่น ไม่มี markdown:
+ตอบกลับเป็น JSON เท่านั้น ไม่มีข้อความอื่น ไม่มี markdown
+วันที่ให้แปลงเป็นปี ค.ศ. (Gregorian) เสมอ เช่น ถ้า slip แสดง 2569 ให้ใส่ 2026, ถ้าแสดง 68 หรือ 2568 ให้ใส่ 2025:
 {
   "amount": number,
   "receiver": string | null,
@@ -64,11 +65,19 @@ export async function readSlip(base64Image: string, mimeType: string): Promise<S
     const clean = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim()
     const parsed = JSON.parse(clean) as SlipData
 
-    // normalize Buddhist calendar year → Gregorian (e.g. 2569 → 2026)
+    // normalize Buddhist calendar year → Gregorian
+    // handles both correctly-read (2569) and misread (2069 for 2569) Buddhist years
     if (parsed.date) {
       const m = parsed.date.match(/^(\d{4})-(\d{2})-(\d{2})$/)
-      if (m && parseInt(m[1]) > 2400) {
-        parsed.date = `${parseInt(m[1]) - 543}-${m[2]}-${m[3]}`
+      if (m) {
+        const y = parseInt(m[1])
+        if (y > 2400) {
+          // clearly Buddhist era (e.g. 2569)
+          parsed.date = `${y - 543}-${m[2]}-${m[3]}`
+        } else if (y > 2050 && y < 2100) {
+          // OCR misread Buddhist 25xx as 20xx (e.g. 2069 → should be 2569 → 2026)
+          parsed.date = `${y - 543 + 500}-${m[2]}-${m[3]}`
+        }
       }
     }
 
