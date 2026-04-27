@@ -13,7 +13,7 @@
 | 2 | Auth | `[x]` |
 | 3 | Layout | `[x]` |
 | 4 | Dashboard | `[x]` |
-| 5 | Add transaction | `[ ]` |
+| 5 | Add transaction | `[x]` |
 | 6 | E-Slip OCR | `[ ]` |
 | 7 | Budget | `[ ]` |
 | 8 | Savings goals | `[ ]` |
