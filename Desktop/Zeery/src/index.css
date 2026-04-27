@@ -83,3 +83,13 @@ body {
 .font-mono-num {
   font-family: 'DM Mono', monospace;
 }
+
+/* Dashboard bento grid — 2 col on mobile */
+@media (max-width: 767px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .dashboard-grid > *[style*="span 2"] {
+    grid-column: span 2 !important;
+  }
+}
