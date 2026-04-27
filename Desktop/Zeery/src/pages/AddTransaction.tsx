@@ -48,6 +48,7 @@ export default function AddTransaction() {
   const [date, setDate] = useState(todayStr())
   const [showNote, setShowNote] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const amount = parseFloat(amountStr) || 0
 
@@ -91,22 +92,27 @@ export default function AddTransaction() {
   }
 
   const handleSave = async () => {
-    if (!uid || amount <= 0 || saving) return
+    setError(null)
+    if (!uid) { setError('ยังไม่ได้ login — รีเฟรชหน้าแล้วลองใหม่'); return }
+    if (amount <= 0) { setError('กรอกจำนวนเงินก่อน'); return }
+    if (saving) return
     setSaving(true)
     try {
       const sign = type === 'income' ? 1 : -1
       const cat = getCategoryById(catId)
+      const trimmedNote = note.trim()
       await addTransaction(uid, {
-        name: note.trim() || cat.label,
+        name: trimmedNote || cat.label,
         catId,
         amount: amount * sign,
         date,
-        note: note.trim() || undefined,
         source: 'manual',
+        ...(trimmedNote ? { note: trimmedNote } : {}),
       })
       navigate('/')
-    } catch (e) {
-      console.error(e)
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e)
+      setError(`บันทึกไม่ได้: ${msg}`)
       setSaving(false)
     }
   }
@@ -319,6 +325,34 @@ export default function AddTransaction() {
           )}
         </div>
       </div>
+
+      {/* Error message */}
+      {error && (
+        <div style={{
+          padding: '10px 14px',
+          borderRadius: '8px',
+          background: 'rgba(220,38,38,0.1)',
+          color: 'var(--red)',
+          fontSize: '0.82rem',
+          marginBottom: '12px',
+        }}>
+          {error}
+        </div>
+      )}
+
+      {/* Auth debug */}
+      {!uid && (
+        <div style={{
+          padding: '10px 14px',
+          borderRadius: '8px',
+          background: 'rgba(217,119,6,0.1)',
+          color: 'var(--amber)',
+          fontSize: '0.78rem',
+          marginBottom: '12px',
+        }}>
+          ⚠️ กำลังเชื่อมต่อ Firebase — ถ้าค้างนาน ให้ตรวจสอบว่าเปิด Anonymous Auth ใน Firebase Console แล้วหรือยัง
+        </div>
+      )}
 
       {/* Save button */}
       <button
