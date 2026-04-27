@@ -20,7 +20,7 @@
 | 9 | Net worth | `[x]` |
 | 10 | Recurring | `[x]` |
 | 11 | Report | `[x]` |
-| 12 | Export | `[ ]` |
+| 12 | Export | `[x]` |
 
 ---
 
