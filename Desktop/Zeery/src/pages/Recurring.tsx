@@ -10,10 +10,10 @@ function fmt(n: number) {
   return Math.abs(n).toLocaleString('th-TH', { maximumFractionDigits: 0 })
 }
 
-const TYPE_OPTS: { id: Recurring['type']; label: string; color: string }[] = [
-  { id: 'expense', label: 'รายจ่าย', color: 'var(--red)' },
-  { id: 'income',  label: 'รายรับ',  color: 'var(--green)' },
-  { id: 'savings', label: 'โอนออม',  color: 'var(--purple)' },
+const TYPE_OPTS: { id: Recurring['type']; label: string; color: string; rgbVar: string }[] = [
+  { id: 'expense', label: 'รายจ่าย', color: 'var(--red)',    rgbVar: 'var(--red-rgb)' },
+  { id: 'income',  label: 'รายรับ',  color: 'var(--green)',  rgbVar: 'var(--green-rgb)' },
+  { id: 'savings', label: 'โอนออม',  color: 'var(--purple)', rgbVar: 'var(--purple-rgb)' },
 ]
 
 const DAY_OPTS = Array.from({ length: 31 }, (_, i) => i + 1)
@@ -143,7 +143,7 @@ export default function Recurring() {
         onClick={() => setForm({ ...EMPTY_FORM })}
         style={{
           width: '100%', padding: '12px', borderRadius: '12px',
-          border: '1px dashed var(--accent)', background: 'rgba(var(--accent-rgb),0.05)',
+          border: '1px dashed var(--accent)', background: 'rgba(232,93,36,0.05)',
           color: 'var(--accent)', fontWeight: 600, fontFamily: 'DM Sans, sans-serif',
           fontSize: '0.9rem', cursor: 'pointer', marginBottom: '16px',
         }}
@@ -189,7 +189,7 @@ export default function Recurring() {
                       <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text)' }}>{item.name}</span>
                       <span style={{
                         fontSize: '0.65rem', padding: '1px 6px', borderRadius: '99px',
-                        background: `${typeInfo.color}22`, color: typeInfo.color, fontWeight: 600,
+                        background: `rgba(${typeInfo.rgbVar},0.12)`, color: typeInfo.color, fontWeight: 600,
                       }}>
                         {typeInfo.label}
                       </span>

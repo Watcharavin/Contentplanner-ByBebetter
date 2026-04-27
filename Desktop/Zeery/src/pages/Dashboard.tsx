@@ -148,7 +148,7 @@ export default function Dashboard() {
     .sort((a, b) => b.spent - a.spent)
     .slice(0, 3)
 
-  const latest = [...periodTxs].slice(0, 3)
+  const latest = transactions.slice(0, 3)
   const top2Goals = goals.slice(0, 2)
 
   return (

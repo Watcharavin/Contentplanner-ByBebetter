@@ -230,8 +230,8 @@ export default function Transactions() {
                           <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '2px' }}>
                             <span style={{ fontSize: '0.7rem', color: 'var(--text2)' }}>{cat.label}</span>
                             {tx.note && <span style={{ fontSize: '0.7rem', color: 'var(--text2)' }}>· {tx.note}</span>}
-                            {tx.source === 'ocr' && <span style={{ fontSize: '0.62rem', color: 'var(--accent)', background: 'var(--accent)11', padding: '1px 5px', borderRadius: '4px' }}>OCR</span>}
-                            {tx.source === 'recurring' && <span style={{ fontSize: '0.62rem', color: 'var(--purple)', background: 'var(--purple)11', padding: '1px 5px', borderRadius: '4px' }}>ประจำ</span>}
+                            {tx.source === 'ocr' && <span style={{ fontSize: '0.62rem', color: 'var(--accent)', background: 'rgba(232,93,36,0.1)', padding: '1px 5px', borderRadius: '4px' }}>OCR</span>}
+                            {tx.source === 'recurring' && <span style={{ fontSize: '0.62rem', color: 'var(--purple)', background: 'rgba(124,58,237,0.1)', padding: '1px 5px', borderRadius: '4px' }}>ประจำ</span>}
                           </div>
                         </div>
                         <span style={{
