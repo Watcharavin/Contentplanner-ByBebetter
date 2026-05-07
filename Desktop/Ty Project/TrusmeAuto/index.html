@@ -524,11 +524,6 @@
       เข้าสู่ระบบด้วย LINE
     </button>
     <p class="login-note">เข้าสู่ระบบด้วย LINE Account ที่ได้รับสิทธิ์เท่านั้น</p>
-    <div style="margin-top:16px">
-      <button onclick="demoLogin()" class="btn-ghost" style="width:100%;font-size:13px">
-        ทดลองใช้งาน (Demo Mode)
-      </button>
-    </div>
   </div>
 </div>
 
@@ -1145,13 +1140,13 @@ function showToast(msg, type = '') {
    DEMO DATA
 ═══════════════════════════════════════════════════════ */
 const DEMO_DATA = [
-  { rowIndex:2, status:'writing',  row_id:'CP001', 'date (YYYY-MM-DD)':'2026-04-16', big_idea_line:'ผิวเปล่งประกายด้วย Lip Velvet Matte', content_pillars:'product_content', product_code:'LIP_VELVET_MATTE', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
-  { rowIndex:3, status:'writing',  row_id:'CP002', 'date (YYYY-MM-DD)':'2026-04-17', big_idea_line:'ความลับของ OEM คุณภาพระดับโรงงาน', content_pillars:'company_profile',  product_code:'OEM', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
-  { rowIndex:4, status:'writing',  row_id:'CP003', 'date (YYYY-MM-DD)':'2026-04-18', big_idea_line:'5 ข้อควรรู้ก่อนผลิตเครื่องสำอาง', content_pillars:'general_knowledge', product_code:'none', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
-  { rowIndex:5, status:'ready',    row_id:'CP004', 'date (YYYY-MM-DD)':'2026-04-19', big_idea_line:'PJ Formula สูตรเฉพาะของ Trusme', content_pillars:'product_content', product_code:'PJ', post_structure:'single_image', layout_family:'product_grid_board', seasonal_event_key:'none' },
-  { rowIndex:6, status:'scheduled',row_id:'CP005', 'date (YYYY-MM-DD)':'2026-04-20', big_idea_line:'Songkran Limited Edition', content_pillars:'seasonal', product_code:'CVA', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'songkran' },
-  { rowIndex:7, status:'posted',   row_id:'CP006', 'date (YYYY-MM-DD)':'2026-04-14', big_idea_line:'เปิดตัว Lip Velvet Collection', content_pillars:'product_content', product_code:'LIP_VELVET_MATTE', post_structure:'carousel_3', layout_family:'carousel_3', seasonal_event_key:'none' },
-  { rowIndex:8, status:'rejected', row_id:'CP007', 'date (YYYY-MM-DD)':'2026-04-15', big_idea_line:'(Rejected) ไอเดียเก่า', content_pillars:'company_profile', product_code:'none', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
+  { rowIndex:2, status:'writing',   row_id:'CP001', 'date (YYYY-MM-DD)':'2026-05-07', big_idea_line:'[Demo] ไอเดีย content รอ review', content_pillars:'product_content',  product_code:'PRODUCT_A', post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
+  { rowIndex:3, status:'writing',   row_id:'CP002', 'date (YYYY-MM-DD)':'2026-05-08', big_idea_line:'[Demo] 5 เหตุผลที่ลูกค้าเลือกแบรนด์นี้', content_pillars:'company_profile',  product_code:'none',      post_structure:'carousel_3',   layout_family:'carousel_3',         seasonal_event_key:'none' },
+  { rowIndex:4, status:'writing',   row_id:'CP003', 'date (YYYY-MM-DD)':'2026-05-09', big_idea_line:'[Demo] ความรู้ทั่วไปเกี่ยวกับผลิตภัณฑ์', content_pillars:'general_knowledge', product_code:'none',    post_structure:'carousel_3',   layout_family:'carousel_3',         seasonal_event_key:'none' },
+  { rowIndex:5, status:'ready',     row_id:'CP004', 'date (YYYY-MM-DD)':'2026-05-10', big_idea_line:'[Demo] รูปพร้อมแล้ว รอตั้ง schedule', content_pillars:'product_content',  product_code:'PRODUCT_B', post_structure:'single_image', layout_family:'product_grid_board', seasonal_event_key:'none' },
+  { rowIndex:6, status:'scheduled', row_id:'CP005', 'date (YYYY-MM-DD)':'2026-05-11', big_idea_line:'[Demo] Post ที่ตั้ง schedule ไว้แล้ว', content_pillars:'seasonal',         product_code:'none',      post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
+  { rowIndex:7, status:'posted',    row_id:'CP006', 'date (YYYY-MM-DD)':'2026-05-01', big_idea_line:'[Demo] Post ที่ขึ้น Facebook แล้ว', content_pillars:'product_content',   product_code:'PRODUCT_A', post_structure:'carousel_3',   layout_family:'carousel_3',         seasonal_event_key:'none' },
+  { rowIndex:8, status:'rejected',  row_id:'CP007', 'date (YYYY-MM-DD)':'2026-05-02', big_idea_line:'[Demo] Post ที่ถูก reject', content_pillars:'company_profile',            product_code:'none',      post_structure:'single_image', layout_family:'hero_product_single', seasonal_event_key:'none' },
 ];
 
 /* ═══════════════════════════════════════════════════════

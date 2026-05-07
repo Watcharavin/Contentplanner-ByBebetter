@@ -1468,57 +1468,38 @@ function showToast(msg, type = '') {
 ══════════════════════════════════════════════ */
 const DEMO_DATA = [
   {
-    rowIndex:2, status:'writing', row_id:'CP001', 'date (YYYY-MM-DD)':'2026-04-16',
-    big_idea_line:'ผิวเปล่งประกายด้วย Lip Velvet Matte', content_pillars:'product_content',
-    product_code:'LIP_VELVET_MATTE', post_structure:'single_image', layout_family:'hero_product_single',
-    seasonal_event_key:'none', headline:'', body_copy:'', cta:'', angle_tags:'', link1:'', link2:'', link3:''
-  },
-  {
-    rowIndex:5, status:'ready', row_id:'CP004', 'date (YYYY-MM-DD)':'2026-04-19',
-    big_idea_line:'PJ Formula สูตรเฉพาะพัฒนาโดยผู้เชี่ยวชาญ', content_pillars:'product_content',
-    product_code:'PJ', post_structure:'single_image', layout_family:'product_grid_board',
+    rowIndex:2, status:'ready', row_id:'CP001', 'date (YYYY-MM-DD)':'2026-05-07',
+    big_idea_line:'[Demo] รูปพร้อมแล้ว รอตั้ง schedule', content_pillars:'product_content',
+    product_code:'PRODUCT_A', post_structure:'single_image', layout_family:'hero_product_single',
     seasonal_event_key:'none',
-    headline:'PJ Formula — ผิวดีจากภายใน สูตรเฉพาะของ Trusme',
-    body_copy:'เพราะผิวสวยไม่ได้เกิดขึ้นเอง\n\nเราพัฒนา PJ Formula ร่วมกับผู้เชี่ยวชาญด้านผิวพรรณ เพื่อให้คุณได้ผิวที่ดีที่สุด\n\nผ่านการทดสอบและรับรองจากห้องแล็บมาตรฐานสากล',
-    cta:'ส่งข้อความหาเราเพื่อรับ Formula Sheet ฟรี',
-    angle_tags:'#TrusmeOEM #PJFormula #เครื่องสำอางOEM #สกินแคร์ #ผิวสวย',
-    link1:'https://drive.google.com/file/d/1example1/view',
-    link2:'https://drive.google.com/file/d/1example2/view',
-    link3:''
+    headline:'[Demo] Headline ตัวอย่าง',
+    body_copy:'นี่คือ demo data ที่แสดงเมื่อโหลดข้อมูลจริงไม่ได้\nกรุณาตรวจสอบการเชื่อมต่อ',
+    cta:'ติดต่อทีมงาน', angle_tags:'#Demo', link1:'', link2:'', link3:''
   },
   {
-    rowIndex:6, status:'ready', row_id:'CP005', 'date (YYYY-MM-DD)':'2026-04-20',
-    big_idea_line:'Songkran Limited Edition — CVA Collection', content_pillars:'seasonal',
-    product_code:'CVA', post_structure:'single_image', layout_family:'hero_product_single',
-    seasonal_event_key:'songkran',
-    headline:'สงกรานต์นี้ ปกป้องผิวด้วย CVA Collection',
-    body_copy:'เล่นน้ำก็ต้องสวย! CVA Sunscreen SPF 50+ กันน้ำ กันเหงื่อ ปกป้องผิวตลอดวัน\n\nLimited Edition เฉพาะช่วงสงกรานต์เท่านั้น',
-    cta:'Order ได้ที่ Shopee / Lazada หรือ DM มาเลย',
-    angle_tags:'#Songkran2026 #สงกรานต์ #CVA #TrusmeCosmet #Sunscreen #กันแดด',
-    link1:'', link2:'', link3:''
-  },
-  {
-    rowIndex:7, status:'scheduled', row_id:'CP006', 'date (YYYY-MM-DD)':'2026-04-21',
-    big_idea_line:'เปิดตัว Lip Velvet Collection ใหม่', content_pillars:'product_content',
-    product_code:'LIP_VELVET_MATTE', post_structure:'carousel_3', layout_family:'carousel_3',
+    rowIndex:3, status:'ready', row_id:'CP002', 'date (YYYY-MM-DD)':'2026-05-08',
+    big_idea_line:'[Demo] Post ที่ 2 รอตั้ง schedule', content_pillars:'company_profile',
+    product_code:'none', post_structure:'carousel_3', layout_family:'carousel_3',
     seasonal_event_key:'none',
-    headline:'Lip Velvet Matte — 12 เฉดสีใหม่ เย้ายวนทุกช่วงเวลา',
-    body_copy:'เพิ่ม 12 สีใหม่ในซีซั่นนี้ ครอบคลุมทุก mood ตั้งแต่ Nude ธรรมชาติ ไปจนถึง Bold Berry',
-    cta:'ดูทุกเฉดสีได้ที่ link ใน bio',
-    angle_tags:'#LipVelvet #TrusmeCosmet #ลิปแมต #เครื่องสำอาง',
-    link1:'https://drive.google.com/file/d/1sched1/view',
-    link2:'', link3:''
+    headline:'[Demo] Headline ตัวอย่าง 2',
+    body_copy:'ข้อมูลนี้เป็น demo เท่านั้น', cta:'ติดต่อทีมงาน',
+    angle_tags:'#Demo', link1:'', link2:'', link3:''
   },
   {
-    rowIndex:8, status:'posted', row_id:'CP007', 'date (YYYY-MM-DD)':'2026-04-14',
-    big_idea_line:'Why Trusme — ทำไมต้องเลือก Trusme OEM', content_pillars:'company_profile',
-    product_code:'none', post_structure:'single_image', layout_family:'hero_product_single',
+    rowIndex:4, status:'scheduled', row_id:'CP003', 'date (YYYY-MM-DD)':'2026-05-09',
+    big_idea_line:'[Demo] Post ที่ตั้ง schedule แล้ว', content_pillars:'product_content',
+    product_code:'PRODUCT_B', post_structure:'single_image', layout_family:'product_grid_board',
     seasonal_event_key:'none',
-    headline:'ทำไม Brand ชั้นนำเลือก Trusme เป็น OEM Partner?',
-    body_copy:'3 เหตุผลที่ทำให้เราแตกต่าง:\n1. โรงงานได้มาตรฐาน GMP\n2. MOQ ต่ำสุดในตลาด\n3. ส่งตรงเวลาทุกครั้ง',
-    cta:'ปรึกษาฟรี 0 บาท — ส่ง DM มาได้เลย',
-    angle_tags:'#TrusmeOEM #OEMCosmetics #เครื่องสำอางOEM #โรงงานOEM',
-    link1:'', link2:'', link3:''
+    headline:'[Demo] Scheduled Post', body_copy:'Post นี้ถูกตั้งเวลาไว้แล้ว',
+    cta:'', angle_tags:'#Demo', link1:'', link2:'', link3:''
+  },
+  {
+    rowIndex:5, status:'posted', row_id:'CP004', 'date (YYYY-MM-DD)':'2026-05-01',
+    big_idea_line:'[Demo] Post ที่ขึ้น Facebook แล้ว', content_pillars:'product_content',
+    product_code:'PRODUCT_A', post_structure:'carousel_3', layout_family:'carousel_3',
+    seasonal_event_key:'none',
+    headline:'[Demo] Posted', body_copy:'Post นี้ขึ้น Facebook แล้ว',
+    cta:'', angle_tags:'#Demo', link1:'', link2:'', link3:''
   },
 ];
 
